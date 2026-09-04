@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FBF9F3">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Ежедневник">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Ежедневник</title>
+<style>
+  :root{
+    --paper:#FBF9F3; --paper-2:#F3F0E7; --grid:#DCE5EE; --rule:#C0453C;
+    --ink:#16202B; --ink-soft:#5C6875; --ink-faint:#98A1AC;
+    --blue:#1F3A93; --green:#1E7A54; --amber:#A96A15; --red:#B23A32; --violet:#6B3FA0;
+    --edge:#E2DDD1;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --serif:Georgia,"Times New Roman",serif;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.4;
+       padding-bottom:calc(96px + env(safe-area-inset-bottom))}
+  body.auth{padding-bottom:24px}
+  .sheet-paper{background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size:22px 22px;background-position:-1px -1px}
+  .wrap{max-width:620px;margin:0 auto;padding:0 14px}
+
+  header{position:sticky;top:0;z-index:30;background:var(--paper);border-bottom:1px solid var(--edge)}
+  header[hidden]{display:none}
+  .bal{padding:14px 0 8px}
+  .bal-row{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+  .bal-label{font-size:13px;color:var(--ink-soft)}
+  .bal-num{font-family:var(--serif);font-size:38px;line-height:1;font-weight:700;letter-spacing:-.5px}
+  .bal-num.neg{color:var(--red)}
+  .bal-alt{font-size:13px;color:var(--ink-soft);text-align:right;line-height:1.5}
+  .sync{font-size:12px;color:var(--ink-faint);padding-bottom:8px;display:flex;align-items:center;gap:6px}
+  .sync.warn{color:var(--amber)}
+  .sync.err{color:var(--red)}
+  .month{display:flex;align-items:center;gap:6px;padding-bottom:10px}
+  .month b{font-family:var(--serif);font-size:17px;font-weight:700;min-width:150px}
+  .mbtn{border:1px solid var(--edge);background:#fff;color:var(--ink);width:30px;height:30px;
+        border-radius:8px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .mbtn:active{background:var(--paper-2)}
+  .chips{display:flex;gap:6px;overflow-x:auto;padding:0 0 10px;scrollbar-width:none}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{flex:0 0 auto;border:1px solid var(--edge);background:#fff;border-radius:9px;padding:6px 10px;
+        cursor:pointer;font-size:13px;display:flex;align-items:baseline;gap:6px;color:var(--ink-soft);font-family:inherit}
+  .chip b{font-size:13.5px;font-variant-numeric:tabular-nums}
+  .chip.on{background:var(--paper-2)}
+  .dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex:0 0 auto;align-self:center}
+
+  main{padding-top:12px}
+  .ledger{border:1px solid var(--edge);border-radius:10px;overflow:hidden;background:#fff}
+  .lhead{display:flex;padding:8px 12px;font-size:12px;color:var(--ink-faint);border-bottom:1px solid var(--rule)}
+  .lhead .c1{flex:0 0 52px}.lhead .c2{flex:1 1 auto}.lhead .c3{flex:0 0 88px;text-align:right}
+  .row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid var(--grid);cursor:pointer}
+  .row:last-child{border-bottom:none}
+  .row:active{background:var(--paper-2)}
+  .r-date{flex:0 0 42px;font-size:12.5px;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+  .r-mid{flex:1 1 auto;min-width:0}
+  .r-sum{font-size:15.5px;font-weight:700;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:6px}
+  .r-note{font-size:12.5px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .r-bal{flex:0 0 82px;text-align:right;font-size:14px;font-variant-numeric:tabular-nums;color:var(--ink-soft)}
+  .r-bal.neg{color:var(--red)}
+  .pending{font-size:11px;color:var(--amber)}
+  .empty{padding:34px 18px;text-align:center;color:var(--ink-soft);font-size:14px}
+  .empty b{display:block;font-family:var(--serif);font-size:18px;color:var(--ink);margin-bottom:6px;font-weight:700}
+
+  .gridwrap{overflow-x:auto;border:1px solid var(--edge);border-radius:10px;background:#fff}
+  table{border-collapse:collapse;width:100%;min-width:640px;font-size:13px}
+  th,td{padding:8px 10px;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+  th:first-child,td:first-child{text-align:left}
+  thead th{font-size:11.5px;color:var(--ink-faint);font-weight:600;border-bottom:1px solid var(--rule);
+           position:sticky;top:0;background:#fff}
+  tbody td{border-bottom:1px solid var(--grid)}
+  tbody tr:nth-child(even) td{background:#FCFBF7}
+  td.bal{font-weight:700;color:var(--green)}
+  td.bal.neg{color:var(--red)}
+  tfoot td{border-top:1px solid var(--rule);font-weight:700}
+
+  .block{border:1px solid var(--edge);border-radius:10px;background:#fff;padding:14px;margin-bottom:12px}
+  .block h2{font-family:var(--serif);font-size:17px;margin:0 0 12px;font-weight:700}
+  .stat{margin-bottom:14px}.stat:last-child{margin-bottom:0}
+  .stat-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:14px}
+  .stat-name{display:flex;align-items:center;gap:7px}
+  .stat-val{font-weight:700;font-variant-numeric:tabular-nums}
+  .bar{height:5px;border-radius:3px;background:var(--paper-2);margin-top:6px;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:3px}
+  .stat-sub{font-size:12px;color:var(--ink-soft);margin-top:5px}
+  .kv{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--grid);font-size:14px}
+  .kv:last-child{border-bottom:none}
+  .kv span{color:var(--ink-soft)}
+  .kv b{font-variant-numeric:tabular-nums}
+  .diff-ok{color:var(--green)}.diff-bad{color:var(--red)}
+
+  label{display:block;font-size:12.5px;color:var(--ink-soft);margin:0 0 5px}
+  input,select{width:100%;font-family:inherit;font-size:16px;color:var(--ink);background:#fff;
+    border:1px solid var(--edge);border-radius:9px;padding:11px 12px;outline:none}
+  input:focus,select:focus{border-color:var(--blue)}
+  .field{margin-bottom:12px}
+  .two{display:flex;gap:10px}.two>*{flex:1 1 0;min-width:0}
+  .btn{width:100%;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:600;
+       font-family:inherit;background:var(--ink);color:var(--paper);cursor:pointer}
+  .btn:active{opacity:.85}
+  .btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--edge)}
+  .btn.danger{background:#fff;color:var(--red);border:1px solid var(--edge)}
+  .btn+.btn{margin-top:8px}
+  .btn[disabled]{opacity:.5;cursor:default}
+  .picker{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+  .pick{border:1px solid var(--edge);background:#fff;border-radius:9px;padding:9px 6px;font-size:13px;
+        font-family:inherit;color:var(--ink-soft);cursor:pointer;display:flex;flex-direction:column;
+        align-items:center;gap:5px}
+  .pick.on{border-width:2px;padding:8px 5px;color:var(--ink);font-weight:600;background:var(--paper-2)}
+  .hint{font-size:12px;color:var(--ink-soft);margin-top:-4px;margin-bottom:12px}
+  .err{font-size:13px;color:var(--red);margin-bottom:12px}
+
+  .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--paper);
+    border-top:1px solid var(--edge);padding:8px 14px calc(8px + env(safe-area-inset-bottom));
+    display:flex;gap:8px;max-width:620px;margin:0 auto}
+  .tabbar[hidden]{display:none}
+  .tab{flex:1 1 0;border:1px solid transparent;background:transparent;border-radius:9px;padding:9px 4px;
+       font-size:13px;font-family:inherit;color:var(--ink-soft);cursor:pointer}
+  .tab.on{background:#fff;border-color:var(--edge);color:var(--ink);font-weight:600}
+  .add{flex:0 0 46px;background:var(--ink);color:var(--paper);border:none;border-radius:9px;
+       font-size:24px;line-height:1;cursor:pointer}
+
+  .scrim{position:fixed;inset:0;background:rgba(22,32,43,.42);z-index:50;display:flex;
+         align-items:flex-end;justify-content:center}
+  .scrim[hidden]{display:none}
+  .modal{width:100%;max-width:620px;background:var(--paper);border-radius:16px 16px 0 0;
+    padding:16px 16px calc(16px + env(safe-area-inset-bottom));max-height:92vh;overflow-y:auto}
+  .modal h3{font-family:var(--serif);font-size:19px;margin:0 0 14px;font-weight:700}
+  .mclose{float:right;border:none;background:transparent;font-size:22px;color:var(--ink-soft);cursor:pointer;padding:0 4px}
+  .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:86px;z-index:60;background:var(--ink);
+         color:var(--paper);padding:10px 16px;border-radius:9px;font-size:13.5px;max-width:88%}
+  .toast[hidden]{display:none}
+
+  .signin{max-width:400px;margin:0 auto;padding:56px 16px 24px}
+  .signin h1{font-family:var(--serif);font-size:30px;margin:0 0 6px;font-weight:700}
+  .signin p.lead{color:var(--ink-soft);font-size:14px;margin:0 0 24px}
+  .signin .block{background:#fff}
+  .swap{background:none;border:none;color:var(--blue);font-family:inherit;font-size:13.5px;
+        cursor:pointer;padding:10px 0 0;width:100%}
+  :focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+</style>
+</head>
+<body class="sheet-paper">
+
+<header id="hdr" hidden>
+  <div class="wrap">
+    <div class="bal">
+      <div class="bal-row">
+        <div>
+          <div class="bal-label">Остаток</div>
+          <div class="bal-num" id="balNum">0</div>
+        </div>
+        <div class="bal-alt" id="balAlt"></div>
+      </div>
+    </div>
+    <div class="sync" id="sync"></div>
+    <div class="month">
+      <button class="mbtn" id="prevM" aria-label="Предыдущий месяц">‹</button>
+      <b id="monthName"></b>
+      <button class="mbtn" id="nextM" aria-label="Следующий месяц">›</button>
+    </div>
+    <div class="chips" id="chips"></div>
+  </div>
+</header>
+
+<main class="wrap" id="view"></main>
+
+<div class="tabbar" id="tabbar" hidden>
+  <button class="tab on" data-tab="book">Тетрадь</button>
+  <button class="tab" data-tab="sums">Итоги</button>
+  <button class="tab" data-tab="set">Настройки</button>
+  <button class="add" id="addBtn" aria-label="Добавить запись">+</button>
+</div>
+
+<div class="scrim" id="scrim" hidden><div class="modal" id="modal"></div></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+"use strict";
+
+/* ===================== настройки подключения ===================== */
+const SUPABASE_URL = "https://jwdwltvmmokffyupseer.supabase.co";
+const SUPABASE_KEY = "sb_publishable_mg1S0h__-ipWiSmiFgOnTw_A9T7ggwS";
+
+/* ===================== колонки ===================== */
+const COLS = [
+  { id:"in",   name:"Приход",     short:"Приход",  color:"var(--green)",  sign:+1 },
+  { id:"real", name:"Реализация", short:"Реализ.", color:"var(--blue)",   sign:-1 },
+  { id:"byt",  name:"Быт",        short:"Быт",     color:"var(--amber)",  sign:-1 },
+  { id:"lich", name:"Личное",     short:"Личное",  color:"var(--violet)", sign:-1 },
+  { id:"auto", name:"Машина",     short:"Машина",  color:"var(--red)",    sign:-1 }
+];
+const colById = id => COLS.find(c => c.id === id) || COLS[0];
+const MONTHS = ["Январь","Февраль","Март","Апрель","Май","Июнь",
+                "Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
+
+/* ===================== локальное хранилище ===================== */
+const LS = {
+  ok: (() => { try { localStorage.setItem("__p","1"); localStorage.removeItem("__p"); return true; }
+               catch(e){ return false; } })(),
+  mem: {},
+  get(k){ try { return this.ok ? localStorage.getItem(k) : (this.mem[k] ?? null); } catch(e){ return null; } },
+  set(k,v){ try { if (this.ok) localStorage.setItem(k,v); else this.mem[k]=v; } catch(e){ this.mem[k]=v; } },
+  del(k){ try { if (this.ok) localStorage.removeItem(k); else delete this.mem[k]; } catch(e){} }
+};
+const K_SESSION = "ezh:session";
+const K_CACHE   = "ezh:cache";
+const K_QUEUE   = "ezh:queue";
+const K_OLD     = "ezhednevnik:v1";
+
+/* ===================== состояние ===================== */
+let session = null;          // {access_token, refresh_token, expires_at, email, user_id}
+let S = { entries: [], settings: { start:0, startCur:"USD", base:"USD", rate:12600, checks:{} } };
+let queue = [];              // отложенные операции
+let ui = { tab:"book", month: ymNow(), filter:"all", grid:false, syncing:false, lastError:null };
+
+function ymNow(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"); }
+function todayISO(){ const d=new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function uuid(){
+  if (crypto && crypto.randomUUID) return crypto.randomUUID();
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => {
+    const r = Math.random()*16|0; return (c==="x"?r:(r&0x3|0x8)).toString(16);
+  });
+}
+
+/* ===================== сеть ===================== */
+async function authFetch(path, opts){
+  const o = opts || {};
+  const r = await fetch(SUPABASE_URL + path, {
+    method: o.method || "GET",
+    headers: Object.assign({ "apikey": SUPABASE_KEY, "Content-Type": "application/json" }, o.headers || {}),
+    body: o.body ? JSON.stringify(o.body) : undefined
+  });
+  const text = await r.text();
+  let data = null;
+  try { data = text ? JSON.parse(text) : null; } catch(e){ data = text; }
+  if (!r.ok) {
+    const msg = (data && (data.error_description || data.msg || data.message || data.error)) || ("Ошибка " + r.status);
+    const err = new Error(msg); err.status = r.status; err.data = data; throw err;
+  }
+  return data;
+}
+async function api(path, opts){
+  await ensureToken();
+  const o = opts || {};
+  o.headers = Object.assign({ "Authorization": "Bearer " + session.access_token }, o.headers || {});
+  try {
+    return await authFetch(path, o);
+  } catch (e) {
+    if (e.status === 401) {
+      await refreshToken();
+      o.headers.Authorization = "Bearer " + session.access_token;
+      return await authFetch(path, o);
+    }
+    throw e;
+  }
+}
+async function ensureToken(){
+  if (!session) throw new Error("Нет входа");
+  if (session.expires_at && Date.now() > session.expires_at - 60000) await refreshToken();
+}
+async function refreshToken(){
+  const d = await authFetch("/auth/v1/token?grant_type=refresh_token", {
+    method:"POST", body:{ refresh_token: session.refresh_token }
+  });
+  saveSession(d);
+}
+function saveSession(d){
+  session = {
+    access_token: d.access_token,
+    refresh_token: d.refresh_token,
+    expires_at: Date.now() + (d.expires_in || 3600) * 1000,
+    email: (d.user && d.user.email) || (session && session.email) || "",
+    user_id: (d.user && d.user.id) || (session && session.user_id) || ""
+  };
+  LS.set(K_SESSION, JSON.stringify(session));
+}
+async function signIn(email, password){
+  const d = await authFetch("/auth/v1/token?grant_type=password", {
+    method:"POST", body:{ email, password }
+  });
+  saveSession(d);
+}
+async function signUp(email, password){
+  const d = await authFetch("/auth/v1/signup", { method:"POST", body:{ email, password } });
+  if (d && d.access_token) { saveSession(d); return true; }
+  return false;
+}
+function signOut(){
+  session = null;
+  LS.del(K_SESSION); LS.del(K_CACHE); LS.del(K_QUEUE);
+  S = { entries: [], settings: { start:0, startCur:"USD", base:"USD", rate:12600, checks:{} } };
+  queue = [];
+  boot();
+}
+
+/* ===================== кэш и очередь ===================== */
+function cacheSave(){ LS.set(K_CACHE, JSON.stringify({ entries:S.entries, settings:S.settings })); }
+function cacheLoad(){
+  try {
+    const d = JSON.parse(LS.get(K_CACHE) || "null");
+    if (d && Array.isArray(d.entries)) { S.entries = d.entries; if (d.settings) S.settings = d.settings; return true; }
+  } catch(e){}
+  return false;
+}
+function queueSave(){ LS.set(K_QUEUE, JSON.stringify(queue)); }
+function queueLoad(){ try { queue = JSON.parse(LS.get(K_QUEUE) || "[]") || []; } catch(e){ queue = []; } }
+function enqueue(op){ queue.push(op); queueSave(); }
+function isPending(id){ return queue.some(q => q.id === id); }
+
+/* ===================== загрузка и выгрузка ===================== */
+function normalize(e){
+  return { id:e.id, date:e.date, col:e.col, amount:Number(e.amount), cur:e.cur,
+           note:e.note || "", created_at:e.created_at || "" };
+}
+async function pullAll(){
+  const rows = await api("/rest/v1/entries?select=*&order=date.asc,created_at.asc");
+  S.entries = (rows || []).map(normalize);
+  const st = await api("/rest/v1/settings?select=*&limit=1");
+  if (st && st.length) {
+    const s = st[0];
+    S.settings = { start:Number(s.start_amount), startCur:s.start_cur, base:s.base_cur,
+                   rate:Number(s.rate), checks:s.checks || {} };
+  } else {
+    await pushSettings();
+  }
+  cacheSave();
+}
+async function pushSettings(){
+  const s = S.settings;
+  const body = { user_id: session.user_id, start_amount:s.start, start_cur:s.startCur,
+                 base_cur:s.base, rate:s.rate, checks:s.checks };
+  await api("/rest/v1/settings", {
+    method:"POST", body:[body],
+    headers:{ "Prefer":"resolution=merge-duplicates,return=minimal" }
+  });
+}
+async function flushQueue(){
+  if (!queue.length || !session) return;
+  const rest = [];
+  for (const op of queue) {
+    try {
+      if (op.kind === "insert") {
+        await api("/rest/v1/entries", { method:"POST", body:[op.row],
+          headers:{ "Prefer":"resolution=merge-duplicates,return=minimal" } });
+      } else if (op.kind === "update") {
+        await api("/rest/v1/entries?id=eq." + op.id, { method:"PATCH", body:op.row,
+          headers:{ "Prefer":"return=minimal" } });
+      } else if (op.kind === "delete") {
+        await api("/rest/v1/entries?id=eq." + op.id, { method:"DELETE",
+          headers:{ "Prefer":"return=minimal" } });
+      } else if (op.kind === "settings") {
+        await pushSettings();
+      }
+    } catch (e) {
+      if (e.status && e.status >= 400 && e.status < 500 && e.status !== 401 && e.status !== 429) {
+        continue; /* запись сервер не принял — не держим очередь вечно */
+      }
+      rest.push(op);
+    }
+  }
+  queue = rest; queueSave();
+}
+async function sync(){
+  if (!session || ui.syncing) return;
+  ui.syncing = true; ui.lastError = null; renderSync();
+  try {
+    await flushQueue();
+    await pullAll();
+  } catch (e) {
+    ui.lastError = e.message || "нет связи";
+  }
+  ui.syncing = false;
+  render();
+}
+
+/* ===================== деньги ===================== */
+function toBase(amount, cur){
+  const s = S.settings;
+  if (cur === s.base) return amount;
+  if (s.base === "USD" && cur === "UZS") return amount / (s.rate || 1);
+  if (s.base === "UZS" && cur === "USD") return amount * (s.rate || 1);
+  return amount;
+}
+function fmt(n, cur){
+  const c = cur || S.settings.base;
+  const v = Math.abs(n);
+  let str;
+  if (c === "USD") {
+    str = "$" + (Math.round(v*100)/100).toLocaleString("ru-RU",
+      { minimumFractionDigits: (Math.round(v*100)/100) % 1 ? 2 : 0, maximumFractionDigits: 2 });
+  } else {
+    str = Math.round(v).toLocaleString("ru-RU").replace(/\u00A0/g," ") + " сум";
+  }
+  return (n < 0 ? "−" : "") + str;
+}
+function fmtShort(n){
+  const c = S.settings.base, a = Math.abs(n);
+  let str;
+  if (c === "USD") {
+    str = "$" + (a >= 1000 ? Math.round(a).toLocaleString("ru-RU").replace(/\u00A0/g," ")
+                           : (Math.round(a*100)/100).toLocaleString("ru-RU"));
+  } else {
+    if (a >= 1e6) str = (Math.round(a/1e5)/10).toLocaleString("ru-RU") + " млн";
+    else if (a >= 1000) str = Math.round(a/1000).toLocaleString("ru-RU").replace(/\u00A0/g," ") + " т";
+    else str = String(Math.round(a));
+  }
+  return (n < 0 ? "−" : "") + str;
+}
+function parseAmount(raw){
+  if (!raw) return null;
+  let t = String(raw).trim().toLowerCase().replace(/\s+/g,"").replace(/,/g,".");
+  let cur = null;
+  if (t.includes("$")) { cur = "USD"; t = t.replace(/\$/g,""); }
+  let mult = 1;
+  if (/(млн|mln|m)$/.test(t)) { mult = 1e6; t = t.replace(/(млн|mln|m)$/,""); }
+  else if (/(тыс|т|k|к)$/.test(t)) { mult = 1e3; t = t.replace(/(тыс|т|k|к)$/,""); }
+  const n = parseFloat(t);
+  if (!isFinite(n)) return null;
+  return { amount: Math.abs(n) * mult, cur };
+}
+
+/* ===================== расчёты ===================== */
+function sortedEntries(){
+  return S.entries.slice().sort((a,b) =>
+    a.date === b.date ? String(a.created_at).localeCompare(String(b.created_at)) : (a.date < b.date ? -1 : 1));
+}
+function withRunning(){
+  let run = toBase(S.settings.start, S.settings.startCur);
+  return sortedEntries().map(e => {
+    run += colById(e.col).sign * toBase(e.amount, e.cur);
+    return Object.assign({}, e, { run });
+  });
+}
+function currentBalance(){
+  const all = withRunning();
+  return all.length ? all[all.length-1].run : toBase(S.settings.start, S.settings.startCur);
+}
+function monthEntries(ym){ return withRunning().filter(e => e.date.slice(0,7) === ym); }
+function monthTotals(ym){
+  const t = {}; COLS.forEach(c => t[c.id] = 0);
+  monthEntries(ym).forEach(e => { t[e.col] += toBase(e.amount, e.cur); });
+  return t;
+}
+function topNotes(ym, colId){
+  const map = {};
+  monthEntries(ym).filter(e => e.col === colId && e.note).forEach(e => {
+    const k = e.note.trim().toLowerCase();
+    map[k] = (map[k] || 0) + toBase(e.amount, e.cur);
+  });
+  return Object.entries(map).sort((a,b) => b[1]-a[1]).slice(0,3);
+}
+function shiftMonth(ym, d){
+  let [y,m] = ym.split("-").map(Number);
+  m += d; if (m < 1) { m = 12; y--; } if (m > 12) { m = 1; y++; }
+  return y + "-" + String(m).padStart(2,"0");
+}
+
+/* ===================== отрисовка ===================== */
+const $ = s => document.querySelector(s);
+
+function render(){
+  if (!session) return;
+  renderHeader(); renderSync();
+  const v = $("#view"); v.innerHTML = "";
+  if (ui.tab === "book") v.appendChild(viewBook());
+  if (ui.tab === "sums") v.appendChild(viewSums());
+  if (ui.tab === "set")  v.appendChild(viewSettings());
+  document.querySelectorAll(".tab").forEach(b => b.classList.toggle("on", b.dataset.tab === ui.tab));
+}
+function renderSync(){
+  const el = $("#sync");
+  el.className = "sync";
+  if (ui.syncing) { el.textContent = "Синхронизация…"; return; }
+  if (queue.length) { el.className = "sync warn"; el.textContent = "Не отправлено в облако: " + queue.length; return; }
+  if (ui.lastError) { el.className = "sync err"; el.textContent = "Нет связи с базой · " + ui.lastError; return; }
+  el.textContent = "Всё сохранено в облаке";
+}
+function renderHeader(){
+  const bal = currentBalance();
+  const el = $("#balNum");
+  el.textContent = fmt(bal); el.classList.toggle("neg", bal < 0);
+  const other = S.settings.base === "USD" ? "UZS" : "USD";
+  const conv = S.settings.base === "USD" ? bal * (S.settings.rate||1) : bal / (S.settings.rate||1);
+  $("#balAlt").innerHTML = "это " + fmt(conv, other) +
+    '<br><span style="color:var(--ink-faint)">по курсу ' +
+    Math.round(S.settings.rate).toLocaleString("ru-RU").replace(/\u00A0/g," ") + "</span>";
+
+  const [y,m] = ui.month.split("-").map(Number);
+  $("#monthName").textContent = MONTHS[m-1] + " " + y;
+
+  const t = monthTotals(ui.month);
+  const chips = $("#chips"); chips.innerHTML = "";
+  const all = document.createElement("button");
+  all.className = "chip" + (ui.filter === "all" ? " on" : "");
+  all.textContent = "Все";
+  all.onclick = () => { ui.filter = "all"; render(); };
+  chips.appendChild(all);
+  COLS.forEach(c => {
+    const b = document.createElement("button");
+    b.className = "chip" + (ui.filter === c.id ? " on" : "");
+    b.innerHTML = '<i class="dot" style="background:'+c.color+'"></i>' +
+                  '<span>'+c.short+'</span> <b style="color:'+c.color+'">'+fmtShort(t[c.id])+'</b>';
+    b.onclick = () => { ui.filter = (ui.filter === c.id ? "all" : c.id); render(); };
+    chips.appendChild(b);
+  });
+}
+
+function viewBook(){
+  const box = document.createElement("div");
+  const bar = document.createElement("div");
+  bar.style.cssText = "display:flex;justify-content:flex-end;margin-bottom:10px";
+  const tg = document.createElement("button");
+  tg.className = "btn ghost"; tg.style.cssText = "width:auto;padding:7px 12px;font-size:13px";
+  tg.textContent = ui.grid ? "Показать лентой" : "Показать сеткой";
+  tg.onclick = () => { ui.grid = !ui.grid; render(); };
+  bar.appendChild(tg); box.appendChild(bar);
+
+  let list = monthEntries(ui.month);
+  if (ui.filter !== "all") list = list.filter(e => e.col === ui.filter);
+  if (!list.length) {
+    const e = document.createElement("div");
+    e.className = "ledger";
+    e.innerHTML = '<div class="empty"><b>В этом месяце пусто</b>Нажми «плюс» внизу и запиши первую сумму.</div>';
+    box.appendChild(e); return box;
+  }
+  box.appendChild(ui.grid ? gridTable(list) : feedList(list));
+  return box;
+}
+function feedList(list){
+  const wrap = document.createElement("div"); wrap.className = "ledger";
+  const head = document.createElement("div"); head.className = "lhead";
+  head.innerHTML = '<div class="c1">Дата</div><div class="c2">Запись</div><div class="c3">Остаток</div>';
+  wrap.appendChild(head);
+  list.forEach(e => {
+    const c = colById(e.col);
+    const row = document.createElement("div");
+    row.className = "row"; row.tabIndex = 0;
+    const d = e.date.slice(8,10) + "." + e.date.slice(5,7);
+    row.innerHTML =
+      '<div class="r-date">'+d+'</div>' +
+      '<div class="r-mid">' +
+        '<div class="r-sum" style="color:'+c.color+'"><i class="dot" style="background:'+c.color+'"></i>' +
+          (c.sign>0?"+":"−") + " " + fmt(e.amount, e.cur) + '</div>' +
+        '<div class="r-note">' + c.name + (e.note ? " · " + escapeHtml(e.note) : "") +
+          (isPending(e.id) ? ' <span class="pending">· не отправлено</span>' : "") + '</div>' +
+      '</div>' +
+      '<div class="r-bal'+(e.run<0?" neg":"")+'">'+fmtShort(e.run)+'</div>';
+    row.onclick = () => openEntry(e.id);
+    row.onkeydown = ev => { if (ev.key === "Enter") openEntry(e.id); };
+    wrap.appendChild(row);
+  });
+  return wrap;
+}
+function gridTable(list){
+  const wrap = document.createElement("div"); wrap.className = "gridwrap";
+  const t = monthTotals(ui.month);
+  let head = '<tr><th>Дата</th>';
+  COLS.forEach(c => head += '<th style="color:'+c.color+'">'+c.short+'</th>');
+  head += '<th>Остаток</th></tr>';
+  let body = "";
+  list.forEach(e => {
+    const d = e.date.slice(8,10)+"."+e.date.slice(5,7);
+    body += "<tr><td>"+d+"</td>";
+    COLS.forEach(c => {
+      body += (e.col === c.id)
+        ? '<td style="color:'+c.color+';font-weight:600" title="'+escapeHtml(e.note||"")+'">'+fmt(e.amount,e.cur)+"</td>"
+        : '<td style="color:var(--ink-faint)">—</td>';
+    });
+    body += '<td class="bal'+(e.run<0?" neg":"")+'">'+fmtShort(e.run)+"</td></tr>";
+  });
+  let foot = "<tr><td>Итого</td>";
+  COLS.forEach(c => foot += '<td style="color:'+c.color+'">'+fmtShort(t[c.id])+"</td>");
+  const last = list.length ? list[list.length-1].run : currentBalance();
+  foot += '<td class="bal'+(last<0?" neg":"")+'">'+fmtShort(last)+"</td></tr>";
+  wrap.innerHTML = "<table><thead>"+head+"</thead><tbody>"+body+"</tbody><tfoot>"+foot+"</tfoot></table>";
+  return wrap;
+}
+
+function viewSums(){
+  const box = document.createElement("div");
+  const t = monthTotals(ui.month);
+  const spent = COLS.filter(c => c.sign < 0).reduce((s,c) => s + t[c.id], 0);
+  const income = t.in;
+
+  const b1 = document.createElement("div"); b1.className = "block";
+  b1.innerHTML = "<h2>Куда ушли деньги</h2>";
+  if (!spent) b1.innerHTML += '<div style="font-size:14px;color:var(--ink-soft)">Расходов за этот месяц ещё нет.</div>';
+  else COLS.filter(c => c.sign < 0).forEach(c => {
+    const val = t[c.id], pct = spent ? Math.round(val/spent*100) : 0;
+    const tops = topNotes(ui.month, c.id);
+    const sub = tops.length ? tops.map(x => escapeHtml(x[0])+" "+fmtShort(x[1])).join(" · ") : "без меток";
+    b1.innerHTML +=
+      '<div class="stat"><div class="stat-top">' +
+        '<div class="stat-name"><i class="dot" style="background:'+c.color+'"></i>'+c.name+'</div>' +
+        '<div class="stat-val">'+fmt(val)+' <span style="color:var(--ink-faint);font-weight:400">'+pct+'%</span></div>' +
+      '</div><div class="bar"><i style="width:'+pct+'%;background:'+c.color+'"></i></div>' +
+      '<div class="stat-sub">'+sub+'</div></div>';
+  });
+  box.appendChild(b1);
+
+  const b2 = document.createElement("div"); b2.className = "block";
+  b2.innerHTML = "<h2>Месяц в цифрах</h2>" +
+    kv("Приход", fmt(income)) + kv("Все расходы", fmt(spent)) +
+    kv(income - spent >= 0 ? "Отложилось" : "Ушло сверх прихода", fmt(Math.abs(income - spent))) +
+    kv("Записей", String(monthEntries(ui.month).length)) +
+    kv("Остаток на сегодня", fmt(currentBalance()));
+  box.appendChild(b2);
+
+  const b3 = document.createElement("div"); b3.className = "block";
+  const saved = S.settings.checks[ui.month];
+  const bal = currentBalance();
+  b3.innerHTML = "<h2>Сверка с наличными</h2>";
+  const f = document.createElement("div"); f.className = "field";
+  f.innerHTML = '<label for="factIn">Сколько денег реально на руках</label>' +
+    '<input id="factIn" inputmode="decimal" placeholder="например 230$ или 2.5млн" value="' +
+    (saved ? escapeHtml(String(saved.raw)) : "") + '">';
+  b3.appendChild(f);
+  const btn = document.createElement("button");
+  btn.className = "btn ghost"; btn.textContent = "Сверить";
+  btn.onclick = async () => {
+    const raw = document.getElementById("factIn").value;
+    const p = parseAmount(raw);
+    if (!p) { toast("Не понял сумму"); return; }
+    S.settings.checks[ui.month] = { raw, base: toBase(p.amount, p.cur || S.settings.base) };
+    cacheSave(); saveSettingsRemote(); render();
+  };
+  b3.appendChild(btn);
+  if (saved) {
+    const diff = saved.base - bal;
+    const res = document.createElement("div");
+    res.style.cssText = "margin-top:12px;font-size:14px";
+    res.innerHTML = Math.abs(diff) < 0.01
+      ? '<span class="diff-ok">Сходится. Ни одна запись не потеряна.</span>'
+      : '<span class="diff-bad">Расхождение '+fmt(Math.abs(diff))+'</span><br><span style="color:var(--ink-soft)">' +
+        (diff > 0 ? "На руках больше расчётного — не записан приход."
+                  : "На руках меньше расчётного — не записан расход.") + "</span>";
+    b3.appendChild(res);
+  }
+  box.appendChild(b3);
+  return box;
+}
+function kv(k,v){ return '<div class="kv"><span>'+k+"</span><b>"+v+"</b></div>"; }
+
+function viewSettings(){
+  const box = document.createElement("div");
+  const s = S.settings;
+
+  const b1 = document.createElement("div"); b1.className = "block";
+  b1.innerHTML = "<h2>Счёт</h2>" +
+    '<div class="field"><label for="setStart">Стартовый остаток</label><div class="two">' +
+      '<input id="setStart" inputmode="decimal" value="'+s.start+'">' +
+      '<select id="setStartCur"><option value="USD"'+(s.startCur==="USD"?" selected":"")+'>доллары</option>' +
+      '<option value="UZS"'+(s.startCur==="UZS"?" selected":"")+'>сумы</option></select></div></div>' +
+    '<div class="hint">С какой суммы начинается отсчёт.</div>' +
+    '<div class="field"><label for="setBase">Главная валюта остатка</label>' +
+      '<select id="setBase"><option value="USD"'+(s.base==="USD"?" selected":"")+'>доллары</option>' +
+      '<option value="UZS"'+(s.base==="UZS"?" selected":"")+'>сумы</option></select></div>' +
+    '<div class="field"><label for="setRate">Курс: сумов за доллар</label>' +
+      '<input id="setRate" inputmode="numeric" value="'+s.rate+'"></div>';
+  const save = document.createElement("button");
+  save.className = "btn"; save.textContent = "Сохранить";
+  save.onclick = () => {
+    const p = parseAmount(document.getElementById("setStart").value);
+    S.settings.start = p ? p.amount : 0;
+    S.settings.startCur = document.getElementById("setStartCur").value;
+    S.settings.base = document.getElementById("setBase").value;
+    const r = parseFloat(String(document.getElementById("setRate").value).replace(/\s/g,""));
+    S.settings.rate = isFinite(r) && r > 0 ? r : 1;
+    cacheSave(); saveSettingsRemote(); render(); toast("Сохранено");
+  };
+  b1.appendChild(save); box.appendChild(b1);
+
+  const b2 = document.createElement("div"); b2.className = "block";
+  b2.innerHTML = "<h2>Облако</h2>" +
+    '<div class="hint" style="margin-top:-6px">Вход: '+escapeHtml(session.email)+
+    "<br>Записей в базе: "+S.entries.length +
+    (queue.length ? "<br>Ждут отправки: "+queue.length : "") + "</div>";
+  const rs = document.createElement("button");
+  rs.className = "btn ghost"; rs.textContent = "Обновить с сервера";
+  rs.onclick = () => sync();
+  b2.appendChild(rs);
+
+  const old = readOldLocal();
+  if (old && old.length) {
+    const mig = document.createElement("button");
+    mig.className = "btn ghost";
+    mig.textContent = "Перенести старые записи (" + old.length + ")";
+    mig.onclick = async () => {
+      old.forEach(e => {
+        const row = { id: uuid(), date:e.date, col:e.col, amount:Number(e.amount),
+                      cur:e.cur, note:e.note || "", created_at:new Date().toISOString() };
+        S.entries.push(row);
+        enqueue({ kind:"insert", id:row.id, row:{ id:row.id, date:row.date, col:row.col,
+                  amount:row.amount, cur:row.cur, note:row.note } });
+      });
+      LS.del(K_OLD); cacheSave(); await sync(); toast("Перенесено");
+    };
+    b2.appendChild(mig);
+  }
+
+  const exp = document.createElement("button");
+  exp.className = "btn ghost"; exp.textContent = "Выгрузить файлом";
+  exp.onclick = exportJSON;
+  b2.appendChild(exp);
+
+  const out = document.createElement("button");
+  out.className = "btn danger"; out.textContent = "Выйти";
+  out.onclick = () => { if (confirm("Выйти из аккаунта?")) signOut(); };
+  b2.appendChild(out);
+  box.appendChild(b2);
+
+  const b3 = document.createElement("div"); b3.className = "block";
+  b3.innerHTML = "<h2>Как записывать быстро</h2>" +
+    '<div style="font-size:13.5px;color:var(--ink-soft);line-height:1.6">' +
+    "661т — это 661 000 сум<br>1.2млн — это 1 200 000 сум<br>$50 или 50$ — сразу доллары<br>" +
+    "Метка — то, что ты пишешь в скобках: нал, бензин, продукты</div>";
+  box.appendChild(b3);
+  return box;
+}
+function readOldLocal(){
+  try {
+    const d = JSON.parse(LS.get(K_OLD) || "null");
+    return d && Array.isArray(d.entries) ? d.entries : null;
+  } catch(e){ return null; }
+}
+
+/* ===================== запись ===================== */
+let draft = null;
+function openAdd(){
+  draft = { id:null, date:todayISO(), col: ui.filter !== "all" ? ui.filter : "in",
+            amount:"", cur:"UZS", note:"" };
+  drawModal();
+}
+function openEntry(id){
+  const e = S.entries.find(x => x.id === id);
+  if (!e) return;
+  draft = { id:e.id, date:e.date, col:e.col, amount:String(e.amount), cur:e.cur, note:e.note || "" };
+  drawModal();
+}
+function drawModal(){
+  const m = $("#modal");
+  m.innerHTML =
+    '<button class="mclose" id="mClose" aria-label="Закрыть">×</button>' +
+    "<h3>" + (draft.id ? "Запись" : "Новая запись") + "</h3>" +
+    '<div class="field"><label>Куда</label><div class="picker" id="pick"></div></div>' +
+    '<div class="field"><label for="fAmt">Сумма</label><div class="two">' +
+      '<input id="fAmt" inputmode="decimal" placeholder="661т" value="'+escapeHtml(draft.amount)+'">' +
+      '<select id="fCur"><option value="UZS"'+(draft.cur==="UZS"?" selected":"")+'>сум</option>' +
+      '<option value="USD"'+(draft.cur==="USD"?" selected":"")+'>доллар</option></select></div></div>' +
+    '<div class="field"><label for="fNote">Метка</label>' +
+      '<input id="fNote" placeholder="нал, бензин, продукты" value="'+escapeHtml(draft.note)+'"></div>' +
+    '<div class="field"><label for="fDate">Дата</label>' +
+      '<input id="fDate" type="date" value="'+draft.date+'"></div>';
+  const pick = m.querySelector("#pick");
+  COLS.forEach(c => {
+    const b = document.createElement("button");
+    b.className = "pick" + (draft.col === c.id ? " on" : "");
+    if (draft.col === c.id) b.style.borderColor = c.color;
+    b.innerHTML = '<i class="dot" style="background:'+c.color+'"></i>'+c.short;
+    b.onclick = () => { readDraft(); draft.col = c.id; drawModal(); };
+    pick.appendChild(b);
+  });
+  const ok = document.createElement("button");
+  ok.className = "btn"; ok.textContent = draft.id ? "Сохранить" : "Записать";
+  ok.onclick = commit; m.appendChild(ok);
+  if (draft.id) {
+    const del = document.createElement("button");
+    del.className = "btn danger"; del.textContent = "Удалить запись";
+    del.onclick = () => {
+      S.entries = S.entries.filter(x => x.id !== draft.id);
+      enqueue({ kind:"delete", id:draft.id });
+      cacheSave(); closeModal(); render(); flushThen();
+    };
+    m.appendChild(del);
+  }
+  m.querySelector("#mClose").onclick = closeModal;
+  m.querySelector("#fAmt").addEventListener("keydown", ev => { if (ev.key === "Enter") commit(); });
+  $("#scrim").hidden = false;
+  setTimeout(() => { const a = m.querySelector("#fAmt"); if (a && !draft.amount) a.focus(); }, 30);
+}
+function readDraft(){
+  const m = $("#modal");
+  if (!m.querySelector("#fAmt")) return;
+  draft.amount = m.querySelector("#fAmt").value;
+  draft.cur = m.querySelector("#fCur").value;
+  draft.note = m.querySelector("#fNote").value;
+  draft.date = m.querySelector("#fDate").value || todayISO();
+}
+function commit(){
+  readDraft();
+  const p = parseAmount(draft.amount);
+  if (!p || !p.amount) { toast("Впиши сумму"); return; }
+  const cur = p.cur || draft.cur;
+  const note = draft.note.trim();
+  if (draft.id) {
+    const e = S.entries.find(x => x.id === draft.id);
+    Object.assign(e, { date:draft.date, col:draft.col, amount:p.amount, cur, note });
+    enqueue({ kind:"update", id:e.id,
+              row:{ date:e.date, col:e.col, amount:e.amount, cur:e.cur, note:e.note } });
+  } else {
+    const row = { id:uuid(), date:draft.date, col:draft.col, amount:p.amount, cur, note,
+                  created_at:new Date().toISOString() };
+    S.entries.push(row);
+    enqueue({ kind:"insert", id:row.id,
+              row:{ id:row.id, date:row.date, col:row.col, amount:row.amount, cur:row.cur, note:row.note } });
+    ui.month = row.date.slice(0,7);
+  }
+  cacheSave(); closeModal(); render(); flushThen();
+}
+function closeModal(){ $("#scrim").hidden = true; draft = null; }
+function saveSettingsRemote(){ enqueue({ kind:"settings" }); flushThen(); }
+async function flushThen(){
+  try { await flushQueue(); ui.lastError = null; }
+  catch(e){ ui.lastError = e.message; }
+  renderSync();
+  if (ui.tab === "book") render();
+}
+
+/* ===================== файлы и мелочи ===================== */
+function exportJSON(){
+  const blob = new Blob([JSON.stringify({ v:2, settings:S.settings, entries:S.entries }, null, 2)],
+    { type:"application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "ezhednevnik-" + todayISO() + ".json";
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  toast("Файл выгружен");
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+}
+let toastT = null;
+function toast(msg){
+  const t = $("#toast");
+  t.textContent = msg; t.hidden = false;
+  clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 2200);
+}
+
+/* ===================== экран входа ===================== */
+let signMode = "in";
+function viewSignIn(err){
+  document.body.classList.add("auth");
+  $("#hdr").hidden = true; $("#tabbar").hidden = true;
+  const v = $("#view");
+  v.className = "signin";
+  v.innerHTML =
+    "<h1>Ежедневник</h1>" +
+    '<p class="lead">Записи хранятся в твоей базе. Войди, чтобы они были и на телефоне, и на компьютере.</p>' +
+    '<div class="block">' +
+      (err ? '<div class="err">'+escapeHtml(err)+"</div>" : "") +
+      '<div class="field"><label for="aEmail">Почта</label>' +
+        '<input id="aEmail" type="email" autocomplete="username" inputmode="email"></div>' +
+      '<div class="field"><label for="aPass">Пароль</label>' +
+        '<input id="aPass" type="password" autocomplete="current-password"></div>' +
+    "</div>";
+  const block = v.querySelector(".block");
+  const go = document.createElement("button");
+  go.className = "btn";
+  go.textContent = signMode === "in" ? "Войти" : "Создать аккаунт";
+  go.onclick = async () => {
+    const email = document.getElementById("aEmail").value.trim();
+    const pass = document.getElementById("aPass").value;
+    if (!email || !pass) { viewSignIn("Впиши почту и пароль"); return; }
+    go.disabled = true; go.textContent = "Секунду…";
+    try {
+      if (signMode === "in") { await signIn(email, pass); }
+      else {
+        const ok = await signUp(email, pass);
+        if (!ok) { viewSignIn("Аккаунт создан. Подтверди письмо на почте и войди."); signMode = "in"; return; }
+      }
+      await boot();
+    } catch (e) {
+      viewSignIn(e.message === "Invalid login credentials" ? "Почта или пароль не подходят" : e.message);
+    }
+  };
+  block.appendChild(go);
+  const sw = document.createElement("button");
+  sw.className = "swap";
+  sw.textContent = signMode === "in" ? "Аккаунта ещё нет" : "У меня уже есть аккаунт";
+  sw.onclick = () => { signMode = signMode === "in" ? "up" : "in"; viewSignIn(); };
+  block.appendChild(sw);
+  document.getElementById("aPass").addEventListener("keydown", ev => { if (ev.key === "Enter") go.click(); });
+}
+
+/* ===================== запуск ===================== */
+document.querySelectorAll(".tab").forEach(b => {
+  b.onclick = () => { ui.tab = b.dataset.tab; render(); window.scrollTo(0,0); };
+});
+$("#addBtn").onclick = openAdd;
+$("#prevM").onclick = () => { ui.month = shiftMonth(ui.month,-1); render(); };
+$("#nextM").onclick = () => { ui.month = shiftMonth(ui.month,+1); render(); };
+$("#scrim").onclick = ev => { if (ev.target === $("#scrim")) closeModal(); };
+document.addEventListener("keydown", ev => { if (ev.key === "Escape" && !$("#scrim").hidden) closeModal(); });
+window.addEventListener("online", () => { if (session) sync(); });
+
+async function boot(){
+  try { session = JSON.parse(LS.get(K_SESSION) || "null"); } catch(e){ session = null; }
+  if (!session) { viewSignIn(); return; }
+  document.body.classList.remove("auth");
+  $("#view").className = "wrap";
+  $("#hdr").hidden = false; $("#tabbar").hidden = false;
+  queueLoad(); cacheLoad(); render();
+  await sync();
+}
+boot();
+
+/* установка на телефон и компьютер */
+if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
