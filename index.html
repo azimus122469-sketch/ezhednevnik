@@ -31,18 +31,32 @@
       linear-gradient(90deg, var(--grid) 1px, transparent 1px);
     background-size:22px 22px;background-position:-1px -1px}
   .wrap{max-width:620px;margin:0 auto;padding:0 14px}
+  body.wide .wrap{max-width:100%;padding:0 20px}
+  body.wide .tabbar{max-width:100%}
 
   header{position:sticky;top:0;z-index:30;background:var(--paper);border-bottom:1px solid var(--edge)}
   header[hidden]{display:none}
-  .bal{padding:14px 0 8px}
-  .bal-row{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
-  .bal-label{font-size:13px;color:var(--ink-soft)}
-  .bal-num{font-family:var(--serif);font-size:38px;line-height:1;font-weight:700;letter-spacing:-.5px}
-  .bal-num.neg{color:var(--red)}
-  .bal-alt{font-size:13px;color:var(--ink-soft);text-align:right;line-height:1.5}
+
+  .purse{display:flex;gap:14px;align-items:flex-start;padding:12px 0 8px}
+  .purse-left{flex:1 1 auto;min-width:0}
+  .purse-label{font-size:12px;color:var(--ink-faint);margin-bottom:5px}
+  .prow{display:flex;justify-content:space-between;align-items:baseline;gap:8px;
+        padding:4px 0;border-bottom:1px solid var(--grid);cursor:pointer}
+  .prow:last-child{border-bottom:none}
+  .prow.on{background:var(--paper-2)}
+  .prow span{font-size:13px;color:var(--ink-soft);white-space:nowrap}
+  .prow b{font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}
+  .prow b.neg{color:var(--red)}
+  .purse-right{flex:0 0 132px;border-left:1px solid var(--edge);padding-left:12px;text-align:right}
+  .total-num{font-family:var(--serif);font-size:27px;line-height:1.05;font-weight:700;cursor:pointer}
+  .total-num.neg{color:var(--red)}
+  .total-sub{font-size:11px;color:var(--ink-faint);margin-top:5px;line-height:1.35}
+
   .sync{font-size:12px;color:var(--ink-faint);padding-bottom:8px;display:flex;align-items:center;gap:6px}
   .sync.warn{color:var(--amber)}
   .sync.err{color:var(--red)}
+  .sync .wbtn{margin-left:auto;border:1px solid var(--edge);background:#fff;border-radius:7px;
+              padding:3px 8px;font-size:11.5px;font-family:inherit;color:var(--ink-soft);cursor:pointer}
   .month{display:flex;align-items:center;gap:6px;padding-bottom:10px}
   .month b{font-family:var(--serif);font-size:17px;font-weight:700;min-width:150px}
   .mbtn{border:1px solid var(--edge);background:#fff;color:var(--ink);width:30px;height:30px;
@@ -67,9 +81,11 @@
   .r-mid{flex:1 1 auto;min-width:0}
   .r-sum{font-size:15.5px;font-weight:700;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:6px}
   .r-note{font-size:12.5px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .r-meta{font-size:11px;color:var(--ink-faint);margin-top:1px}
   .r-bal{flex:0 0 82px;text-align:right;font-size:14px;font-variant-numeric:tabular-nums;color:var(--ink-soft)}
   .r-bal.neg{color:var(--red)}
-  .pending{font-size:11px;color:var(--amber)}
+  .pending{color:var(--amber)}
+  .zero{color:var(--ink-faint);font-weight:400}
   .empty{padding:34px 18px;text-align:center;color:var(--ink-soft);font-size:14px}
   .empty b{display:block;font-family:var(--serif);font-size:18px;color:var(--ink);margin-bottom:6px;font-weight:700}
 
@@ -112,24 +128,40 @@
   .btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--edge)}
   .btn.danger{background:#fff;color:var(--red);border:1px solid var(--edge)}
   .btn+.btn{margin-top:8px}
-  .btn[disabled]{opacity:.5;cursor:default}
   .picker{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+  .picker.two-col{grid-template-columns:repeat(2,1fr)}
   .pick{border:1px solid var(--edge);background:#fff;border-radius:9px;padding:9px 6px;font-size:13px;
         font-family:inherit;color:var(--ink-soft);cursor:pointer;display:flex;flex-direction:column;
         align-items:center;gap:5px}
   .pick.on{border-width:2px;padding:8px 5px;color:var(--ink);font-weight:600;background:var(--paper-2)}
+  .quick{display:flex;gap:6px;margin-top:8px}
+  .quick button{flex:1;border:1px solid var(--edge);background:#fff;border-radius:9px;padding:9px 4px;
+                font-size:13px;font-family:inherit;color:var(--ink);cursor:pointer}
+  .quick button:active{background:var(--paper-2)}
   .hint{font-size:12px;color:var(--ink-soft);margin-top:-4px;margin-bottom:12px}
   .err{font-size:13px;color:var(--red);margin-bottom:12px}
 
+  .goal{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--grid);cursor:pointer}
+  .goal:last-child{border-bottom:none}
+  .gbox{flex:0 0 18px;height:18px;border:2px solid var(--ink-faint);border-radius:5px;margin-top:2px;
+        display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff}
+  .gbox.done{background:var(--green);border-color:var(--green)}
+  .gmid{flex:1 1 auto;min-width:0}
+  .gtitle{font-size:14.5px}
+  .gtitle.done{color:var(--ink-faint);text-decoration:line-through}
+  .gdue{font-size:12px;color:var(--ink-soft);margin-top:2px}
+  .gdue.late{color:var(--red);font-weight:600}
+  .gdue.soon{color:var(--amber)}
+
   .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--paper);
-    border-top:1px solid var(--edge);padding:8px 14px calc(8px + env(safe-area-inset-bottom));
-    display:flex;gap:8px;max-width:620px;margin:0 auto}
+    border-top:1px solid var(--edge);padding:8px 10px calc(8px + env(safe-area-inset-bottom));
+    display:flex;gap:5px;max-width:620px;margin:0 auto}
   .tabbar[hidden]{display:none}
-  .tab{flex:1 1 0;border:1px solid transparent;background:transparent;border-radius:9px;padding:9px 4px;
-       font-size:13px;font-family:inherit;color:var(--ink-soft);cursor:pointer}
+  .tab{flex:1 1 0;border:1px solid transparent;background:transparent;border-radius:9px;padding:9px 2px;
+       font-size:12.5px;font-family:inherit;color:var(--ink-soft);cursor:pointer;white-space:nowrap}
   .tab.on{background:#fff;border-color:var(--edge);color:var(--ink);font-weight:600}
-  .add{flex:0 0 46px;background:var(--ink);color:var(--paper);border:none;border-radius:9px;
-       font-size:24px;line-height:1;cursor:pointer}
+  .add{flex:0 0 44px;background:var(--ink);color:var(--paper);border:none;border-radius:9px;
+       font-size:23px;line-height:1;cursor:pointer}
 
   .scrim{position:fixed;inset:0;background:rgba(22,32,43,.42);z-index:50;display:flex;
          align-items:flex-end;justify-content:center}
@@ -155,17 +187,19 @@
 
 <header id="hdr" hidden>
   <div class="wrap">
-    <div class="bal">
-      <div class="bal-row">
-        <div>
-          <div class="bal-label">Остаток</div>
-          <div class="bal-num" id="balNum">0</div>
-        </div>
-        <div class="bal-alt" id="balAlt"></div>
+    <div class="purse">
+      <div class="purse-left">
+        <div class="purse-label">На руках</div>
+        <div id="purseRows"></div>
+      </div>
+      <div class="purse-right">
+        <div class="purse-label">Всего</div>
+        <div class="total-num" id="totalNum">0</div>
+        <div class="total-sub" id="totalSub"></div>
       </div>
     </div>
     <div class="sync" id="sync"></div>
-    <div class="month">
+    <div class="month" id="monthBar">
       <button class="mbtn" id="prevM" aria-label="Предыдущий месяц">‹</button>
       <b id="monthName"></b>
       <button class="mbtn" id="nextM" aria-label="Следующий месяц">›</button>
@@ -178,9 +212,10 @@
 
 <div class="tabbar" id="tabbar" hidden>
   <button class="tab on" data-tab="book">Тетрадь</button>
+  <button class="tab" data-tab="goals">Цели</button>
   <button class="tab" data-tab="sums">Итоги</button>
-  <button class="tab" data-tab="set">Настройки</button>
-  <button class="add" id="addBtn" aria-label="Добавить запись">+</button>
+  <button class="tab" data-tab="set">Ещё</button>
+  <button class="add" id="addBtn" aria-label="Добавить">+</button>
 </div>
 
 <div class="scrim" id="scrim" hidden><div class="modal" id="modal"></div></div>
@@ -189,11 +224,9 @@
 <script>
 "use strict";
 
-/* ===================== настройки подключения ===================== */
 const SUPABASE_URL = "https://jwdwltvmmokffyupseer.supabase.co";
 const SUPABASE_KEY = "sb_publishable_mg1S0h__-ipWiSmiFgOnTw_A9T7ggwS";
 
-/* ===================== колонки ===================== */
 const COLS = [
   { id:"in",   name:"Приход",     short:"Приход",  color:"var(--green)",  sign:+1 },
   { id:"real", name:"Реализация", short:"Реализ.", color:"var(--blue)",   sign:-1 },
@@ -202,451 +235,663 @@ const COLS = [
   { id:"auto", name:"Машина",     short:"Машина",  color:"var(--red)",    sign:-1 }
 ];
 const colById = id => COLS.find(c => c.id === id) || COLS[0];
+
+const WALLETS = [
+  { id:"cash_uzs", name:"Наличка сум", short:"Нал сум",  cur:"UZS" },
+  { id:"card_uzs", name:"Карта сум",   short:"Карта сум", cur:"UZS" },
+  { id:"cash_usd", name:"Наличка $",   short:"Нал $",     cur:"USD" },
+  { id:"card_usd", name:"Карта $",     short:"Карта $",   cur:"USD" }
+];
+const walletById = id => WALLETS.find(w => w.id === id) || WALLETS[0];
+
 const MONTHS = ["Январь","Февраль","Март","Апрель","Май","Июнь",
                 "Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
 
-/* ===================== локальное хранилище ===================== */
 const LS = {
-  ok: (() => { try { localStorage.setItem("__p","1"); localStorage.removeItem("__p"); return true; }
-               catch(e){ return false; } })(),
-  mem: {},
-  get(k){ try { return this.ok ? localStorage.getItem(k) : (this.mem[k] ?? null); } catch(e){ return null; } },
-  set(k,v){ try { if (this.ok) localStorage.setItem(k,v); else this.mem[k]=v; } catch(e){ this.mem[k]=v; } },
-  del(k){ try { if (this.ok) localStorage.removeItem(k); else delete this.mem[k]; } catch(e){} }
+  ok:(()=>{try{localStorage.setItem("__p","1");localStorage.removeItem("__p");return true}catch(e){return false}})(),
+  mem:{},
+  get(k){ try{ return this.ok ? localStorage.getItem(k) : (this.mem[k] ?? null); }catch(e){ return null; } },
+  set(k,v){ try{ if(this.ok) localStorage.setItem(k,v); else this.mem[k]=v; }catch(e){ this.mem[k]=v; } },
+  del(k){ try{ if(this.ok) localStorage.removeItem(k); else delete this.mem[k]; }catch(e){} }
 };
-const K_SESSION = "ezh:session";
-const K_CACHE   = "ezh:cache";
-const K_QUEUE   = "ezh:queue";
-const K_OLD     = "ezhednevnik:v1";
+const K_SESSION="ezh:session", K_CACHE="ezh:cache", K_QUEUE="ezh:queue",
+      K_WIDE="ezh:wide", K_NOTIFIED="ezh:notified";
 
-/* ===================== состояние ===================== */
-let session = null;          // {access_token, refresh_token, expires_at, email, user_id}
-let S = { entries: [], settings: { start:0, startCur:"USD", base:"USD", rate:12600, checks:{} } };
-let queue = [];              // отложенные операции
-let ui = { tab:"book", month: ymNow(), filter:"all", grid:false, syncing:false, lastError:null };
+let session = null;
+let S = {
+  entries: [], goals: [],
+  settings: { starts:{}, base:"USD", rate:12600, rateSource:"cbu",
+              notifyTime:"21:00", checks:{} }
+};
+let queue = [];
+let ui = { tab:"book", month:ymNow(), filter:"all", wallet:"all", grid:false,
+           syncing:false, lastError:null, wide:LS.get(K_WIDE)==="1" };
 
 function ymNow(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"); }
 function todayISO(){ const d=new Date();
   return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
 function uuid(){
-  if (crypto && crypto.randomUUID) return crypto.randomUUID();
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => {
-    const r = Math.random()*16|0; return (c==="x"?r:(r&0x3|0x8)).toString(16);
-  });
+  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,c=>{
+    const r=Math.random()*16|0; return (c==="x"?r:(r&0x3|0x8)).toString(16); });
 }
+function nowISO(){ return new Date().toISOString(); }
+function hhmm(iso){ if(!iso) return ""; const d=new Date(iso);
+  return String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0"); }
+function dmy(iso){ if(!iso) return ""; const d=new Date(iso);
+  return String(d.getDate()).padStart(2,"0")+"."+String(d.getMonth()+1).padStart(2,"0"); }
 
-/* ===================== сеть ===================== */
+/* ---------- сеть ---------- */
 async function authFetch(path, opts){
-  const o = opts || {};
-  const r = await fetch(SUPABASE_URL + path, {
-    method: o.method || "GET",
-    headers: Object.assign({ "apikey": SUPABASE_KEY, "Content-Type": "application/json" }, o.headers || {}),
-    body: o.body ? JSON.stringify(o.body) : undefined
+  const o = opts||{};
+  const r = await fetch(SUPABASE_URL+path, {
+    method:o.method||"GET",
+    headers:Object.assign({apikey:SUPABASE_KEY,"Content-Type":"application/json"}, o.headers||{}),
+    body:o.body?JSON.stringify(o.body):undefined
   });
   const text = await r.text();
-  let data = null;
-  try { data = text ? JSON.parse(text) : null; } catch(e){ data = text; }
-  if (!r.ok) {
-    const msg = (data && (data.error_description || data.msg || data.message || data.error)) || ("Ошибка " + r.status);
-    const err = new Error(msg); err.status = r.status; err.data = data; throw err;
+  let data=null; try{ data = text?JSON.parse(text):null; }catch(e){ data=text; }
+  if(!r.ok){
+    const msg=(data&&(data.error_description||data.msg||data.message||data.error))||("Ошибка "+r.status);
+    const err=new Error(msg); err.status=r.status; err.data=data; throw err;
   }
   return data;
 }
 async function api(path, opts){
   await ensureToken();
-  const o = opts || {};
-  o.headers = Object.assign({ "Authorization": "Bearer " + session.access_token }, o.headers || {});
-  try {
-    return await authFetch(path, o);
-  } catch (e) {
-    if (e.status === 401) {
-      await refreshToken();
-      o.headers.Authorization = "Bearer " + session.access_token;
-      return await authFetch(path, o);
-    }
+  const o=opts||{};
+  o.headers=Object.assign({Authorization:"Bearer "+session.access_token}, o.headers||{});
+  try{ return await authFetch(path,o); }
+  catch(e){
+    if(e.status===401){ await refreshToken(); o.headers.Authorization="Bearer "+session.access_token;
+      return await authFetch(path,o); }
     throw e;
   }
 }
 async function ensureToken(){
-  if (!session) throw new Error("Нет входа");
-  if (session.expires_at && Date.now() > session.expires_at - 60000) await refreshToken();
+  if(!session) throw new Error("Нет входа");
+  if(session.expires_at && Date.now() > session.expires_at-60000) await refreshToken();
 }
 async function refreshToken(){
-  const d = await authFetch("/auth/v1/token?grant_type=refresh_token", {
-    method:"POST", body:{ refresh_token: session.refresh_token }
-  });
+  const d=await authFetch("/auth/v1/token?grant_type=refresh_token",
+    {method:"POST", body:{refresh_token:session.refresh_token}});
   saveSession(d);
 }
 function saveSession(d){
-  session = {
-    access_token: d.access_token,
-    refresh_token: d.refresh_token,
-    expires_at: Date.now() + (d.expires_in || 3600) * 1000,
-    email: (d.user && d.user.email) || (session && session.email) || "",
-    user_id: (d.user && d.user.id) || (session && session.user_id) || ""
-  };
+  session={ access_token:d.access_token, refresh_token:d.refresh_token,
+    expires_at:Date.now()+(d.expires_in||3600)*1000,
+    email:(d.user&&d.user.email)||(session&&session.email)||"",
+    user_id:(d.user&&d.user.id)||(session&&session.user_id)||"" };
   LS.set(K_SESSION, JSON.stringify(session));
 }
-async function signIn(email, password){
-  const d = await authFetch("/auth/v1/token?grant_type=password", {
-    method:"POST", body:{ email, password }
-  });
-  saveSession(d);
+async function signIn(email,password){
+  saveSession(await authFetch("/auth/v1/token?grant_type=password",{method:"POST",body:{email,password}}));
 }
-async function signUp(email, password){
-  const d = await authFetch("/auth/v1/signup", { method:"POST", body:{ email, password } });
-  if (d && d.access_token) { saveSession(d); return true; }
+async function signUp(email,password){
+  const d=await authFetch("/auth/v1/signup",{method:"POST",body:{email,password}});
+  if(d&&d.access_token){ saveSession(d); return true; }
   return false;
 }
 function signOut(){
-  session = null;
-  LS.del(K_SESSION); LS.del(K_CACHE); LS.del(K_QUEUE);
-  S = { entries: [], settings: { start:0, startCur:"USD", base:"USD", rate:12600, checks:{} } };
-  queue = [];
-  boot();
+  session=null; LS.del(K_SESSION); LS.del(K_CACHE); LS.del(K_QUEUE);
+  S={ entries:[], goals:[], settings:{ starts:{}, base:"USD", rate:12600,
+      rateSource:"cbu", notifyTime:"21:00", checks:{} } };
+  queue=[]; boot();
 }
 
-/* ===================== кэш и очередь ===================== */
-function cacheSave(){ LS.set(K_CACHE, JSON.stringify({ entries:S.entries, settings:S.settings })); }
+/* ---------- кэш и очередь ---------- */
+function cacheSave(){ LS.set(K_CACHE, JSON.stringify({entries:S.entries, goals:S.goals, settings:S.settings})); }
 function cacheLoad(){
-  try {
-    const d = JSON.parse(LS.get(K_CACHE) || "null");
-    if (d && Array.isArray(d.entries)) { S.entries = d.entries; if (d.settings) S.settings = d.settings; return true; }
-  } catch(e){}
+  try{ const d=JSON.parse(LS.get(K_CACHE)||"null");
+    if(d&&Array.isArray(d.entries)){ S.entries=d.entries; S.goals=d.goals||[];
+      if(d.settings) S.settings=Object.assign(S.settings,d.settings); return true; }
+  }catch(e){}
   return false;
 }
 function queueSave(){ LS.set(K_QUEUE, JSON.stringify(queue)); }
-function queueLoad(){ try { queue = JSON.parse(LS.get(K_QUEUE) || "[]") || []; } catch(e){ queue = []; } }
+function queueLoad(){ try{ queue=JSON.parse(LS.get(K_QUEUE)||"[]")||[]; }catch(e){ queue=[]; } }
 function enqueue(op){ queue.push(op); queueSave(); }
-function isPending(id){ return queue.some(q => q.id === id); }
+function isPending(id){ return queue.some(q => q.id===id); }
 
-/* ===================== загрузка и выгрузка ===================== */
-function normalize(e){
+/* ---------- загрузка ---------- */
+function normEntry(e){
   return { id:e.id, date:e.date, col:e.col, amount:Number(e.amount), cur:e.cur,
-           note:e.note || "", created_at:e.created_at || "" };
+           wallet:e.wallet||"cash_uzs", note:e.note||"", source:e.source||"user",
+           created_at:e.created_at||"", updated_at:e.updated_at||e.created_at||"" };
+}
+function normGoal(g){
+  return { id:g.id, title:g.title, due:g.due||"", done:!!g.done, notify:g.notify!==false,
+           source:g.source||"user", created_at:g.created_at||"", updated_at:g.updated_at||"" };
 }
 async function pullAll(){
   const rows = await api("/rest/v1/entries?select=*&order=date.asc,created_at.asc");
-  S.entries = (rows || []).map(normalize);
+  S.entries = (rows||[]).map(normEntry);
+  const gs = await api("/rest/v1/goals?select=*&order=due.asc");
+  S.goals = (gs||[]).map(normGoal);
   const st = await api("/rest/v1/settings?select=*&limit=1");
-  if (st && st.length) {
-    const s = st[0];
-    S.settings = { start:Number(s.start_amount), startCur:s.start_cur, base:s.base_cur,
-                   rate:Number(s.rate), checks:s.checks || {} };
-  } else {
-    await pushSettings();
-  }
+  if(st && st.length){
+    const s=st[0];
+    S.settings = { starts:s.starts||{}, base:s.base_cur||"USD", rate:Number(s.rate)||12600,
+      rateSource:s.rate_source||"cbu", notifyTime:s.notify_time||"21:00", checks:s.checks||{} };
+  } else { await pushSettings(); }
   cacheSave();
 }
 async function pushSettings(){
-  const s = S.settings;
-  const body = { user_id: session.user_id, start_amount:s.start, start_cur:s.startCur,
-                 base_cur:s.base, rate:s.rate, checks:s.checks };
-  await api("/rest/v1/settings", {
-    method:"POST", body:[body],
-    headers:{ "Prefer":"resolution=merge-duplicates,return=minimal" }
-  });
+  const s=S.settings;
+  await api("/rest/v1/settings",{ method:"POST",
+    body:[{ user_id:session.user_id, starts:s.starts, base_cur:s.base, rate:s.rate,
+            rate_source:s.rateSource, notify_time:s.notifyTime, checks:s.checks,
+            start_amount:0, start_cur:"USD" }],
+    headers:{Prefer:"resolution=merge-duplicates,return=minimal"} });
 }
 async function flushQueue(){
-  if (!queue.length || !session) return;
-  const rest = [];
-  for (const op of queue) {
-    try {
-      if (op.kind === "insert") {
-        await api("/rest/v1/entries", { method:"POST", body:[op.row],
-          headers:{ "Prefer":"resolution=merge-duplicates,return=minimal" } });
-      } else if (op.kind === "update") {
-        await api("/rest/v1/entries?id=eq." + op.id, { method:"PATCH", body:op.row,
-          headers:{ "Prefer":"return=minimal" } });
-      } else if (op.kind === "delete") {
-        await api("/rest/v1/entries?id=eq." + op.id, { method:"DELETE",
-          headers:{ "Prefer":"return=minimal" } });
-      } else if (op.kind === "settings") {
-        await pushSettings();
-      }
-    } catch (e) {
-      if (e.status && e.status >= 400 && e.status < 500 && e.status !== 401 && e.status !== 429) {
-        continue; /* запись сервер не принял — не держим очередь вечно */
-      }
+  if(!queue.length || !session) return;
+  const rest=[];
+  for(const op of queue){
+    try{
+      if(op.kind==="insert")
+        await api("/rest/v1/entries",{method:"POST",body:[op.row],
+          headers:{Prefer:"resolution=merge-duplicates,return=minimal"}});
+      else if(op.kind==="update")
+        await api("/rest/v1/entries?id=eq."+op.id,{method:"PATCH",body:op.row,
+          headers:{Prefer:"return=minimal"}});
+      else if(op.kind==="delete")
+        await api("/rest/v1/entries?id=eq."+op.id,{method:"DELETE",headers:{Prefer:"return=minimal"}});
+      else if(op.kind==="goal_insert")
+        await api("/rest/v1/goals",{method:"POST",body:[op.row],
+          headers:{Prefer:"resolution=merge-duplicates,return=minimal"}});
+      else if(op.kind==="goal_update")
+        await api("/rest/v1/goals?id=eq."+op.id,{method:"PATCH",body:op.row,
+          headers:{Prefer:"return=minimal"}});
+      else if(op.kind==="goal_delete")
+        await api("/rest/v1/goals?id=eq."+op.id,{method:"DELETE",headers:{Prefer:"return=minimal"}});
+      else if(op.kind==="settings") await pushSettings();
+    }catch(e){
+      if(e.status && e.status>=400 && e.status<500 && e.status!==401 && e.status!==429) continue;
       rest.push(op);
     }
   }
-  queue = rest; queueSave();
+  queue=rest; queueSave();
 }
 async function sync(){
-  if (!session || ui.syncing) return;
-  ui.syncing = true; ui.lastError = null; renderSync();
-  try {
-    await flushQueue();
-    await pullAll();
-  } catch (e) {
-    ui.lastError = e.message || "нет связи";
-  }
-  ui.syncing = false;
-  render();
+  if(!session || ui.syncing) return;
+  ui.syncing=true; ui.lastError=null; renderSync();
+  try{ await flushQueue(); await pullAll(); }
+  catch(e){ ui.lastError=e.message||"нет связи"; }
+  ui.syncing=false; render(); checkReminders();
 }
 
-/* ===================== деньги ===================== */
-function toBase(amount, cur){
-  const s = S.settings;
-  if (cur === s.base) return amount;
-  if (s.base === "USD" && cur === "UZS") return amount / (s.rate || 1);
-  if (s.base === "UZS" && cur === "USD") return amount * (s.rate || 1);
+/* ---------- курс ЦБ ---------- */
+async function fetchCbuRate(){
+  if(S.settings.rateSource!=="cbu") return;
+  try{
+    const r=await fetch("https://cbu.uz/ru/arkhiv-kursov-valyut/json/USD/");
+    if(!r.ok) return;
+    const d=await r.json();
+    const v=Array.isArray(d)&&d[0]&&parseFloat(d[0].Rate);
+    if(isFinite(v)&&v>0 && Math.abs(v-S.settings.rate)>0.5){
+      S.settings.rate=v; cacheSave(); enqueue({kind:"settings"}); flushThen(); render();
+    }
+  }catch(e){}
+}
+
+/* ---------- деньги ---------- */
+function toBase(amount,cur){
+  const s=S.settings;
+  if(cur===s.base) return amount;
+  if(s.base==="USD"&&cur==="UZS") return amount/(s.rate||1);
+  if(s.base==="UZS"&&cur==="USD") return amount*(s.rate||1);
   return amount;
 }
-function fmt(n, cur){
-  const c = cur || S.settings.base;
-  const v = Math.abs(n);
+function fmt(n,cur){
+  const c=cur||S.settings.base, v=Math.abs(n);
   let str;
-  if (c === "USD") {
-    str = "$" + (Math.round(v*100)/100).toLocaleString("ru-RU",
-      { minimumFractionDigits: (Math.round(v*100)/100) % 1 ? 2 : 0, maximumFractionDigits: 2 });
-  } else {
-    str = Math.round(v).toLocaleString("ru-RU").replace(/\u00A0/g," ") + " сум";
-  }
-  return (n < 0 ? "−" : "") + str;
+  if(c==="USD") str="$"+(Math.round(v*100)/100).toLocaleString("ru-RU",
+    {minimumFractionDigits:(Math.round(v*100)/100)%1?2:0,maximumFractionDigits:2});
+  else str=Math.round(v).toLocaleString("ru-RU").replace(/\u00A0/g," ")+" сум";
+  return (n<0?"−":"")+str;
+}
+function fmtNum(n,cur){
+  const c=cur||S.settings.base, v=Math.abs(n);
+  let str;
+  if(c==="USD") str="$"+(Math.round(v*100)/100).toLocaleString("ru-RU",
+    {minimumFractionDigits:(Math.round(v*100)/100)%1?2:0,maximumFractionDigits:2});
+  else str=Math.round(v).toLocaleString("ru-RU").replace(/\u00A0/g," ");
+  return (n<0?"−":"")+str;
 }
 function fmtShort(n){
-  const c = S.settings.base, a = Math.abs(n);
+  const c=S.settings.base,a=Math.abs(n);
   let str;
-  if (c === "USD") {
-    str = "$" + (a >= 1000 ? Math.round(a).toLocaleString("ru-RU").replace(/\u00A0/g," ")
-                           : (Math.round(a*100)/100).toLocaleString("ru-RU"));
-  } else {
-    if (a >= 1e6) str = (Math.round(a/1e5)/10).toLocaleString("ru-RU") + " млн";
-    else if (a >= 1000) str = Math.round(a/1000).toLocaleString("ru-RU").replace(/\u00A0/g," ") + " т";
-    else str = String(Math.round(a));
+  if(c==="USD") str="$"+(a>=1000?Math.round(a).toLocaleString("ru-RU").replace(/\u00A0/g," ")
+    :(Math.round(a*100)/100).toLocaleString("ru-RU"));
+  else{
+    if(a>=1e6) str=(Math.round(a/1e5)/10).toLocaleString("ru-RU")+" млн";
+    else if(a>=1000) str=Math.round(a/1000).toLocaleString("ru-RU").replace(/\u00A0/g," ")+" т";
+    else str=String(Math.round(a));
   }
-  return (n < 0 ? "−" : "") + str;
+  return (n<0?"−":"")+str;
 }
 function parseAmount(raw){
-  if (!raw) return null;
-  let t = String(raw).trim().toLowerCase().replace(/\s+/g,"").replace(/,/g,".");
-  let cur = null;
-  if (t.includes("$")) { cur = "USD"; t = t.replace(/\$/g,""); }
-  let mult = 1;
-  if (/(млн|mln|m)$/.test(t)) { mult = 1e6; t = t.replace(/(млн|mln|m)$/,""); }
-  else if (/(тыс|т|k|к)$/.test(t)) { mult = 1e3; t = t.replace(/(тыс|т|k|к)$/,""); }
-  const n = parseFloat(t);
-  if (!isFinite(n)) return null;
-  return { amount: Math.abs(n) * mult, cur };
+  if(raw===0||raw==="0") return {amount:0,cur:null};
+  if(!raw) return null;
+  let t=String(raw).trim().toLowerCase().replace(/\s+/g,"").replace(/,/g,".");
+  let cur=null;
+  if(t.includes("$")){ cur="USD"; t=t.replace(/\$/g,""); }
+  let mult=1;
+  if(/(млн|mln|m)$/.test(t)){ mult=1e6; t=t.replace(/(млн|mln|m)$/,""); }
+  else if(/(тыс|т|k|к)$/.test(t)){ mult=1e3; t=t.replace(/(тыс|т|k|к)$/,""); }
+  const n=parseFloat(t);
+  if(!isFinite(n)) return null;
+  return { amount:Math.abs(n)*mult, cur };
 }
 
-/* ===================== расчёты ===================== */
+/* ---------- расчёты ---------- */
 function sortedEntries(){
-  return S.entries.slice().sort((a,b) =>
-    a.date === b.date ? String(a.created_at).localeCompare(String(b.created_at)) : (a.date < b.date ? -1 : 1));
+  return S.entries.slice().sort((a,b)=>
+    a.date===b.date ? String(a.created_at).localeCompare(String(b.created_at)) : (a.date<b.date?-1:1));
+}
+function walletBalance(wid){
+  const w=walletById(wid);
+  let v=Number(S.settings.starts[wid]||0);
+  S.entries.forEach(e=>{ if(e.wallet===wid) v+=colById(e.col).sign*e.amount; });
+  return v;
+}
+function totalBase(){
+  return WALLETS.reduce((s,w)=>s+toBase(walletBalance(w.id), w.cur), 0);
 }
 function withRunning(){
-  let run = toBase(S.settings.start, S.settings.startCur);
-  return sortedEntries().map(e => {
-    run += colById(e.col).sign * toBase(e.amount, e.cur);
-    return Object.assign({}, e, { run });
+  let run=WALLETS.reduce((s,w)=>s+toBase(Number(S.settings.starts[w.id]||0), w.cur),0);
+  return sortedEntries().map(e=>{
+    run+=colById(e.col).sign*toBase(e.amount, walletById(e.wallet).cur);
+    return Object.assign({},e,{run});
   });
 }
-function currentBalance(){
-  const all = withRunning();
-  return all.length ? all[all.length-1].run : toBase(S.settings.start, S.settings.startCur);
-}
-function monthEntries(ym){ return withRunning().filter(e => e.date.slice(0,7) === ym); }
+function monthEntries(ym){ return withRunning().filter(e=>e.date.slice(0,7)===ym); }
 function monthTotals(ym){
-  const t = {}; COLS.forEach(c => t[c.id] = 0);
-  monthEntries(ym).forEach(e => { t[e.col] += toBase(e.amount, e.cur); });
+  const t={}; COLS.forEach(c=>t[c.id]=0);
+  monthEntries(ym).forEach(e=>{ t[e.col]+=toBase(e.amount, walletById(e.wallet).cur); });
   return t;
 }
-function topNotes(ym, colId){
-  const map = {};
-  monthEntries(ym).filter(e => e.col === colId && e.note).forEach(e => {
-    const k = e.note.trim().toLowerCase();
-    map[k] = (map[k] || 0) + toBase(e.amount, e.cur);
+function topNotes(ym,colId){
+  const map={};
+  monthEntries(ym).filter(e=>e.col===colId&&e.note&&e.amount>0).forEach(e=>{
+    const k=e.note.trim().toLowerCase();
+    map[k]=(map[k]||0)+toBase(e.amount, walletById(e.wallet).cur);
   });
-  return Object.entries(map).sort((a,b) => b[1]-a[1]).slice(0,3);
+  return Object.entries(map).sort((a,b)=>b[1]-a[1]).slice(0,3);
 }
-function shiftMonth(ym, d){
-  let [y,m] = ym.split("-").map(Number);
-  m += d; if (m < 1) { m = 12; y--; } if (m > 12) { m = 1; y++; }
-  return y + "-" + String(m).padStart(2,"0");
+function shiftMonth(ym,d){
+  let [y,m]=ym.split("-").map(Number);
+  m+=d; if(m<1){m=12;y--;} if(m>12){m=1;y++;}
+  return y+"-"+String(m).padStart(2,"0");
+}
+function daysLeft(due){
+  if(!due) return null;
+  const a=new Date(todayISO()+"T00:00:00"), b=new Date(due+"T00:00:00");
+  return Math.round((b-a)/86400000);
 }
 
-/* ===================== отрисовка ===================== */
+/* ---------- напоминания ---------- */
+async function askNotify(){
+  if(!("Notification" in window)) { toast("Устройство не умеет уведомления"); return; }
+  const p=await Notification.requestPermission();
+  toast(p==="granted"?"Уведомления включены":"Уведомления не разрешены");
+  render();
+}
+function notify(title, body){
+  if(!("Notification" in window) || Notification.permission!=="granted") return;
+  try{
+    if(navigator.serviceWorker && navigator.serviceWorker.ready)
+      navigator.serviceWorker.ready.then(r=>r.showNotification(title,{body,icon:"./icon-192.png",tag:"ezh"}));
+    else new Notification(title,{body,icon:"./icon-192.png"});
+  }catch(e){}
+}
+function checkReminders(){
+  if(!session) return;
+  let marks={}; try{ marks=JSON.parse(LS.get(K_NOTIFIED)||"{}"); }catch(e){}
+  const today=todayISO();
+
+  const [hh,mm]=(S.settings.notifyTime||"21:00").split(":").map(Number);
+  const now=new Date();
+  const past = now.getHours()>hh || (now.getHours()===hh && now.getMinutes()>=mm);
+  const hasToday = S.entries.some(e=>e.date===today);
+  if(past && !hasToday && marks.day!==today){
+    notify("Ежедневник", "За сегодня нет ни одной записи");
+    marks.day=today;
+  }
+
+  const due = S.goals.filter(g=>!g.done && g.notify && g.due && daysLeft(g.due)<=0);
+  if(due.length && marks.goals!==today){
+    const late=due.filter(g=>daysLeft(g.due)<0).length;
+    notify("Цели", late?("Просрочено целей: "+late):("Сегодня срок: "+due[0].title));
+    marks.goals=today;
+  }
+  LS.set(K_NOTIFIED, JSON.stringify(marks));
+}
+
+/* ---------- отрисовка ---------- */
 const $ = s => document.querySelector(s);
 
 function render(){
-  if (!session) return;
+  if(!session) return;
+  document.body.classList.toggle("wide", ui.wide);
   renderHeader(); renderSync();
-  const v = $("#view"); v.innerHTML = "";
-  if (ui.tab === "book") v.appendChild(viewBook());
-  if (ui.tab === "sums") v.appendChild(viewSums());
-  if (ui.tab === "set")  v.appendChild(viewSettings());
-  document.querySelectorAll(".tab").forEach(b => b.classList.toggle("on", b.dataset.tab === ui.tab));
+  $("#monthBar").style.display = (ui.tab==="goals"||ui.tab==="set") ? "none" : "flex";
+  $("#chips").style.display = (ui.tab==="book") ? "flex" : "none";
+  const v=$("#view"); v.innerHTML="";
+  if(ui.tab==="book")  v.appendChild(viewBook());
+  if(ui.tab==="goals") v.appendChild(viewGoals());
+  if(ui.tab==="sums")  v.appendChild(viewSums());
+  if(ui.tab==="set")   v.appendChild(viewSettings());
+  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("on", b.dataset.tab===ui.tab));
 }
 function renderSync(){
-  const el = $("#sync");
-  el.className = "sync";
-  if (ui.syncing) { el.textContent = "Синхронизация…"; return; }
-  if (queue.length) { el.className = "sync warn"; el.textContent = "Не отправлено в облако: " + queue.length; return; }
-  if (ui.lastError) { el.className = "sync err"; el.textContent = "Нет связи с базой · " + ui.lastError; return; }
-  el.textContent = "Всё сохранено в облаке";
+  const el=$("#sync"); el.className="sync"; el.innerHTML="";
+  let txt="Всё сохранено в облаке";
+  if(ui.syncing) txt="Синхронизация…";
+  else if(queue.length){ el.className="sync warn"; txt="Не отправлено: "+queue.length; }
+  else if(ui.lastError){ el.className="sync err"; txt="Нет связи · "+ui.lastError; }
+  el.appendChild(document.createTextNode(txt));
+  const b=document.createElement("button");
+  b.className="wbtn"; b.textContent = ui.wide ? "Узкий вид" : "Широкий вид";
+  b.onclick=()=>{ ui.wide=!ui.wide; LS.set(K_WIDE, ui.wide?"1":"0"); render(); };
+  el.appendChild(b);
 }
 function renderHeader(){
-  const bal = currentBalance();
-  const el = $("#balNum");
-  el.textContent = fmt(bal); el.classList.toggle("neg", bal < 0);
-  const other = S.settings.base === "USD" ? "UZS" : "USD";
-  const conv = S.settings.base === "USD" ? bal * (S.settings.rate||1) : bal / (S.settings.rate||1);
-  $("#balAlt").innerHTML = "это " + fmt(conv, other) +
-    '<br><span style="color:var(--ink-faint)">по курсу ' +
-    Math.round(S.settings.rate).toLocaleString("ru-RU").replace(/\u00A0/g," ") + "</span>";
+  const rows=$("#purseRows"); rows.innerHTML="";
+  WALLETS.forEach(w=>{
+    const v=walletBalance(w.id);
+    const r=document.createElement("div");
+    r.className="prow"+(ui.wallet===w.id?" on":"");
+    r.innerHTML='<span>'+w.name+'</span><b class="'+(v<0?"neg":"")+'">'+fmtNum(v,w.cur)+'</b>';
+    r.onclick=()=>{ ui.wallet = ui.wallet===w.id ? "all" : w.id; ui.tab="book"; render(); };
+    rows.appendChild(r);
+  });
+  const tot=totalBase();
+  const tn=$("#totalNum");
+  tn.textContent=fmt(tot); tn.classList.toggle("neg", tot<0);
+  tn.onclick=()=>{ S.settings.base = S.settings.base==="USD"?"UZS":"USD";
+    cacheSave(); enqueue({kind:"settings"}); flushThen(); render(); };
+  $("#totalSub").innerHTML = (S.settings.rateSource==="cbu"?"по курсу ЦБ<br>":"по своему курсу<br>") +
+    Math.round(S.settings.rate).toLocaleString("ru-RU").replace(/\u00A0/g," ");
 
-  const [y,m] = ui.month.split("-").map(Number);
-  $("#monthName").textContent = MONTHS[m-1] + " " + y;
+  const [y,m]=ui.month.split("-").map(Number);
+  $("#monthName").textContent=MONTHS[m-1]+" "+y;
 
-  const t = monthTotals(ui.month);
-  const chips = $("#chips"); chips.innerHTML = "";
-  const all = document.createElement("button");
-  all.className = "chip" + (ui.filter === "all" ? " on" : "");
-  all.textContent = "Все";
-  all.onclick = () => { ui.filter = "all"; render(); };
+  const t=monthTotals(ui.month);
+  const chips=$("#chips"); chips.innerHTML="";
+  const all=document.createElement("button");
+  all.className="chip"+(ui.filter==="all"?" on":""); all.textContent="Все";
+  all.onclick=()=>{ ui.filter="all"; render(); };
   chips.appendChild(all);
-  COLS.forEach(c => {
-    const b = document.createElement("button");
-    b.className = "chip" + (ui.filter === c.id ? " on" : "");
-    b.innerHTML = '<i class="dot" style="background:'+c.color+'"></i>' +
-                  '<span>'+c.short+'</span> <b style="color:'+c.color+'">'+fmtShort(t[c.id])+'</b>';
-    b.onclick = () => { ui.filter = (ui.filter === c.id ? "all" : c.id); render(); };
+  COLS.forEach(c=>{
+    const b=document.createElement("button");
+    b.className="chip"+(ui.filter===c.id?" on":"");
+    b.innerHTML='<i class="dot" style="background:'+c.color+'"></i><span>'+c.short+
+                '</span> <b style="color:'+c.color+'">'+fmtShort(t[c.id])+'</b>';
+    b.onclick=()=>{ ui.filter = ui.filter===c.id?"all":c.id; render(); };
     chips.appendChild(b);
   });
 }
 
 function viewBook(){
-  const box = document.createElement("div");
-  const bar = document.createElement("div");
-  bar.style.cssText = "display:flex;justify-content:flex-end;margin-bottom:10px";
-  const tg = document.createElement("button");
-  tg.className = "btn ghost"; tg.style.cssText = "width:auto;padding:7px 12px;font-size:13px";
-  tg.textContent = ui.grid ? "Показать лентой" : "Показать сеткой";
-  tg.onclick = () => { ui.grid = !ui.grid; render(); };
+  const box=document.createElement("div");
+  const bar=document.createElement("div");
+  bar.style.cssText="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px";
+  const left=document.createElement("div");
+  left.style.cssText="font-size:12.5px;color:var(--ink-soft)";
+  left.textContent = ui.wallet==="all" ? "" : walletById(ui.wallet).name;
+  bar.appendChild(left);
+  const tg=document.createElement("button");
+  tg.className="btn ghost"; tg.style.cssText="width:auto;padding:7px 12px;font-size:13px";
+  tg.textContent = ui.grid?"Показать лентой":"Показать сеткой";
+  tg.onclick=()=>{ ui.grid=!ui.grid; render(); };
   bar.appendChild(tg); box.appendChild(bar);
 
-  let list = monthEntries(ui.month);
-  if (ui.filter !== "all") list = list.filter(e => e.col === ui.filter);
-  if (!list.length) {
-    const e = document.createElement("div");
-    e.className = "ledger";
-    e.innerHTML = '<div class="empty"><b>В этом месяце пусто</b>Нажми «плюс» внизу и запиши первую сумму.</div>';
+  let list=monthEntries(ui.month);
+  if(ui.filter!=="all") list=list.filter(e=>e.col===ui.filter);
+  if(ui.wallet!=="all") list=list.filter(e=>e.wallet===ui.wallet);
+
+  if(!list.length){
+    const e=document.createElement("div"); e.className="ledger";
+    e.innerHTML='<div class="empty"><b>Здесь пусто</b>Нажми «плюс» внизу и запиши первую сумму.</div>';
     box.appendChild(e); return box;
   }
-  box.appendChild(ui.grid ? gridTable(list) : feedList(list));
+  box.appendChild(ui.grid?gridTable(list):feedList(list));
   return box;
 }
 function feedList(list){
-  const wrap = document.createElement("div"); wrap.className = "ledger";
-  const head = document.createElement("div"); head.className = "lhead";
-  head.innerHTML = '<div class="c1">Дата</div><div class="c2">Запись</div><div class="c3">Остаток</div>';
+  const wrap=document.createElement("div"); wrap.className="ledger";
+  const head=document.createElement("div"); head.className="lhead";
+  head.innerHTML='<div class="c1">Дата</div><div class="c2">Запись</div><div class="c3">Остаток</div>';
   wrap.appendChild(head);
-  list.forEach(e => {
-    const c = colById(e.col);
-    const row = document.createElement("div");
-    row.className = "row"; row.tabIndex = 0;
-    const d = e.date.slice(8,10) + "." + e.date.slice(5,7);
-    row.innerHTML =
-      '<div class="r-date">'+d+'</div>' +
-      '<div class="r-mid">' +
-        '<div class="r-sum" style="color:'+c.color+'"><i class="dot" style="background:'+c.color+'"></i>' +
-          (c.sign>0?"+":"−") + " " + fmt(e.amount, e.cur) + '</div>' +
-        '<div class="r-note">' + c.name + (e.note ? " · " + escapeHtml(e.note) : "") +
-          (isPending(e.id) ? ' <span class="pending">· не отправлено</span>' : "") + '</div>' +
-      '</div>' +
+  list.forEach(e=>{
+    const c=colById(e.col), w=walletById(e.wallet);
+    const row=document.createElement("div"); row.className="row"; row.tabIndex=0;
+    const d=e.date.slice(8,10)+"."+e.date.slice(5,7);
+    const zero = e.amount===0;
+    const sumHtml = zero
+      ? '<span class="zero">прихода не было</span>'
+      : (c.sign>0?"+":"−")+" "+fmt(e.amount, w.cur);
+    let meta="";
+    if(e.source==="ai") meta+="✦ помощник";
+    if(e.updated_at && e.created_at && e.updated_at!==e.created_at)
+      meta+=(meta?" · ":"")+"изм. "+dmy(e.updated_at)+" "+hhmm(e.updated_at);
+    if(isPending(e.id)) meta+=(meta?" · ":"")+'<span class="pending">не отправлено</span>';
+    row.innerHTML=
+      '<div class="r-date">'+d+'</div>'+
+      '<div class="r-mid">'+
+        '<div class="r-sum" style="color:'+(zero?"var(--ink-faint)":c.color)+'">'+
+          '<i class="dot" style="background:'+c.color+'"></i>'+sumHtml+'</div>'+
+        '<div class="r-note">'+c.name+" · "+w.short+(e.note?" · "+escapeHtml(e.note):"")+'</div>'+
+        (meta?'<div class="r-meta">'+meta+'</div>':"")+
+      '</div>'+
       '<div class="r-bal'+(e.run<0?" neg":"")+'">'+fmtShort(e.run)+'</div>';
-    row.onclick = () => openEntry(e.id);
-    row.onkeydown = ev => { if (ev.key === "Enter") openEntry(e.id); };
+    row.onclick=()=>openEntry(e.id);
+    row.onkeydown=ev=>{ if(ev.key==="Enter") openEntry(e.id); };
     wrap.appendChild(row);
   });
   return wrap;
 }
 function gridTable(list){
-  const wrap = document.createElement("div"); wrap.className = "gridwrap";
-  const t = monthTotals(ui.month);
-  let head = '<tr><th>Дата</th>';
-  COLS.forEach(c => head += '<th style="color:'+c.color+'">'+c.short+'</th>');
-  head += '<th>Остаток</th></tr>';
-  let body = "";
-  list.forEach(e => {
-    const d = e.date.slice(8,10)+"."+e.date.slice(5,7);
-    body += "<tr><td>"+d+"</td>";
-    COLS.forEach(c => {
-      body += (e.col === c.id)
-        ? '<td style="color:'+c.color+';font-weight:600" title="'+escapeHtml(e.note||"")+'">'+fmt(e.amount,e.cur)+"</td>"
+  const wrap=document.createElement("div"); wrap.className="gridwrap";
+  const t=monthTotals(ui.month);
+  let head='<tr><th>Дата</th>';
+  COLS.forEach(c=>head+='<th style="color:'+c.color+'">'+c.short+'</th>');
+  head+='<th>Кошелёк</th><th>Остаток</th></tr>';
+  let body="";
+  list.forEach(e=>{
+    const w=walletById(e.wallet);
+    body+="<tr><td>"+e.date.slice(8,10)+"."+e.date.slice(5,7)+"</td>";
+    COLS.forEach(c=>{
+      body += (e.col===c.id)
+        ? '<td style="color:'+c.color+';font-weight:600" title="'+escapeHtml(e.note||"")+'">'+
+          (e.amount===0?"0":fmt(e.amount,w.cur))+"</td>"
         : '<td style="color:var(--ink-faint)">—</td>';
     });
-    body += '<td class="bal'+(e.run<0?" neg":"")+'">'+fmtShort(e.run)+"</td></tr>";
+    body+='<td style="color:var(--ink-soft);font-size:12px">'+w.short+"</td>";
+    body+='<td class="bal'+(e.run<0?" neg":"")+'">'+fmtShort(e.run)+"</td></tr>";
   });
-  let foot = "<tr><td>Итого</td>";
-  COLS.forEach(c => foot += '<td style="color:'+c.color+'">'+fmtShort(t[c.id])+"</td>");
-  const last = list.length ? list[list.length-1].run : currentBalance();
-  foot += '<td class="bal'+(last<0?" neg":"")+'">'+fmtShort(last)+"</td></tr>";
-  wrap.innerHTML = "<table><thead>"+head+"</thead><tbody>"+body+"</tbody><tfoot>"+foot+"</tfoot></table>";
+  let foot="<tr><td>Итого</td>";
+  COLS.forEach(c=>foot+='<td style="color:'+c.color+'">'+fmtShort(t[c.id])+"</td>");
+  const last=list.length?list[list.length-1].run:totalBase();
+  foot+="<td></td>"+'<td class="bal'+(last<0?" neg":"")+'">'+fmtShort(last)+"</td></tr>";
+  wrap.innerHTML="<table><thead>"+head+"</thead><tbody>"+body+"</tbody><tfoot>"+foot+"</tfoot></table>";
   return wrap;
 }
 
-function viewSums(){
-  const box = document.createElement("div");
-  const t = monthTotals(ui.month);
-  const spent = COLS.filter(c => c.sign < 0).reduce((s,c) => s + t[c.id], 0);
-  const income = t.in;
+/* ---------- цели ---------- */
+function viewGoals(){
+  const box=document.createElement("div");
+  const open=S.goals.filter(g=>!g.done).sort((a,b)=>(a.due||"9999").localeCompare(b.due||"9999"));
+  const done=S.goals.filter(g=>g.done);
 
-  const b1 = document.createElement("div"); b1.className = "block";
-  b1.innerHTML = "<h2>Куда ушли деньги</h2>";
-  if (!spent) b1.innerHTML += '<div style="font-size:14px;color:var(--ink-soft)">Расходов за этот месяц ещё нет.</div>';
-  else COLS.filter(c => c.sign < 0).forEach(c => {
-    const val = t[c.id], pct = spent ? Math.round(val/spent*100) : 0;
-    const tops = topNotes(ui.month, c.id);
-    const sub = tops.length ? tops.map(x => escapeHtml(x[0])+" "+fmtShort(x[1])).join(" · ") : "без меток";
-    b1.innerHTML +=
-      '<div class="stat"><div class="stat-top">' +
-        '<div class="stat-name"><i class="dot" style="background:'+c.color+'"></i>'+c.name+'</div>' +
-        '<div class="stat-val">'+fmt(val)+' <span style="color:var(--ink-faint);font-weight:400">'+pct+'%</span></div>' +
-      '</div><div class="bar"><i style="width:'+pct+'%;background:'+c.color+'"></i></div>' +
+  const b1=document.createElement("div"); b1.className="block";
+  b1.innerHTML='<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">'+
+    '<span style="font-family:var(--serif);font-size:17px;font-weight:700">Цели</span>'+
+    '<span style="font-size:12px;color:var(--ink-faint)">'+
+    (S.goals.length?open.length+" из "+S.goals.length+" открыто":"пока пусто")+'</span></div>';
+
+  if(!open.length && !done.length){
+    b1.innerHTML+='<div style="font-size:14px;color:var(--ink-soft)">Запиши, что нужно сделать, и поставь дату.</div>';
+  }
+  open.forEach(g=>b1.appendChild(goalRow(g)));
+
+  const add=document.createElement("button");
+  add.className="btn ghost"; add.style.marginTop="12px"; add.textContent="Новая цель";
+  add.onclick=()=>openGoal(null);
+  b1.appendChild(add);
+  box.appendChild(b1);
+
+  if(done.length){
+    const b2=document.createElement("div"); b2.className="block";
+    b2.innerHTML="<h2>Сделано</h2>";
+    done.forEach(g=>b2.appendChild(goalRow(g)));
+    box.appendChild(b2);
+  }
+  return box;
+}
+function goalRow(g){
+  const row=document.createElement("div"); row.className="goal";
+  const bx=document.createElement("div");
+  bx.className="gbox"+(g.done?" done":"");
+  bx.textContent=g.done?"✓":"";
+  bx.onclick=ev=>{ ev.stopPropagation(); toggleGoal(g.id); };
+  const mid=document.createElement("div"); mid.className="gmid";
+  const dl=daysLeft(g.due);
+  let due="", cls="";
+  if(g.done) due = g.updated_at?("закрыто "+dmy(g.updated_at)):"закрыто";
+  else if(!g.due) due="без даты";
+  else if(dl<0){ due="просрочено на "+Math.abs(dl)+" дн · "+g.due.split("-").reverse().join("."); cls=" late"; }
+  else if(dl===0){ due="срок сегодня"; cls=" late"; }
+  else if(dl<=7){ due="осталось "+dl+" дн"; cls=" soon"; }
+  else due="до "+g.due.split("-").reverse().join(".");
+  mid.innerHTML='<div class="gtitle'+(g.done?" done":"")+'">'+escapeHtml(g.title)+'</div>'+
+                '<div class="gdue'+cls+'">'+due+(g.source==="ai"?" · ✦":"")+'</div>';
+  mid.onclick=()=>openGoal(g.id);
+  row.appendChild(bx); row.appendChild(mid);
+  return row;
+}
+function toggleGoal(id){
+  const g=S.goals.find(x=>x.id===id); if(!g) return;
+  g.done=!g.done; g.updated_at=nowISO();
+  cacheSave(); enqueue({kind:"goal_update", id:g.id, row:{done:g.done, updated_at:g.updated_at}});
+  render(); flushThen();
+}
+let gdraft=null;
+function openGoal(id){
+  const g = id ? S.goals.find(x=>x.id===id) : null;
+  gdraft = g ? {id:g.id,title:g.title,due:g.due,notify:g.notify}
+             : {id:null,title:"",due:"",notify:true};
+  const m=$("#modal");
+  m.innerHTML='<button class="mclose" id="mClose">×</button><h3>'+(g?"Цель":"Новая цель")+'</h3>'+
+    '<div class="field"><label for="gT">Что сделать</label>'+
+      '<input id="gT" value="'+escapeHtml(gdraft.title)+'" placeholder="купить аппарат"></div>'+
+    '<div class="field"><label for="gD">Срок</label><input id="gD" type="date" value="'+gdraft.due+'"></div>'+
+    '<div class="field"><label for="gN">Напоминать о сроке</label>'+
+      '<select id="gN"><option value="1"'+(gdraft.notify?" selected":"")+'>да</option>'+
+      '<option value="0"'+(!gdraft.notify?" selected":"")+'>нет</option></select></div>';
+  const ok=document.createElement("button");
+  ok.className="btn"; ok.textContent=g?"Сохранить":"Записать";
+  ok.onclick=commitGoal; m.appendChild(ok);
+  if(g){
+    const del=document.createElement("button");
+    del.className="btn danger"; del.textContent="Удалить цель";
+    del.onclick=()=>{ S.goals=S.goals.filter(x=>x.id!==g.id);
+      enqueue({kind:"goal_delete", id:g.id}); cacheSave(); closeModal(); render(); flushThen(); };
+    m.appendChild(del);
+  }
+  m.querySelector("#mClose").onclick=closeModal;
+  $("#scrim").hidden=false;
+  setTimeout(()=>{ const t=m.querySelector("#gT"); if(t&&!gdraft.title) t.focus(); },30);
+}
+function commitGoal(){
+  const m=$("#modal");
+  const title=m.querySelector("#gT").value.trim();
+  if(!title){ toast("Впиши, что сделать"); return; }
+  const due=m.querySelector("#gD").value||null;
+  const notify=m.querySelector("#gN").value==="1";
+  if(gdraft.id){
+    const g=S.goals.find(x=>x.id===gdraft.id);
+    Object.assign(g,{title,due:due||"",notify,updated_at:nowISO()});
+    enqueue({kind:"goal_update", id:g.id, row:{title,due,notify,updated_at:g.updated_at}});
+  }else{
+    const row={id:uuid(),title,due:due||"",done:false,notify,source:"user",
+               created_at:nowISO(),updated_at:nowISO()};
+    S.goals.push(row);
+    enqueue({kind:"goal_insert", id:row.id,
+             row:{id:row.id,title,due,done:false,notify,source:"user"}});
+  }
+  cacheSave(); closeModal(); render(); flushThen();
+}
+
+/* ---------- итоги ---------- */
+function viewSums(){
+  const box=document.createElement("div");
+  const t=monthTotals(ui.month);
+  const spent=COLS.filter(c=>c.sign<0).reduce((s,c)=>s+t[c.id],0);
+  const income=t.in;
+
+  const b1=document.createElement("div"); b1.className="block";
+  b1.innerHTML="<h2>Куда ушли деньги</h2>";
+  if(!spent) b1.innerHTML+='<div style="font-size:14px;color:var(--ink-soft)">Расходов за этот месяц ещё нет.</div>';
+  else COLS.filter(c=>c.sign<0).forEach(c=>{
+    const val=t[c.id], pct=spent?Math.round(val/spent*100):0;
+    const tops=topNotes(ui.month,c.id);
+    const sub=tops.length?tops.map(x=>escapeHtml(x[0])+" "+fmtShort(x[1])).join(" · "):"без меток";
+    b1.innerHTML+='<div class="stat"><div class="stat-top">'+
+      '<div class="stat-name"><i class="dot" style="background:'+c.color+'"></i>'+c.name+'</div>'+
+      '<div class="stat-val">'+fmt(val)+' <span style="color:var(--ink-faint);font-weight:400">'+pct+'%</span></div>'+
+      '</div><div class="bar"><i style="width:'+pct+'%;background:'+c.color+'"></i></div>'+
       '<div class="stat-sub">'+sub+'</div></div>';
   });
   box.appendChild(b1);
 
-  const b2 = document.createElement("div"); b2.className = "block";
-  b2.innerHTML = "<h2>Месяц в цифрах</h2>" +
-    kv("Приход", fmt(income)) + kv("Все расходы", fmt(spent)) +
-    kv(income - spent >= 0 ? "Отложилось" : "Ушло сверх прихода", fmt(Math.abs(income - spent))) +
-    kv("Записей", String(monthEntries(ui.month).length)) +
-    kv("Остаток на сегодня", fmt(currentBalance()));
+  const b2=document.createElement("div"); b2.className="block";
+  b2.innerHTML="<h2>Месяц в цифрах</h2>"+
+    kv("Приход",fmt(income))+kv("Все расходы",fmt(spent))+
+    kv(income-spent>=0?"Отложилось":"Ушло сверх прихода",fmt(Math.abs(income-spent)))+
+    kv("Записей",String(monthEntries(ui.month).length))+
+    kv("Остаток на сегодня",fmt(totalBase()));
   box.appendChild(b2);
 
-  const b3 = document.createElement("div"); b3.className = "block";
-  const saved = S.settings.checks[ui.month];
-  const bal = currentBalance();
-  b3.innerHTML = "<h2>Сверка с наличными</h2>";
-  const f = document.createElement("div"); f.className = "field";
-  f.innerHTML = '<label for="factIn">Сколько денег реально на руках</label>' +
-    '<input id="factIn" inputmode="decimal" placeholder="например 230$ или 2.5млн" value="' +
-    (saved ? escapeHtml(String(saved.raw)) : "") + '">';
+  const b3=document.createElement("div"); b3.className="block";
+  const saved=S.settings.checks[ui.month];
+  b3.innerHTML="<h2>Сверка с наличными</h2>";
+  const f=document.createElement("div"); f.className="field";
+  f.innerHTML='<label for="factIn">Сколько денег реально на руках</label>'+
+    '<div class="two"><input id="factIn" inputmode="decimal" value="'+
+      (saved?escapeHtml(String(saved.raw)):"")+'">'+
+    '<select id="factCur"><option value="UZS">сум</option><option value="USD">доллар</option></select></div>';
   b3.appendChild(f);
-  const btn = document.createElement("button");
-  btn.className = "btn ghost"; btn.textContent = "Сверить";
-  btn.onclick = async () => {
-    const raw = document.getElementById("factIn").value;
-    const p = parseAmount(raw);
-    if (!p) { toast("Не понял сумму"); return; }
-    S.settings.checks[ui.month] = { raw, base: toBase(p.amount, p.cur || S.settings.base) };
-    cacheSave(); saveSettingsRemote(); render();
+  const q=document.createElement("div"); q.className="quick";
+  [["+ тыс",1e3],["+ млн",1e6]].forEach(([lbl,mult])=>{
+    const b=document.createElement("button"); b.textContent=lbl;
+    b.onclick=()=>{ const el=document.getElementById("factIn");
+      const n=parseFloat(String(el.value).replace(/\s/g,"").replace(",","."));
+      if(isFinite(n)) el.value=String(Math.round(n*mult)); };
+    q.appendChild(b);
+  });
+  b3.appendChild(q);
+  const btn=document.createElement("button");
+  btn.className="btn ghost"; btn.style.marginTop="10px"; btn.textContent="Сверить";
+  btn.onclick=()=>{
+    const raw=document.getElementById("factIn").value;
+    const cur=document.getElementById("factCur").value;
+    const p=parseAmount(raw);
+    if(!p){ toast("Не понял сумму"); return; }
+    S.settings.checks[ui.month]={raw, base:toBase(p.amount, p.cur||cur)};
+    cacheSave(); enqueue({kind:"settings"}); flushThen(); render();
   };
   b3.appendChild(btn);
-  if (saved) {
-    const diff = saved.base - bal;
-    const res = document.createElement("div");
-    res.style.cssText = "margin-top:12px;font-size:14px";
-    res.innerHTML = Math.abs(diff) < 0.01
+  if(saved){
+    const diff=saved.base-totalBase();
+    const res=document.createElement("div"); res.style.cssText="margin-top:12px;font-size:14px";
+    res.innerHTML=Math.abs(diff)<0.01
       ? '<span class="diff-ok">Сходится. Ни одна запись не потеряна.</span>'
-      : '<span class="diff-bad">Расхождение '+fmt(Math.abs(diff))+'</span><br><span style="color:var(--ink-soft)">' +
-        (diff > 0 ? "На руках больше расчётного — не записан приход."
-                  : "На руках меньше расчётного — не записан расход.") + "</span>";
+      : '<span class="diff-bad">Расхождение '+fmt(Math.abs(diff))+'</span><br><span style="color:var(--ink-soft)">'+
+        (diff>0?"На руках больше расчётного — не записан приход."
+               :"На руках меньше расчётного — не записан расход.")+"</span>";
     b3.appendChild(res);
   }
   box.appendChild(b3);
@@ -654,274 +899,305 @@ function viewSums(){
 }
 function kv(k,v){ return '<div class="kv"><span>'+k+"</span><b>"+v+"</b></div>"; }
 
+/* ---------- настройки ---------- */
 function viewSettings(){
-  const box = document.createElement("div");
-  const s = S.settings;
+  const box=document.createElement("div");
+  const s=S.settings;
 
-  const b1 = document.createElement("div"); b1.className = "block";
-  b1.innerHTML = "<h2>Счёт</h2>" +
-    '<div class="field"><label for="setStart">Стартовый остаток</label><div class="two">' +
-      '<input id="setStart" inputmode="decimal" value="'+s.start+'">' +
-      '<select id="setStartCur"><option value="USD"'+(s.startCur==="USD"?" selected":"")+'>доллары</option>' +
-      '<option value="UZS"'+(s.startCur==="UZS"?" selected":"")+'>сумы</option></select></div></div>' +
-    '<div class="hint">С какой суммы начинается отсчёт.</div>' +
-    '<div class="field"><label for="setBase">Главная валюта остатка</label>' +
-      '<select id="setBase"><option value="USD"'+(s.base==="USD"?" selected":"")+'>доллары</option>' +
-      '<option value="UZS"'+(s.base==="UZS"?" selected":"")+'>сумы</option></select></div>' +
-    '<div class="field"><label for="setRate">Курс: сумов за доллар</label>' +
-      '<input id="setRate" inputmode="numeric" value="'+s.rate+'"></div>';
-  const save = document.createElement("button");
-  save.className = "btn"; save.textContent = "Сохранить";
-  save.onclick = () => {
-    const p = parseAmount(document.getElementById("setStart").value);
-    S.settings.start = p ? p.amount : 0;
-    S.settings.startCur = document.getElementById("setStartCur").value;
-    S.settings.base = document.getElementById("setBase").value;
-    const r = parseFloat(String(document.getElementById("setRate").value).replace(/\s/g,""));
-    S.settings.rate = isFinite(r) && r > 0 ? r : 1;
-    cacheSave(); saveSettingsRemote(); render(); toast("Сохранено");
+  const b1=document.createElement("div"); b1.className="block";
+  b1.innerHTML="<h2>Стартовые остатки</h2>";
+  WALLETS.forEach(w=>{
+    b1.innerHTML+='<div class="field"><label for="st_'+w.id+'">'+w.name+'</label>'+
+      '<input id="st_'+w.id+'" inputmode="decimal" value="'+(s.starts[w.id]||0)+'"></div>';
+  });
+  b1.innerHTML+='<div class="hint">С каких сумм начинается отсчёт по каждому кошельку.</div>';
+  const sv=document.createElement("button");
+  sv.className="btn"; sv.textContent="Сохранить";
+  sv.onclick=()=>{
+    WALLETS.forEach(w=>{
+      const p=parseAmount(document.getElementById("st_"+w.id).value);
+      S.settings.starts[w.id]=p?p.amount:0;
+    });
+    cacheSave(); enqueue({kind:"settings"}); flushThen(); render(); toast("Сохранено");
   };
-  b1.appendChild(save); box.appendChild(b1);
+  b1.appendChild(sv); box.appendChild(b1);
 
-  const b2 = document.createElement("div"); b2.className = "block";
-  b2.innerHTML = "<h2>Облако</h2>" +
-    '<div class="hint" style="margin-top:-6px">Вход: '+escapeHtml(session.email)+
-    "<br>Записей в базе: "+S.entries.length +
-    (queue.length ? "<br>Ждут отправки: "+queue.length : "") + "</div>";
-  const rs = document.createElement("button");
-  rs.className = "btn ghost"; rs.textContent = "Обновить с сервера";
-  rs.onclick = () => sync();
-  b2.appendChild(rs);
+  const b2=document.createElement("div"); b2.className="block";
+  b2.innerHTML="<h2>Курс</h2>"+
+    '<div class="field"><label for="rSrc">Откуда брать</label>'+
+      '<select id="rSrc"><option value="cbu"'+(s.rateSource==="cbu"?" selected":"")+'>Центробанк, автоматически</option>'+
+      '<option value="manual"'+(s.rateSource==="manual"?" selected":"")+'>мой курс</option></select></div>'+
+    '<div class="field"><label for="rVal">Сумов за доллар</label>'+
+      '<input id="rVal" inputmode="numeric" value="'+Math.round(s.rate)+'"></div>'+
+    '<div class="hint">Курс нужен только чтобы свести общий итог. Записи хранятся в своей валюте.</div>';
+  const sv2=document.createElement("button");
+  sv2.className="btn ghost"; sv2.textContent="Сохранить курс";
+  sv2.onclick=()=>{
+    S.settings.rateSource=document.getElementById("rSrc").value;
+    const r=parseFloat(String(document.getElementById("rVal").value).replace(/\s/g,""));
+    if(isFinite(r)&&r>0) S.settings.rate=r;
+    cacheSave(); enqueue({kind:"settings"}); flushThen(); fetchCbuRate(); render(); toast("Сохранено");
+  };
+  b2.appendChild(sv2); box.appendChild(b2);
 
-  const old = readOldLocal();
-  if (old && old.length) {
-    const mig = document.createElement("button");
-    mig.className = "btn ghost";
-    mig.textContent = "Перенести старые записи (" + old.length + ")";
-    mig.onclick = async () => {
-      old.forEach(e => {
-        const row = { id: uuid(), date:e.date, col:e.col, amount:Number(e.amount),
-                      cur:e.cur, note:e.note || "", created_at:new Date().toISOString() };
-        S.entries.push(row);
-        enqueue({ kind:"insert", id:row.id, row:{ id:row.id, date:row.date, col:row.col,
-                  amount:row.amount, cur:row.cur, note:row.note } });
-      });
-      LS.del(K_OLD); cacheSave(); await sync(); toast("Перенесено");
-    };
-    b2.appendChild(mig);
+  const b3=document.createElement("div"); b3.className="block";
+  const perm=("Notification" in window)?Notification.permission:"unsupported";
+  b3.innerHTML="<h2>Напоминания</h2>"+
+    '<div class="field"><label for="nT">Во сколько напоминать, если за день нет записей</label>'+
+      '<input id="nT" type="time" value="'+(s.notifyTime||"21:00")+'"></div>'+
+    '<div class="hint">Состояние: '+
+      (perm==="granted"?"уведомления разрешены":perm==="denied"?"уведомления запрещены в настройках телефона"
+       :perm==="unsupported"?"устройство не поддерживает":"разрешение ещё не выдано")+'</div>';
+  const sv3=document.createElement("button");
+  sv3.className="btn ghost"; sv3.textContent="Сохранить время";
+  sv3.onclick=()=>{
+    S.settings.notifyTime=document.getElementById("nT").value||"21:00";
+    cacheSave(); enqueue({kind:"settings"}); flushThen(); toast("Сохранено");
+  };
+  b3.appendChild(sv3);
+  if(perm==="default"){
+    const ask=document.createElement("button");
+    ask.className="btn"; ask.textContent="Разрешить уведомления";
+    ask.onclick=askNotify; b3.appendChild(ask);
   }
-
-  const exp = document.createElement("button");
-  exp.className = "btn ghost"; exp.textContent = "Выгрузить файлом";
-  exp.onclick = exportJSON;
-  b2.appendChild(exp);
-
-  const out = document.createElement("button");
-  out.className = "btn danger"; out.textContent = "Выйти";
-  out.onclick = () => { if (confirm("Выйти из аккаунта?")) signOut(); };
-  b2.appendChild(out);
-  box.appendChild(b2);
-
-  const b3 = document.createElement("div"); b3.className = "block";
-  b3.innerHTML = "<h2>Как записывать быстро</h2>" +
-    '<div style="font-size:13.5px;color:var(--ink-soft);line-height:1.6">' +
-    "661т — это 661 000 сум<br>1.2млн — это 1 200 000 сум<br>$50 или 50$ — сразу доллары<br>" +
-    "Метка — то, что ты пишешь в скобках: нал, бензин, продукты</div>";
   box.appendChild(b3);
+
+  const b4=document.createElement("div"); b4.className="block";
+  b4.innerHTML="<h2>Облако</h2>"+
+    '<div class="hint" style="margin-top:-6px">Вход: '+escapeHtml(session.email)+
+    "<br>Записей: "+S.entries.length+" · целей: "+S.goals.length+
+    (queue.length?"<br>Ждут отправки: "+queue.length:"")+"</div>";
+  const rs=document.createElement("button");
+  rs.className="btn ghost"; rs.textContent="Обновить с сервера"; rs.onclick=()=>sync();
+  b4.appendChild(rs);
+  const exp=document.createElement("button");
+  exp.className="btn ghost"; exp.textContent="Выгрузить файлом"; exp.onclick=exportJSON;
+  b4.appendChild(exp);
+  const out=document.createElement("button");
+  out.className="btn danger"; out.textContent="Выйти";
+  out.onclick=()=>{ if(confirm("Выйти из аккаунта?")) signOut(); };
+  b4.appendChild(out);
+  box.appendChild(b4);
+
   return box;
 }
-function readOldLocal(){
-  try {
-    const d = JSON.parse(LS.get(K_OLD) || "null");
-    return d && Array.isArray(d.entries) ? d.entries : null;
-  } catch(e){ return null; }
-}
 
-/* ===================== запись ===================== */
-let draft = null;
+/* ---------- запись ---------- */
+let draft=null;
 function openAdd(){
-  draft = { id:null, date:todayISO(), col: ui.filter !== "all" ? ui.filter : "in",
-            amount:"", cur:"UZS", note:"" };
+  if(ui.tab==="goals"){ openGoal(null); return; }
+  draft={ id:null, date:todayISO(), col: ui.filter!=="all"?ui.filter:"in",
+          amount:"", wallet: ui.wallet!=="all"?ui.wallet:"cash_uzs", note:"" };
   drawModal();
 }
 function openEntry(id){
-  const e = S.entries.find(x => x.id === id);
-  if (!e) return;
-  draft = { id:e.id, date:e.date, col:e.col, amount:String(e.amount), cur:e.cur, note:e.note || "" };
+  const e=S.entries.find(x=>x.id===id); if(!e) return;
+  draft={ id:e.id, date:e.date, col:e.col, amount:String(e.amount),
+          wallet:e.wallet, note:e.note||"", created_at:e.created_at,
+          updated_at:e.updated_at, source:e.source };
   drawModal();
 }
 function drawModal(){
-  const m = $("#modal");
-  m.innerHTML =
-    '<button class="mclose" id="mClose" aria-label="Закрыть">×</button>' +
-    "<h3>" + (draft.id ? "Запись" : "Новая запись") + "</h3>" +
-    '<div class="field"><label>Куда</label><div class="picker" id="pick"></div></div>' +
-    '<div class="field"><label for="fAmt">Сумма</label><div class="two">' +
-      '<input id="fAmt" inputmode="decimal" placeholder="661т" value="'+escapeHtml(draft.amount)+'">' +
-      '<select id="fCur"><option value="UZS"'+(draft.cur==="UZS"?" selected":"")+'>сум</option>' +
-      '<option value="USD"'+(draft.cur==="USD"?" selected":"")+'>доллар</option></select></div></div>' +
-    '<div class="field"><label for="fNote">Метка</label>' +
-      '<input id="fNote" placeholder="нал, бензин, продукты" value="'+escapeHtml(draft.note)+'"></div>' +
-    '<div class="field"><label for="fDate">Дата</label>' +
+  const m=$("#modal");
+  m.innerHTML='<button class="mclose" id="mClose" aria-label="Закрыть">×</button>'+
+    "<h3>"+(draft.id?"Запись":"Новая запись")+"</h3>"+
+    '<div class="field"><label>Куда</label><div class="picker" id="pick"></div></div>'+
+    '<div class="field"><label for="fAmt">Сумма</label>'+
+      '<input id="fAmt" inputmode="decimal" placeholder="650" value="'+escapeHtml(draft.amount)+'">'+
+      '<div class="quick" id="quick"></div></div>'+
+    '<div class="field"><label>Откуда деньги</label><div class="picker two-col" id="wpick"></div></div>'+
+    '<div class="field"><label for="fNote">Метка</label>'+
+      '<input id="fNote" placeholder="нал, бензин, продукты" value="'+escapeHtml(draft.note)+'"></div>'+
+    '<div class="field"><label for="fDate">Дата</label>'+
       '<input id="fDate" type="date" value="'+draft.date+'"></div>';
-  const pick = m.querySelector("#pick");
-  COLS.forEach(c => {
-    const b = document.createElement("button");
-    b.className = "pick" + (draft.col === c.id ? " on" : "");
-    if (draft.col === c.id) b.style.borderColor = c.color;
-    b.innerHTML = '<i class="dot" style="background:'+c.color+'"></i>'+c.short;
-    b.onclick = () => { readDraft(); draft.col = c.id; drawModal(); };
+
+  const pick=m.querySelector("#pick");
+  COLS.forEach(c=>{
+    const b=document.createElement("button");
+    b.className="pick"+(draft.col===c.id?" on":"");
+    if(draft.col===c.id) b.style.borderColor=c.color;
+    b.innerHTML='<i class="dot" style="background:'+c.color+'"></i>'+c.short;
+    b.onclick=()=>{ readDraft(); draft.col=c.id; drawModal(); };
     pick.appendChild(b);
   });
-  const ok = document.createElement("button");
-  ok.className = "btn"; ok.textContent = draft.id ? "Сохранить" : "Записать";
-  ok.onclick = commit; m.appendChild(ok);
-  if (draft.id) {
-    const del = document.createElement("button");
-    del.className = "btn danger"; del.textContent = "Удалить запись";
-    del.onclick = () => {
-      S.entries = S.entries.filter(x => x.id !== draft.id);
-      enqueue({ kind:"delete", id:draft.id });
-      cacheSave(); closeModal(); render(); flushThen();
-    };
+  const wp=m.querySelector("#wpick");
+  WALLETS.forEach(w=>{
+    const b=document.createElement("button");
+    b.className="pick"+(draft.wallet===w.id?" on":"");
+    b.textContent=w.name;
+    b.onclick=()=>{ readDraft(); draft.wallet=w.id; drawModal(); };
+    wp.appendChild(b);
+  });
+  const q=m.querySelector("#quick");
+  [["+ тыс",1e3],["+ млн",1e6]].forEach(([lbl,mult])=>{
+    const b=document.createElement("button"); b.textContent=lbl;
+    b.onclick=()=>{ const el=m.querySelector("#fAmt");
+      const n=parseFloat(String(el.value).replace(/\s/g,"").replace(",","."));
+      if(isFinite(n)) el.value=String(Math.round(n*mult)); el.focus(); };
+    q.appendChild(b);
+  });
+  const cl=document.createElement("button"); cl.textContent="← стереть";
+  cl.onclick=()=>{ m.querySelector("#fAmt").value=""; m.querySelector("#fAmt").focus(); };
+  q.appendChild(cl);
+
+  const ok=document.createElement("button");
+  ok.className="btn"; ok.textContent=draft.id?"Сохранить":"Записать";
+  ok.onclick=()=>commit(false); m.appendChild(ok);
+
+  if(!draft.id){
+    const zero=document.createElement("button");
+    zero.className="btn ghost"; zero.textContent="Сегодня прихода не было";
+    zero.onclick=()=>commit(true); m.appendChild(zero);
+  }
+  if(draft.id){
+    if(draft.updated_at){
+      const info=document.createElement("div");
+      info.style.cssText="font-size:11.5px;color:var(--ink-faint);margin-top:10px;text-align:center";
+      info.textContent=(draft.source==="ai"?"внесено помощником · ":"изменено ")+
+        dmy(draft.updated_at)+" "+hhmm(draft.updated_at);
+      m.appendChild(info);
+    }
+    const del=document.createElement("button");
+    del.className="btn danger"; del.textContent="Удалить запись";
+    del.onclick=()=>{ S.entries=S.entries.filter(x=>x.id!==draft.id);
+      enqueue({kind:"delete", id:draft.id}); cacheSave(); closeModal(); render(); flushThen(); };
     m.appendChild(del);
   }
-  m.querySelector("#mClose").onclick = closeModal;
-  m.querySelector("#fAmt").addEventListener("keydown", ev => { if (ev.key === "Enter") commit(); });
-  $("#scrim").hidden = false;
-  setTimeout(() => { const a = m.querySelector("#fAmt"); if (a && !draft.amount) a.focus(); }, 30);
+  m.querySelector("#mClose").onclick=closeModal;
+  m.querySelector("#fAmt").addEventListener("keydown",ev=>{ if(ev.key==="Enter") commit(false); });
+  $("#scrim").hidden=false;
+  setTimeout(()=>{ const a=m.querySelector("#fAmt"); if(a&&!draft.amount) a.focus(); },30);
 }
 function readDraft(){
-  const m = $("#modal");
-  if (!m.querySelector("#fAmt")) return;
-  draft.amount = m.querySelector("#fAmt").value;
-  draft.cur = m.querySelector("#fCur").value;
-  draft.note = m.querySelector("#fNote").value;
-  draft.date = m.querySelector("#fDate").value || todayISO();
+  const m=$("#modal"); if(!m.querySelector("#fAmt")) return;
+  draft.amount=m.querySelector("#fAmt").value;
+  draft.note=m.querySelector("#fNote").value;
+  draft.date=m.querySelector("#fDate").value||todayISO();
 }
-function commit(){
+function commit(isZero){
   readDraft();
-  const p = parseAmount(draft.amount);
-  if (!p || !p.amount) { toast("Впиши сумму"); return; }
-  const cur = p.cur || draft.cur;
-  const note = draft.note.trim();
-  if (draft.id) {
-    const e = S.entries.find(x => x.id === draft.id);
-    Object.assign(e, { date:draft.date, col:draft.col, amount:p.amount, cur, note });
-    enqueue({ kind:"update", id:e.id,
-              row:{ date:e.date, col:e.col, amount:e.amount, cur:e.cur, note:e.note } });
-  } else {
-    const row = { id:uuid(), date:draft.date, col:draft.col, amount:p.amount, cur, note,
-                  created_at:new Date().toISOString() };
+  let amount=0, note=draft.note.trim(), col=draft.col;
+  if(isZero){ amount=0; col="in"; if(!note) note="прихода не было"; }
+  else{
+    const p=parseAmount(draft.amount);
+    if(!p||!p.amount){ toast("Впиши сумму"); return; }
+    amount=p.amount;
+  }
+  const w=walletById(draft.wallet);
+  const now=nowISO();
+  if(draft.id){
+    const e=S.entries.find(x=>x.id===draft.id);
+    Object.assign(e,{date:draft.date,col,amount,cur:w.cur,wallet:w.id,note,updated_at:now});
+    enqueue({kind:"update", id:e.id,
+      row:{date:e.date,col:e.col,amount:e.amount,cur:e.cur,wallet:e.wallet,note:e.note,updated_at:now}});
+  }else{
+    const row={id:uuid(),date:draft.date,col,amount,cur:w.cur,wallet:w.id,note,
+               source:"user",created_at:now,updated_at:now};
     S.entries.push(row);
-    enqueue({ kind:"insert", id:row.id,
-              row:{ id:row.id, date:row.date, col:row.col, amount:row.amount, cur:row.cur, note:row.note } });
-    ui.month = row.date.slice(0,7);
+    enqueue({kind:"insert", id:row.id,
+      row:{id:row.id,date:row.date,col:row.col,amount:row.amount,cur:row.cur,
+           wallet:row.wallet,note:row.note,source:"user"}});
+    ui.month=row.date.slice(0,7);
   }
   cacheSave(); closeModal(); render(); flushThen();
 }
-function closeModal(){ $("#scrim").hidden = true; draft = null; }
-function saveSettingsRemote(){ enqueue({ kind:"settings" }); flushThen(); }
+function closeModal(){ $("#scrim").hidden=true; draft=null; gdraft=null; }
 async function flushThen(){
-  try { await flushQueue(); ui.lastError = null; }
-  catch(e){ ui.lastError = e.message; }
+  try{ await flushQueue(); ui.lastError=null; }catch(e){ ui.lastError=e.message; }
   renderSync();
-  if (ui.tab === "book") render();
+  if(ui.tab==="book"||ui.tab==="goals") render();
 }
 
-/* ===================== файлы и мелочи ===================== */
+/* ---------- мелочи ---------- */
 function exportJSON(){
-  const blob = new Blob([JSON.stringify({ v:2, settings:S.settings, entries:S.entries }, null, 2)],
-    { type:"application/json" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "ezhednevnik-" + todayISO() + ".json";
-  a.click();
-  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  const blob=new Blob([JSON.stringify({v:3,settings:S.settings,entries:S.entries,goals:S.goals},null,2)],
+    {type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob); a.download="ezhednevnik-"+todayISO()+".json"; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
   toast("Файл выгружен");
 }
 function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+  return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
-let toastT = null;
+let toastT=null;
 function toast(msg){
-  const t = $("#toast");
-  t.textContent = msg; t.hidden = false;
-  clearTimeout(toastT); toastT = setTimeout(() => { t.hidden = true; }, 2200);
+  const t=$("#toast"); t.textContent=msg; t.hidden=false;
+  clearTimeout(toastT); toastT=setTimeout(()=>{ t.hidden=true; },2200);
 }
 
-/* ===================== экран входа ===================== */
-let signMode = "in";
+/* ---------- вход ---------- */
+let signMode="in";
 function viewSignIn(err){
   document.body.classList.add("auth");
-  $("#hdr").hidden = true; $("#tabbar").hidden = true;
-  const v = $("#view");
-  v.className = "signin";
-  v.innerHTML =
-    "<h1>Ежедневник</h1>" +
-    '<p class="lead">Записи хранятся в твоей базе. Войди, чтобы они были и на телефоне, и на компьютере.</p>' +
-    '<div class="block">' +
-      (err ? '<div class="err">'+escapeHtml(err)+"</div>" : "") +
-      '<div class="field"><label for="aEmail">Почта</label>' +
-        '<input id="aEmail" type="email" autocomplete="username" inputmode="email"></div>' +
-      '<div class="field"><label for="aPass">Пароль</label>' +
-        '<input id="aPass" type="password" autocomplete="current-password"></div>' +
-    "</div>";
-  const block = v.querySelector(".block");
-  const go = document.createElement("button");
-  go.className = "btn";
-  go.textContent = signMode === "in" ? "Войти" : "Создать аккаунт";
-  go.onclick = async () => {
-    const email = document.getElementById("aEmail").value.trim();
-    const pass = document.getElementById("aPass").value;
-    if (!email || !pass) { viewSignIn("Впиши почту и пароль"); return; }
-    go.disabled = true; go.textContent = "Секунду…";
-    try {
-      if (signMode === "in") { await signIn(email, pass); }
-      else {
-        const ok = await signUp(email, pass);
-        if (!ok) { viewSignIn("Аккаунт создан. Подтверди письмо на почте и войди."); signMode = "in"; return; }
+  $("#hdr").hidden=true; $("#tabbar").hidden=true;
+  const v=$("#view"); v.className="signin";
+  v.innerHTML="<h1>Ежедневник</h1>"+
+    '<p class="lead">Записи хранятся в твоей базе. Войди, чтобы они были и на телефоне, и на компьютере.</p>'+
+    '<div class="block">'+(err?'<div class="err">'+escapeHtml(err)+"</div>":"")+
+      '<div class="field"><label for="aEmail">Почта</label>'+
+        '<input id="aEmail" type="email" autocomplete="username" inputmode="email"></div>'+
+      '<div class="field"><label for="aPass">Пароль</label>'+
+        '<input id="aPass" type="password" autocomplete="current-password"></div></div>';
+  const block=v.querySelector(".block");
+  const go=document.createElement("button");
+  go.className="btn"; go.textContent=signMode==="in"?"Войти":"Создать аккаунт";
+  go.onclick=async()=>{
+    const email=document.getElementById("aEmail").value.trim();
+    const pass=document.getElementById("aPass").value;
+    if(!email||!pass){ viewSignIn("Впиши почту и пароль"); return; }
+    go.disabled=true; go.textContent="Секунду…";
+    try{
+      if(signMode==="in") await signIn(email,pass);
+      else{
+        const ok=await signUp(email,pass);
+        if(!ok){ signMode="in"; viewSignIn("Аккаунт создан. Подтверди письмо и войди."); return; }
       }
       await boot();
-    } catch (e) {
-      viewSignIn(e.message === "Invalid login credentials" ? "Почта или пароль не подходят" : e.message);
+    }catch(e){
+      viewSignIn(e.message==="Invalid login credentials"?"Почта или пароль не подходят":e.message);
     }
   };
   block.appendChild(go);
-  const sw = document.createElement("button");
-  sw.className = "swap";
-  sw.textContent = signMode === "in" ? "Аккаунта ещё нет" : "У меня уже есть аккаунт";
-  sw.onclick = () => { signMode = signMode === "in" ? "up" : "in"; viewSignIn(); };
+  const sw=document.createElement("button");
+  sw.className="swap"; sw.textContent=signMode==="in"?"Аккаунта ещё нет":"У меня уже есть аккаунт";
+  sw.onclick=()=>{ signMode=signMode==="in"?"up":"in"; viewSignIn(); };
   block.appendChild(sw);
-  document.getElementById("aPass").addEventListener("keydown", ev => { if (ev.key === "Enter") go.click(); });
+  document.getElementById("aPass").addEventListener("keydown",ev=>{ if(ev.key==="Enter") go.click(); });
 }
 
-/* ===================== запуск ===================== */
-document.querySelectorAll(".tab").forEach(b => {
-  b.onclick = () => { ui.tab = b.dataset.tab; render(); window.scrollTo(0,0); };
+/* ---------- запуск ---------- */
+document.querySelectorAll(".tab").forEach(b=>{
+  b.onclick=()=>{ ui.tab=b.dataset.tab; render(); window.scrollTo(0,0); };
 });
-$("#addBtn").onclick = openAdd;
-$("#prevM").onclick = () => { ui.month = shiftMonth(ui.month,-1); render(); };
-$("#nextM").onclick = () => { ui.month = shiftMonth(ui.month,+1); render(); };
-$("#scrim").onclick = ev => { if (ev.target === $("#scrim")) closeModal(); };
-document.addEventListener("keydown", ev => { if (ev.key === "Escape" && !$("#scrim").hidden) closeModal(); });
-window.addEventListener("online", () => { if (session) sync(); });
+$("#addBtn").onclick=openAdd;
+$("#prevM").onclick=()=>{ ui.month=shiftMonth(ui.month,-1); render(); };
+$("#nextM").onclick=()=>{ ui.month=shiftMonth(ui.month,+1); render(); };
+$("#scrim").onclick=ev=>{ if(ev.target===$("#scrim")) closeModal(); };
+document.addEventListener("keydown",ev=>{ if(ev.key==="Escape"&&!$("#scrim").hidden) closeModal(); });
+window.addEventListener("online",()=>{ if(session) sync(); });
+document.addEventListener("visibilitychange",()=>{ if(!document.hidden&&session) checkReminders(); });
+setInterval(()=>{ if(session) checkReminders(); }, 5*60*1000);
 
 async function boot(){
-  try { session = JSON.parse(LS.get(K_SESSION) || "null"); } catch(e){ session = null; }
-  if (!session) { viewSignIn(); return; }
+  try{ session=JSON.parse(LS.get(K_SESSION)||"null"); }catch(e){ session=null; }
+  if(!session){ viewSignIn(); return; }
   document.body.classList.remove("auth");
-  $("#view").className = "wrap";
-  $("#hdr").hidden = false; $("#tabbar").hidden = false;
+  $("#view").className="wrap";
+  $("#hdr").hidden=false; $("#tabbar").hidden=false;
   queueLoad(); cacheLoad(); render();
   await sync();
+  fetchCbuRate();
 }
 boot();
 
-/* установка на телефон и компьютер */
-if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js").catch(() => {});
+if("serviceWorker" in navigator && location.protocol.startsWith("http")){
+  window.addEventListener("load",()=>{
+    navigator.serviceWorker.register("./sw.js").then(reg=>{
+      if("periodicSync" in reg){
+        reg.periodicSync.register("ezh-daily",{minInterval:12*60*60*1000}).catch(()=>{});
+      }
+    }).catch(()=>{});
   });
 }
 </script>
