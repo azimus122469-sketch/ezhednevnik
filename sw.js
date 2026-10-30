@@ -1,5 +1,5 @@
 /* Ежедневник — офлайн-оболочка */
-const CACHE = "ezh-shell-v1";
+const CACHE = "ezh-shell-v3";
 const SHELL = [
   "./",
   "./index.html",

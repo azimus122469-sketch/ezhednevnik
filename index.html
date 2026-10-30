@@ -16,7 +16,7 @@
   :root{
     --paper:#FBF9F3; --paper-2:#F3F0E7; --grid:#DCE5EE; --rule:#C0453C;
     --ink:#16202B; --ink-soft:#5C6875; --ink-faint:#98A1AC;
-    --blue:#1F3A93; --green:#1E7A54; --amber:#A96A15; --red:#B23A32; --violet:#6B3FA0;
+    --blue:#1F3A93; --teal:#0F766E; --green:#1E7A54; --amber:#A96A15; --red:#B23A32; --violet:#6B3FA0;
     --edge:#E2DDD1;
     --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
     --serif:Georgia,"Times New Roman",serif;
@@ -37,20 +37,58 @@
   header{position:sticky;top:0;z-index:30;background:var(--paper);border-bottom:1px solid var(--edge)}
   header[hidden]{display:none}
 
-  .purse{display:flex;gap:14px;align-items:flex-start;padding:12px 0 8px}
-  .purse-left{flex:1 1 auto;min-width:0}
-  .purse-label{font-size:12px;color:var(--ink-faint);margin-bottom:5px}
-  .prow{display:flex;justify-content:space-between;align-items:baseline;gap:8px;
-        padding:4px 0;border-bottom:1px solid var(--grid);cursor:pointer}
+  .purse{display:flex;gap:12px;align-items:flex-start;padding:12px 0 8px}
+  .purse-left{flex:0 0 118px;min-width:0;padding-right:12px;border-right:1px solid var(--edge)}
+  .purse-right{flex:1 1 auto;min-width:0}
+  .purse-label{font-size:12px;color:var(--ink-faint);margin-bottom:3px}
+  .rate-num{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.15}
+  .rate-sub{font-size:11px;color:var(--ink-faint);margin-bottom:10px;line-height:1.3}
+  .total-num{font-family:var(--serif);font-size:21px;line-height:1.05;font-weight:700;cursor:pointer;word-break:break-word}
+  .total-num.neg{color:var(--red)}
+  .total-sub{font-size:11px;color:var(--ink-faint);margin-top:3px;line-height:1.3}
+  .prow{display:flex;justify-content:space-between;align-items:center;gap:8px;
+        padding:4px 6px;border-bottom:1px solid var(--grid);cursor:pointer;border-radius:6px}
   .prow:last-child{border-bottom:none}
   .prow.on{background:var(--paper-2)}
-  .prow span{font-size:13px;color:var(--ink-soft);white-space:nowrap}
-  .prow b{font-size:14px;font-weight:700;font-variant-numeric:tabular-nums}
+  .prow span{font-size:12.5px;color:var(--ink-soft);white-space:nowrap;display:flex;align-items:center;gap:6px}
+  .prow b{font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
   .prow b.neg{color:var(--red)}
-  .purse-right{flex:0 0 132px;border-left:1px solid var(--edge);padding-left:12px;text-align:right}
-  .total-num{font-family:var(--serif);font-size:27px;line-height:1.05;font-weight:700;cursor:pointer}
-  .total-num.neg{color:var(--red)}
-  .total-sub{font-size:11px;color:var(--ink-faint);margin-top:5px;line-height:1.35}
+  .ico{flex:0 0 auto;display:inline-block;vertical-align:middle}
+
+  .dayhead{padding:9px 12px 8px;background:var(--paper-2);border-bottom:1px solid var(--grid);border-top:1px solid var(--edge)}
+  .dayhead:first-of-type{border-top:none}
+  .dh-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .dh-date{font-size:13px;font-weight:700}
+  .dh-flow{font-size:12px;color:var(--ink-soft);font-variant-numeric:tabular-nums;text-align:right}
+  .dh-flow b{font-weight:700}
+  .dh-wal{display:grid;grid-template-columns:1fr 1fr;gap:3px 10px;margin-top:6px;font-size:11.5px;color:var(--ink-soft);
+          font-variant-numeric:tabular-nums}
+  .dh-wal span{display:flex;align-items:center;gap:4px;white-space:nowrap;min-width:0}
+  .dh-wal b{margin-left:auto}
+  .dh-wal b{color:var(--ink);font-weight:600}
+  .dh-wal b.neg{color:var(--red)}
+  .conv-row .r-sum{font-size:13.5px;white-space:nowrap;gap:5px}
+  .conv-arrow{color:var(--ink-faint);font-weight:400}
+
+  .conv-pickrow{display:flex;gap:8px;align-items:center}
+  .conv-pickrow .picker{flex:1}
+  .conv-sum{margin:2px 0 14px;padding:10px 12px;border:1px dashed var(--edge);border-radius:9px;
+            font-size:14px;background:#fff;font-variant-numeric:tabular-nums}
+
+  .chart-box{position:relative}
+  .chart-box svg{display:block;width:100%;height:auto;overflow:visible}
+  .chart-note{font-size:12px;color:var(--ink-soft);margin-top:8px}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-size:12px;color:var(--ink-soft)}
+  .legend span{display:flex;align-items:center;gap:5px}
+  .legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+  .chart-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:10px}
+  .chart-head h2{margin:0}
+  .chart-delta{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums}
+  .chart-delta.up{color:var(--green)}.chart-delta.down{color:var(--red)}
+  .tip{min-height:18px;font-size:12.5px;color:var(--ink);margin-top:8px;font-variant-numeric:tabular-nums}
+  .bar-hit{cursor:pointer}
+  .selfbar i{background:var(--teal)}
+  .selfnote{font-size:12px;color:var(--ink-soft);margin-top:10px}
 
   .sync{font-size:12px;color:var(--ink-faint);padding-bottom:8px;display:flex;align-items:center;gap:6px}
   .sync.warn{color:var(--amber)}
@@ -189,13 +227,16 @@
   <div class="wrap">
     <div class="purse">
       <div class="purse-left">
-        <div class="purse-label">На руках</div>
-        <div id="purseRows"></div>
-      </div>
-      <div class="purse-right">
+        <div class="purse-label">Курс</div>
+        <div class="rate-num" id="rateNum"></div>
+        <div class="rate-sub" id="rateSub"></div>
         <div class="purse-label">Всего</div>
         <div class="total-num" id="totalNum">0</div>
         <div class="total-sub" id="totalSub"></div>
+      </div>
+      <div class="purse-right">
+        <div class="purse-label">Осталось на руках</div>
+        <div id="purseRows"></div>
       </div>
     </div>
     <div class="sync" id="sync"></div>
@@ -234,7 +275,37 @@ const COLS = [
   { id:"lich", name:"Личное",     short:"Личное",  color:"var(--violet)", sign:-1 },
   { id:"auto", name:"Машина",     short:"Машина",  color:"var(--red)",    sign:-1 }
 ];
-const colById = id => COLS.find(c => c.id === id) || COLS[0];
+/* обмен хранится парой записей: cout (списание) и cin (зачисление) с общим conv_id */
+const CONV_COLS = [
+  { id:"cout", name:"Обмен (списано)",  short:"Обмен", color:"var(--ink-soft)", sign:-1, conv:true },
+  { id:"cin",  name:"Обмен (получено)", short:"Обмен", color:"var(--ink-soft)", sign:+1, conv:true }
+];
+/* выплата себе: отдельная запись, не входит ни в приход, ни в обычные расходы */
+const SELF_COL = { id:"self", name:"Себе", short:"Себе", color:"var(--teal)", sign:-1 };
+const colById = id => COLS.find(c => c.id === id) || CONV_COLS.find(c => c.id === id)
+                      || (id==="self" ? SELF_COL : null) || COLS[0];
+const isConv = e => e.col==="cout" || e.col==="cin";
+/* цвета для графиков (проверены валидатором палитры) */
+const CHART_COL = { real:"#3D5FC4", byt:"#A96A15", lich:"#6B3FA0", auto:"#B23A32" };
+
+const ICONS = {
+  in:   '<path d="M12 4v11"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/>',
+  real: '<path d="M3 8l9-5 9 5v8l-9 5-9-5z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/>',
+  byt:  '<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
+  lich: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>',
+  auto: '<path d="M5 17h14a1 1 0 0 0 1-1v-3.5a1.5 1.5 0 0 0-1.1-1.4L17.5 10l-1.6-3A2 2 0 0 0 14.1 6H9.9a2 2 0 0 0-1.8 1L6.5 10l-1.4 1.1A1.5 1.5 0 0 0 4 12.5V16a1 1 0 0 0 1 1z"/><circle cx="8" cy="17" r="1.7"/><circle cx="16" cy="17" r="1.7"/><path d="M6.5 10h11"/>',
+  conv: '<path d="M4 8h14l-3-3"/><path d="M20 16H6l3 3"/>',
+  self: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v9"/><path d="M14.6 9.6c-.4-.9-1.4-1.4-2.6-1.4-1.5 0-2.6.8-2.6 1.9 0 2.7 5.4 1.2 5.4 3.9 0 1.1-1.1 1.9-2.8 1.9-1.3 0-2.4-.6-2.8-1.6"/>',
+  cash: '<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/>',
+  card: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/><path d="M7 15h4"/>'
+};
+function ico(name,color,size){
+  const s=size||16;
+  return '<svg class="ico" viewBox="0 0 24 24" width="'+s+'" height="'+s+'" fill="none" stroke="'+(color||"currentColor")+
+    '" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(ICONS[name]||"")+'</svg>';
+}
+const colIcon = c => isConv({col:c.id}) ? "conv" : c.id;
+const walletIcon = w => w.id.startsWith("cash") ? "cash" : "card";
 
 const WALLETS = [
   { id:"cash_uzs", name:"Наличка сум", short:"Нал сум",  cur:"UZS" },
@@ -261,7 +332,7 @@ let session = null;
 let S = {
   entries: [], goals: [],
   settings: { starts:{}, base:"USD", rate:12600, rateSource:"cbu",
-              notifyTime:"21:00", checks:{} }
+              notifyTime:"21:00", checks:{}, payPct:10, payBase:"all" }
 };
 let queue = [];
 let ui = { tab:"book", month:ymNow(), filter:"all", wallet:"all", grid:false,
@@ -269,6 +340,8 @@ let ui = { tab:"book", month:ymNow(), filter:"all", wallet:"all", grid:false,
 
 function ymNow(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"); }
 function todayISO(){ const d=new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+function localISO(d){
   return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
 function uuid(){
   if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
@@ -335,7 +408,7 @@ async function signUp(email,password){
 function signOut(){
   session=null; LS.del(K_SESSION); LS.del(K_CACHE); LS.del(K_QUEUE);
   S={ entries:[], goals:[], settings:{ starts:{}, base:"USD", rate:12600,
-      rateSource:"cbu", notifyTime:"21:00", checks:{} } };
+      rateSource:"cbu", notifyTime:"21:00", checks:{}, payPct:10, payBase:"all" } };
   queue=[]; boot();
 }
 
@@ -357,6 +430,7 @@ function isPending(id){ return queue.some(q => q.id===id); }
 function normEntry(e){
   return { id:e.id, date:e.date, col:e.col, amount:Number(e.amount), cur:e.cur,
            wallet:e.wallet||"cash_uzs", note:e.note||"", source:e.source||"user",
+           conv_id:e.conv_id||null, rate:(e.rate==null?null:Number(e.rate)),
            created_at:e.created_at||"", updated_at:e.updated_at||e.created_at||"" };
 }
 function normGoal(g){
@@ -372,7 +446,8 @@ async function pullAll(){
   if(st && st.length){
     const s=st[0];
     S.settings = { starts:s.starts||{}, base:s.base_cur||"USD", rate:Number(s.rate)||12600,
-      rateSource:s.rate_source||"cbu", notifyTime:s.notify_time||"21:00", checks:s.checks||{} };
+      rateSource:s.rate_source||"cbu", notifyTime:s.notify_time||"21:00", checks:s.checks||{},
+      payPct:Number(s.pay_pct)||10, payBase:s.pay_base||"all" };
   } else { await pushSettings(); }
   cacheSave();
 }
@@ -381,6 +456,7 @@ async function pushSettings(){
   await api("/rest/v1/settings",{ method:"POST",
     body:[{ user_id:session.user_id, starts:s.starts, base_cur:s.base, rate:s.rate,
             rate_source:s.rateSource, notify_time:s.notifyTime, checks:s.checks,
+            pay_pct:s.payPct||10, pay_base:s.payBase||"all",
             start_amount:0, start_cur:"USD" }],
     headers:{Prefer:"resolution=merge-duplicates,return=minimal"} });
 }
@@ -459,8 +535,9 @@ function fmtNum(n,cur){
   else str=Math.round(v).toLocaleString("ru-RU").replace(/\u00A0/g," ");
   return (n<0?"−":"")+str;
 }
-function fmtShort(n){
-  const c=S.settings.base,a=Math.abs(n);
+function fmtShort(n){ return fmtShortCur(n, S.settings.base); }
+function fmtShortCur(n,c){
+  const a=Math.abs(n);
   let str;
   if(c==="USD") str="$"+(a>=1000?Math.round(a).toLocaleString("ru-RU").replace(/\u00A0/g," ")
     :(Math.round(a*100)/100).toLocaleString("ru-RU"));
@@ -506,11 +583,54 @@ function withRunning(){
     return Object.assign({},e,{run});
   });
 }
-function monthEntries(ym){ return withRunning().filter(e=>e.date.slice(0,7)===ym); }
+/* все записи месяца, включая обе половины обмена (для расчётов) */
+function rawMonth(ym){ return withRunning().filter(e=>e.date.slice(0,7)===ym); }
+/* записи месяца для показа: пара обмена сливается в одну строку */
+function monthEntries(ym){
+  const raw=rawMonth(ym), out=[], seen={};
+  raw.forEach(e=>{
+    if(!isConv(e) || !e.conv_id){ out.push(e); return; }
+    if(seen[e.conv_id]) return;
+    const pair=raw.filter(x=>x.conv_id===e.conv_id);
+    const o=pair.find(x=>x.col==="cout"), i=pair.find(x=>x.col==="cin");
+    seen[e.conv_id]=true;
+    if(o && i) out.push({ conv:true, id:o.id, conv_id:e.conv_id, date:o.date, out:o, inn:i,
+      run:raw.indexOf(i)>raw.indexOf(o)?i.run:o.run,
+      note:o.note||i.note||"", rate:o.rate||i.rate||null, source:o.source,
+      created_at:o.created_at, updated_at:o.updated_at>i.updated_at?o.updated_at:i.updated_at });
+    else out.push(e);
+  });
+  return out;
+}
+/* обмены не входят ни в приход, ни в расход */
 function monthTotals(ym){
   const t={}; COLS.forEach(c=>t[c.id]=0);
-  monthEntries(ym).forEach(e=>{ t[e.col]+=toBase(e.amount, walletById(e.wallet).cur); });
+  rawMonth(ym).forEach(e=>{ if(isConv(e) || !(e.col in t)) return;
+    t[e.col]+=toBase(e.amount, walletById(e.wallet).cur); });
   return t;
+}
+/* по дням: приход, расход (без обменов) и остаток каждого кошелька на конец дня */
+function dayMap(){
+  const bal={}; WALLETS.forEach(w=>bal[w.id]=Number(S.settings.starts[w.id]||0));
+  const days={}, list=sortedEntries();
+  list.forEach((e,idx)=>{
+    const c=colById(e.col), d=days[e.date]||(days[e.date]={inc:0,spent:0,bal:null});
+    bal[e.wallet]=(bal[e.wallet]||0)+c.sign*e.amount;
+    if(e.col==="self"){ d.self=(d.self||0)+toBase(e.amount, walletById(e.wallet).cur); }
+    else if(!isConv(e)){
+      const v=toBase(e.amount, walletById(e.wallet).cur);
+      if(c.sign>0) d.inc+=v; else d.spent+=v;
+    }
+    const next=list[idx+1];
+    if(!next || next.date!==e.date) d.bal=Object.assign({},bal);
+  });
+  return days;
+}
+function totalOfBal(bal){ return WALLETS.reduce((s,w)=>s+toBase(bal[w.id]||0,w.cur),0); }
+const WD=["вс","пн","вт","ср","чт","пт","сб"];
+function dayLabel(iso){
+  const d=new Date(iso+"T00:00:00");
+  return String(d.getDate()).padStart(2,"0")+" "+MONTHS[d.getMonth()].slice(0,3).toLowerCase()+", "+WD[d.getDay()];
 }
 function topNotes(ym,colId){
   const map={};
@@ -554,7 +674,9 @@ function checkReminders(){
   const [hh,mm]=(S.settings.notifyTime||"21:00").split(":").map(Number);
   const now=new Date();
   const past = now.getHours()>hh || (now.getHours()===hh && now.getMinutes()>=mm);
-  const hasToday = S.entries.some(e=>e.date===today);
+  /* считаем запись «за сегодня», если она внесена сегодня, даже на другую дату */
+  const hasToday = S.entries.some(e=>e.date===today ||
+    (e.created_at && !isNaN(new Date(e.created_at)) && localISO(new Date(e.created_at))===today));
   if(past && !hasToday && marks.day!==today){
     notify("Ежедневник", "За сегодня нет ни одной записи");
     marks.day=today;
@@ -603,7 +725,8 @@ function renderHeader(){
     const v=walletBalance(w.id);
     const r=document.createElement("div");
     r.className="prow"+(ui.wallet===w.id?" on":"");
-    r.innerHTML='<span>'+w.name+'</span><b class="'+(v<0?"neg":"")+'">'+fmtNum(v,w.cur)+'</b>';
+    r.innerHTML='<span>'+ico(walletIcon(w),"var(--ink-soft)",15)+w.short+'</span>'+
+      '<b class="'+(v<0?"neg":"")+'">'+fmtNum(v,w.cur)+'</b>';
     r.onclick=()=>{ ui.wallet = ui.wallet===w.id ? "all" : w.id; ui.tab="book"; render(); };
     rows.appendChild(r);
   });
@@ -612,8 +735,11 @@ function renderHeader(){
   tn.textContent=fmt(tot); tn.classList.toggle("neg", tot<0);
   tn.onclick=()=>{ S.settings.base = S.settings.base==="USD"?"UZS":"USD";
     cacheSave(); enqueue({kind:"settings"}); flushThen(); render(); };
-  $("#totalSub").innerHTML = (S.settings.rateSource==="cbu"?"по курсу ЦБ<br>":"по своему курсу<br>") +
-    Math.round(S.settings.rate).toLocaleString("ru-RU").replace(/\u00A0/g," ");
+  $("#totalSub").textContent = "нажми — сменить валюту";
+  $("#rateNum").textContent = Math.round(S.settings.rate).toLocaleString("ru-RU").replace(/\u00A0/g," ")+" сум";
+  $("#rateSub").textContent = (S.settings.rateSource==="cbu"?"курс ЦБ":"свой курс")+" за $1";
+  $("#rateNum").style.cursor="pointer";
+  $("#rateNum").onclick=()=>{ ui.tab="set"; render(); window.scrollTo(0,0); };
 
   const [y,m]=ui.month.split("-").map(Number);
   $("#monthName").textContent=MONTHS[m-1]+" "+y;
@@ -627,7 +753,7 @@ function renderHeader(){
   COLS.forEach(c=>{
     const b=document.createElement("button");
     b.className="chip"+(ui.filter===c.id?" on":"");
-    b.innerHTML='<i class="dot" style="background:'+c.color+'"></i><span>'+c.short+
+    b.innerHTML=ico(c.id,c.color,15)+'<span>'+c.short+
                 '</span> <b style="color:'+c.color+'">'+fmtShort(t[c.id])+'</b>';
     b.onclick=()=>{ ui.filter = ui.filter===c.id?"all":c.id; render(); };
     chips.appendChild(b);
@@ -646,11 +772,18 @@ function viewBook(){
   tg.className="btn ghost"; tg.style.cssText="width:auto;padding:7px 12px;font-size:13px";
   tg.textContent = ui.grid?"Показать лентой":"Показать сеткой";
   tg.onclick=()=>{ ui.grid=!ui.grid; render(); };
-  bar.appendChild(tg); box.appendChild(bar);
+  const cv=document.createElement("button");
+  cv.className="btn ghost"; cv.style.cssText="width:auto;padding:7px 12px;font-size:13px;display:flex;align-items:center;gap:6px";
+  cv.innerHTML=ico("conv","currentColor",15)+"Обмен";
+  cv.onclick=()=>openConv(null);
+  const right=document.createElement("div"); right.style.cssText="display:flex;gap:8px";
+  right.appendChild(cv); right.appendChild(tg);
+  bar.appendChild(right); box.appendChild(bar);
 
   let list=monthEntries(ui.month);
-  if(ui.filter!=="all") list=list.filter(e=>e.col===ui.filter);
-  if(ui.wallet!=="all") list=list.filter(e=>e.wallet===ui.wallet);
+  if(ui.filter!=="all") list=list.filter(e=>!e.conv && e.col===ui.filter);
+  if(ui.wallet!=="all") list=list.filter(e=> e.conv
+    ? (e.out.wallet===ui.wallet || e.inn.wallet===ui.wallet) : e.wallet===ui.wallet);
 
   if(!list.length){
     const e=document.createElement("div"); e.className="ledger";
@@ -660,36 +793,86 @@ function viewBook(){
   box.appendChild(ui.grid?gridTable(list):feedList(list));
   return box;
 }
+function dayHead(date, info){
+  const el=document.createElement("div"); el.className="dayhead";
+  let flow="";
+  if(info){
+    if(info.inc>0) flow+='<b style="color:var(--green)">+'+fmtShort(info.inc)+'</b>';
+    if(info.spent>0) flow+=(flow?" &nbsp;":"")+'<b style="color:var(--red)">−'+fmtShort(info.spent)+'</b>';
+    if(info.self>0) flow+=(flow?" &nbsp;":"")+'<b style="color:var(--teal)">себе −'+fmtShort(info.self)+'</b>';
+  }
+  if(!flow) flow='<span style="color:var(--ink-faint)">без прихода и расхода</span>';
+  let wal="";
+  if(info && info.bal) WALLETS.forEach(w=>{
+    const v=info.bal[w.id]||0;
+    wal+='<span>'+ico(walletIcon(w),"var(--ink-faint)",13)+w.short+' <b class="'+(v<0?"neg":"")+'">'+fmtNum(v,w.cur)+'</b></span>';
+  });
+  el.innerHTML='<div class="dh-top"><div class="dh-date">'+dayLabel(date)+'</div><div class="dh-flow">'+flow+'</div></div>'+
+    (wal?'<div class="dh-wal" title="Остаток на конец дня">'+wal+'</div>':"");
+  return el;
+}
+function metaOf(e){
+  let meta="";
+  if(e.source==="ai") meta+="✦ помощник";
+  if(e.updated_at && e.created_at && e.updated_at!==e.created_at)
+    meta+=(meta?" · ":"")+"изм. "+dmy(e.updated_at)+" "+hhmm(e.updated_at);
+  const ids=e.conv ? [e.out.id,e.inn.id] : [e.id];
+  if(ids.some(isPending)) meta+=(meta?" · ":"")+'<span class="pending">не отправлено</span>';
+  return meta;
+}
+function entryRow(e){
+  const c=colById(e.col), w=walletById(e.wallet);
+  const row=document.createElement("div"); row.className="row"; row.tabIndex=0;
+  const d=e.date.slice(8,10)+"."+e.date.slice(5,7);
+  const zero = e.amount===0;
+  const sumHtml = zero
+    ? '<span class="zero">прихода не было</span>'
+    : (c.sign>0?"+":"−")+" "+fmt(e.amount, w.cur);
+  const meta=metaOf(e);
+  row.innerHTML=
+    '<div class="r-date">'+d+'</div>'+
+    '<div class="r-mid">'+
+      '<div class="r-sum" style="color:'+(zero?"var(--ink-faint)":c.color)+'">'+
+        ico(colIcon(c), zero?"var(--ink-faint)":c.color, 17)+sumHtml+'</div>'+
+      '<div class="r-note">'+c.name+" · "+w.short+(e.note?" · "+escapeHtml(e.note):"")+'</div>'+
+      (meta?'<div class="r-meta">'+meta+'</div>':"")+
+    '</div>'+
+    '<div class="r-bal'+(e.run<0?" neg":"")+'">'+fmtShort(e.run)+'</div>';
+  row.onclick=()=>openEntry(e.id);
+  row.onkeydown=ev=>{ if(ev.key==="Enter") openEntry(e.id); };
+  return row;
+}
+function convRow(e){
+  const o=e.out, i=e.inn, wo=walletById(o.wallet), wi=walletById(i.wallet);
+  const row=document.createElement("div"); row.className="row conv-row"; row.tabIndex=0;
+  const d=e.date.slice(8,10)+"."+e.date.slice(5,7);
+  const cross = wo.cur!==wi.cur;
+  const meta=metaOf(e);
+  row.innerHTML=
+    '<div class="r-date">'+d+'</div>'+
+    '<div class="r-mid">'+
+      '<div class="r-sum" style="color:var(--ink)">'+ico("conv","var(--ink-soft)",17)+
+        '<span>'+fmt(o.amount,wo.cur)+'</span><span class="conv-arrow">→</span><span>'+fmt(i.amount,wi.cur)+'</span></div>'+
+      '<div class="r-note">'+(cross?"Обмен":"Перевод")+" · "+wo.short+" → "+wi.short+
+        (cross&&e.rate?" · курс "+Math.round(e.rate).toLocaleString("ru-RU").replace(/ /g," "):"")+
+        (e.note?" · "+escapeHtml(e.note):"")+'</div>'+
+      (meta?'<div class="r-meta">'+meta+'</div>':"")+
+    '</div>'+
+    '<div class="r-bal'+(e.run<0?" neg":"")+'">'+fmtShort(e.run)+'</div>';
+  row.onclick=()=>openConv(e.conv_id);
+  row.onkeydown=ev=>{ if(ev.key==="Enter") openConv(e.conv_id); };
+  return row;
+}
 function feedList(list){
   const wrap=document.createElement("div"); wrap.className="ledger";
   const head=document.createElement("div"); head.className="lhead";
   head.innerHTML='<div class="c1">Дата</div><div class="c2">Запись</div><div class="c3">Остаток</div>';
   wrap.appendChild(head);
+  const days=dayMap();
+  let last="";
   list.forEach(e=>{
-    const c=colById(e.col), w=walletById(e.wallet);
-    const row=document.createElement("div"); row.className="row"; row.tabIndex=0;
-    const d=e.date.slice(8,10)+"."+e.date.slice(5,7);
-    const zero = e.amount===0;
-    const sumHtml = zero
-      ? '<span class="zero">прихода не было</span>'
-      : (c.sign>0?"+":"−")+" "+fmt(e.amount, w.cur);
-    let meta="";
-    if(e.source==="ai") meta+="✦ помощник";
-    if(e.updated_at && e.created_at && e.updated_at!==e.created_at)
-      meta+=(meta?" · ":"")+"изм. "+dmy(e.updated_at)+" "+hhmm(e.updated_at);
-    if(isPending(e.id)) meta+=(meta?" · ":"")+'<span class="pending">не отправлено</span>';
-    row.innerHTML=
-      '<div class="r-date">'+d+'</div>'+
-      '<div class="r-mid">'+
-        '<div class="r-sum" style="color:'+(zero?"var(--ink-faint)":c.color)+'">'+
-          '<i class="dot" style="background:'+c.color+'"></i>'+sumHtml+'</div>'+
-        '<div class="r-note">'+c.name+" · "+w.short+(e.note?" · "+escapeHtml(e.note):"")+'</div>'+
-        (meta?'<div class="r-meta">'+meta+'</div>':"")+
-      '</div>'+
-      '<div class="r-bal'+(e.run<0?" neg":"")+'">'+fmtShort(e.run)+'</div>';
-    row.onclick=()=>openEntry(e.id);
-    row.onkeydown=ev=>{ if(ev.key==="Enter") openEntry(e.id); };
-    wrap.appendChild(row);
+    if(e.date!==last){ last=e.date; wrap.appendChild(dayHead(e.date, days[e.date])); }
+    wrap.appendChild(e.conv ? convRow(e) : entryRow(e));
   });
   return wrap;
 }
@@ -701,15 +884,28 @@ function gridTable(list){
   head+='<th>Кошелёк</th><th>Остаток</th></tr>';
   let body="";
   list.forEach(e=>{
-    const w=walletById(e.wallet);
     body+="<tr><td>"+e.date.slice(8,10)+"."+e.date.slice(5,7)+"</td>";
-    COLS.forEach(c=>{
-      body += (e.col===c.id)
-        ? '<td style="color:'+c.color+';font-weight:600" title="'+escapeHtml(e.note||"")+'">'+
-          (e.amount===0?"0":fmt(e.amount,w.cur))+"</td>"
-        : '<td style="color:var(--ink-faint)">—</td>';
-    });
-    body+='<td style="color:var(--ink-soft);font-size:12px">'+w.short+"</td>";
+    if(e.conv){
+      const o=e.out, i=e.inn, wo=walletById(o.wallet), wi=walletById(i.wallet);
+      body+='<td colspan="'+COLS.length+'" style="text-align:left;color:var(--ink-soft)">⇄ '+
+        fmt(o.amount,wo.cur)+" → "+fmt(i.amount,wi.cur)+
+        (wo.cur!==wi.cur&&e.rate?" · курс "+Math.round(e.rate):"")+'</td>';
+      body+='<td style="color:var(--ink-soft);font-size:12px">'+wo.short+" → "+wi.short+"</td>";
+    }else if(!COLS.some(c=>c.id===e.col)){
+      const w=walletById(e.wallet);
+      body+='<td colspan="'+COLS.length+'" style="text-align:left;color:var(--teal);font-weight:600">'+
+        ico("self","var(--teal)",14)+' Себе '+(e.amount?fmt(e.amount,w.cur):"0")+'</td>';
+      body+='<td style="color:var(--ink-soft);font-size:12px">'+w.short+"</td>";
+    }else{
+      const w=walletById(e.wallet);
+      COLS.forEach(c=>{
+        body += (e.col===c.id)
+          ? '<td style="color:'+c.color+';font-weight:600" title="'+escapeHtml(e.note||"")+'">'+
+            (e.amount===0?"0":fmt(e.amount,w.cur))+"</td>"
+          : '<td style="color:var(--ink-faint)">—</td>';
+      });
+      body+='<td style="color:var(--ink-soft);font-size:12px">'+w.short+"</td>";
+    }
     body+='<td class="bal'+(e.run<0?" neg":"")+'">'+fmtShort(e.run)+"</td></tr>";
   });
   let foot="<tr><td>Итого</td>";
@@ -825,9 +1021,251 @@ function commitGoal(){
   cacheSave(); closeModal(); render(); flushThen();
 }
 
+/* ---------- графики месяца ---------- */
+function daysInMonth(ym){ const [y,m]=ym.split("-").map(Number); return new Date(y,m,0).getDate(); }
+function lastShownDay(ym){
+  const n=daysInMonth(ym), cur=ymNow();
+  if(ym<cur) return n;
+  if(ym===cur) return new Date().getDate();
+  return 0;
+}
+function dShort(ym,d){ return String(d).padStart(2,"0")+" "+MONTHS[Number(ym.slice(5,7))-1].slice(0,3).toLowerCase(); }
+function svgEl(w,h,inner){ return '<svg viewBox="0 0 '+w+' '+h+'" role="img" preserveAspectRatio="xMidYMid meet">'+inner+'</svg>'; }
+
+function chartBalanceBlock(ym){
+  const b=document.createElement("div"); b.className="block";
+  const N=lastShownDay(ym);
+  if(!N){ b.innerHTML="<h2>Остаток по дням</h2><div class=\"chart-note\">Этот месяц ещё не начался.</div>"; return b; }
+  const days=dayMap(), keys=Object.keys(days).sort();
+  const first=ym+"-01";
+  let open=WALLETS.reduce((a,w)=>a+toBase(Number(S.settings.starts[w.id]||0),w.cur),0);
+  keys.forEach(k=>{ if(k<first && days[k].bal) open=totalOfBal(days[k].bal); });
+  const vals=[]; let cur=open;
+  for(let d=1; d<=N; d++){
+    const k=ym+"-"+String(d).padStart(2,"0");
+    if(days[k] && days[k].bal) cur=totalOfBal(days[k].bal);
+    vals.push(cur);
+  }
+  const delta=vals[vals.length-1]-open;
+  const hasData=keys.some(k=>k.slice(0,7)===ym);
+  const W=320,H=150,L=40,R=10,T=12,B=26, pw=W-L-R, ph=H-T-B;
+  let mn=Math.min(open,...vals), mx=Math.max(open,...vals);
+  if(mx===mn){ mx+=1; mn-=1; }
+  const pad=(mx-mn)*0.08; mn-=pad; mx+=pad;
+  const X=i=> N===1 ? L+pw/2 : L+pw*i/(N-1), Y=v=> T+ph*(1-(v-mn)/(mx-mn));
+  let pts=vals.map((v,i)=>X(i).toFixed(1)+","+Y(v).toFixed(1));
+  let g='';
+  [mn+pad,(mn+mx)/2,mx-pad].forEach((v,idx)=>{
+    g+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="var(--grid)" stroke-width="1"/>'+
+       '<text x="'+(L-5)+'" y="'+(Y(v)+3).toFixed(1)+'" text-anchor="end" font-size="9.5" fill="var(--ink-faint)">'+fmtShort(v)+'</text>';
+  });
+  if(mn<0&&mx>0) g+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(0).toFixed(1)+'" y2="'+Y(0).toFixed(1)+'" stroke="var(--ink-faint)" stroke-dasharray="3 3"/>';
+  const area='M'+X(0).toFixed(1)+","+(T+ph)+" L"+pts.join(" L")+" L"+X(N-1).toFixed(1)+","+(T+ph)+" Z";
+  g+='<path d="'+area+'" fill="var(--blue)" opacity=".07"/>'+
+     '<polyline points="'+pts.join(" ")+'" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
+  const lx=X(N-1), ly=Y(vals[N-1]);
+  g+='<circle id="bcDot" cx="'+lx.toFixed(1)+'" cy="'+ly.toFixed(1)+'" r="4" fill="var(--blue)" stroke="#fff" stroke-width="2"/>';
+  g+='<line id="bcLine" x1="'+lx.toFixed(1)+'" x2="'+lx.toFixed(1)+'" y1="'+T+'" y2="'+(T+ph)+'" stroke="var(--ink-faint)" stroke-width="1" opacity="0"/>';
+  const ticks=[1]; if(N>=8) ticks.push(Math.round(N/2)); if(N>1) ticks.push(N);
+  [...new Set(ticks)].forEach(d=>{
+    g+='<text x="'+X(d-1).toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle" font-size="9.5" fill="var(--ink-faint)">'+d+'</text>';
+  });
+  const hw=N===1?pw:pw/(N-1);
+  for(let i=0;i<N;i++){
+    g+='<rect class="bar-hit" data-i="'+i+'" x="'+(X(i)-hw/2).toFixed(1)+'" y="'+T+'" width="'+hw.toFixed(1)+'" height="'+ph+'" fill="transparent"/>';
+  }
+  b.innerHTML='<div class="chart-head"><h2>Остаток по дням</h2>'+
+    (hasData?'<div class="chart-delta '+(delta>=0?"up":"down")+'">'+(delta>=0?"+":"−")+fmt(Math.abs(delta))+'</div>':"")+'</div>'+
+    '<div class="chart-box">'+svgEl(W,H,g)+'</div>'+
+    '<div class="tip" id="bcTip" aria-live="polite">'+
+      (hasData?(delta>=0?"За месяц прибавилось, ":"За месяц ушло, ")+"остаток на старте месяца "+fmt(open)
+              :"В этом месяце записей ещё нет")+'</div>'+
+    '<div class="chart-note">Общий остаток по всем кошелькам в '+(S.settings.base==="USD"?"долларах":"сумах")+' по текущему курсу. Нажми на день, чтобы увидеть цифры.</div>';
+  b.querySelectorAll(".bar-hit").forEach(r=>{
+    const show=()=>{
+      const i=Number(r.dataset.i), v=vals[i], prev=i?vals[i-1]:open, dd=v-prev;
+      b.querySelector("#bcDot").setAttribute("cx",X(i).toFixed(1)); b.querySelector("#bcDot").setAttribute("cy",Y(v).toFixed(1));
+      const ln=b.querySelector("#bcLine"); ln.setAttribute("x1",X(i).toFixed(1)); ln.setAttribute("x2",X(i).toFixed(1)); ln.setAttribute("opacity","1");
+      b.querySelector("#bcTip").textContent=dShort(ym,i+1)+": остаток "+fmt(v)+" ("+(dd>=0?"+":"−")+fmt(Math.abs(dd))+" за день)";
+    };
+    r.addEventListener("mouseenter",show); r.addEventListener("click",show);
+  });
+  return b;
+}
+
+function chartSpendBlock(ym){
+  const b=document.createElement("div"); b.className="block";
+  const n=daysInMonth(ym), N=lastShownDay(ym)||n;
+  const cats=COLS.filter(c=>c.sign<0);
+  const per=Array.from({length:n},()=>({real:0,byt:0,lich:0,auto:0,sum:0}));
+  rawMonth(ym).forEach(e=>{ if(isConv(e)||e.col==="self"||!(e.col in per[0])||colById(e.col).sign>0) return;
+    const d=Number(e.date.slice(8,10))-1, v=toBase(e.amount,walletById(e.wallet).cur);
+    per[d][e.col]+=v; per[d].sum+=v; });
+  const total=per.reduce((a,x)=>a+x.sum,0);
+  if(!total){ b.innerHTML="<h2>Расходы по дням</h2><div class=\"chart-note\">Расходов за этот месяц ещё нет.</div>"; return b; }
+  const W=320,H=150,L=40,R=10,T=12,B=26, pw=W-L-R, ph=H-T-B;
+  const mx=Math.max(...per.map(x=>x.sum));
+  const slot=pw/n, bw=Math.max(3,Math.min(14,slot*0.62));
+  const Y=v=>T+ph*(1-v/mx);
+  let g='';
+  [0,mx/2,mx].forEach(v=>{
+    g+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+Y(v).toFixed(1)+'" y2="'+Y(v).toFixed(1)+'" stroke="'+(v===0?"var(--ink-faint)":"var(--grid)")+'" stroke-width="1"/>'+
+       '<text x="'+(L-5)+'" y="'+(Y(v)+3).toFixed(1)+'" text-anchor="end" font-size="9.5" fill="var(--ink-faint)">'+fmtShort(v)+'</text>';
+  });
+  per.forEach((x,i)=>{
+    const cx=L+slot*(i+0.5); let acc=0;
+    cats.forEach(c=>{
+      const v=x[c.id]; if(!v) return;
+      const y1=Y(acc+v), y0=Y(acc); acc+=v;
+      g+='<rect x="'+(cx-bw/2).toFixed(1)+'" y="'+y1.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+Math.max(0.5,(y0-y1)).toFixed(1)+
+         '" rx="1.5" fill="'+CHART_COL[c.id]+'" stroke="#fff" stroke-width="1.2"/>';
+    });
+    g+='<rect class="bar-hit" data-i="'+i+'" x="'+(cx-slot/2).toFixed(1)+'" y="'+T+'" width="'+slot.toFixed(1)+'" height="'+ph+'" fill="transparent"/>';
+  });
+  const ticks=[...new Set([1,Math.round(n/2),n])];
+  ticks.forEach(d=>{
+    g+='<text x="'+(L+slot*(d-0.5)).toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle" font-size="9.5" fill="var(--ink-faint)">'+d+'</text>';
+  });
+  const topI=per.reduce((bi,x,i)=>x.sum>per[bi].sum?i:bi,0);
+  b.innerHTML='<div class="chart-head"><h2>Расходы по дням</h2><div class="chart-delta" style="color:var(--ink)">'+fmt(total)+'</div></div>'+
+    '<div class="chart-box">'+svgEl(W,H,g)+'</div>'+
+    '<div class="legend">'+cats.map(c=>'<span><i style="background:'+CHART_COL[c.id]+'"></i>'+c.name+'</span>').join("")+'</div>'+
+    '<div class="tip" id="spTip" aria-live="polite">Больше всего ушло '+dShort(ym,topI+1)+': '+fmt(per[topI].sum)+'</div>'+
+    '<div class="chart-note">Обмены сюда не входят. Нажми на столбик, чтобы увидеть, на что ушёл день.</div>';
+  b.querySelectorAll(".bar-hit").forEach(r=>{
+    const show=()=>{
+      const i=Number(r.dataset.i), x=per[i];
+      const parts=cats.filter(c=>x[c.id]>0).map(c=>c.short+" "+fmt(x[c.id]));
+      b.querySelector("#spTip").textContent=dShort(ym,i+1)+": "+(x.sum?("всего "+fmt(x.sum)+" · "+parts.join(" · ")):"расходов не было");
+    };
+    r.addEventListener("mouseenter",show); r.addEventListener("click",show);
+  });
+  return b;
+}
+
+/* ---------- плачу себе ---------- */
+function payPct(){ const v=Number(S.settings.payPct); return v>=1&&v<=100?v:10; }
+function payBase(){ return S.settings.payBase==="real"?"real":"all"; }
+function fromBase(v,cur){
+  const s=S.settings;
+  if(cur===s.base) return v;
+  if(s.base==="USD"&&cur==="UZS") return v*(s.rate||1);
+  if(s.base==="UZS"&&cur==="USD") return v/(s.rate||1);
+  return v;
+}
+function profitMonth(ym){
+  const t=monthTotals(ym);
+  const spent = payBase()==="real" ? t.real : COLS.filter(c=>c.sign<0).reduce((a,c)=>a+t[c.id],0);
+  return t.in-spent;
+}
+function selfSum(list){ return list.filter(e=>e.col==="self").reduce((a,e)=>a+toBase(e.amount,walletById(e.wallet).cur),0); }
+function paidSelf(ym){ return selfSum(rawMonth(ym)); }
+function dueSelf(ym){ return Math.max(0,profitMonth(ym))*payPct()/100; }
+
+function paySelfBlock(ym){
+  const b=document.createElement("div"); b.className="block";
+  const profit=profitMonth(ym), due=dueSelf(ym), paid=paidSelf(ym), left=Math.max(0,due-paid);
+  const pct=due>0?Math.min(100,Math.round(paid/due*100)):0;
+  let opts=""; for(let i=5;i<=15;i++) opts+='<option value="'+i+'"'+(payPct()===i?" selected":"")+'>'+i+'%</option>';
+  b.innerHTML='<div class="chart-head"><h2 style="display:flex;align-items:center;gap:8px">'+ico("self","var(--teal)",20)+'Плачу себе</h2>'+
+    '<div class="chart-delta" style="color:var(--ink)">'+fmt(due)+'</div></div>'+
+    '<div class="two"><div class="field" style="margin-bottom:8px"><label for="psPct">Доля от прибыли</label>'+
+      '<select id="psPct">'+opts+'</select></div>'+
+    '<div class="field" style="margin-bottom:8px"><label for="psBase">Прибыль = приход</label>'+
+      '<select id="psBase"><option value="all"'+(payBase()==="all"?" selected":"")+'>минус все расходы</option>'+
+      '<option value="real"'+(payBase()==="real"?" selected":"")+'>минус реализацию</option></select></div></div>'+
+    kv("Прибыль месяца",(profit<0?"−":"")+fmt(Math.abs(profit)))+
+    kv("Положено себе ("+payPct()+"%)",fmt(due))+
+    kv("Уже выплачено",fmt(paid))+
+    '<div class="bar selfbar" style="margin:8px 0 4px"><i style="width:'+pct+'%"></i></div>'+
+    kv(paid>due&&due>0?"Выплачено сверх доли":"Осталось выплатить",fmt(paid>due?paid-due:left));
+  if(profit<=0) b.insertAdjacentHTML("beforeend",'<div class="selfnote">Прибыли в этом месяце нет, платить себе пока не из чего.</div>');
+  const btn=document.createElement("button");
+  btn.className="btn"; btn.style.marginTop="12px"; btn.textContent="Выплатить себе";
+  btn.onclick=()=>openSelf(); b.appendChild(btn);
+  const all=selfSum(S.entries);
+  b.insertAdjacentHTML("beforeend",'<div class="selfnote">За всё время выплачено себе: <b>'+fmt(all)+
+    '</b>. Это отдельная запись «Себе»: она списывает деньги с кошелька, но не считается обычным расходом и не уменьшает прибыль.</div>');
+  b.querySelector("#psPct").onchange=ev=>{ S.settings.payPct=Number(ev.target.value);
+    cacheSave(); enqueue({kind:"settings"}); flushThen(); render(); };
+  b.querySelector("#psBase").onchange=ev=>{ S.settings.payBase=ev.target.value;
+    cacheSave(); enqueue({kind:"settings"}); flushThen(); render(); };
+  return b;
+}
+
+let sdraft=null;
+function selfPrefill(){
+  const w=walletById(sdraft.wallet);
+  const left=Math.max(0,dueSelf(sdraft.month)-paidSelf(sdraft.month));
+  return left>0 ? String(roundCur(fromBase(left,w.cur),w.cur)) : "";
+}
+function openSelf(){
+  sdraft={ wallet:"cash_uzs", note:"себе", date:todayISO(), month:ui.month, amount:"", auto:true };
+  drawSelf();
+}
+function readSelf(){
+  const m=$("#modal"); if(!m.querySelector("#sAmt")) return;
+  sdraft.amount=m.querySelector("#sAmt").value;
+  sdraft.note=m.querySelector("#sNote").value;
+  sdraft.date=m.querySelector("#sDate").value||todayISO();
+}
+function drawSelf(){
+  const m=$("#modal"); if(sdraft.auto) sdraft.amount=selfPrefill();
+  const due=dueSelf(sdraft.month), paid=paidSelf(sdraft.month);
+  m.innerHTML='<button class="mclose" id="mClose" aria-label="Закрыть">×</button>'+
+    "<h3>Выплата себе</h3>"+
+    '<div class="hint" style="margin-top:-6px">Положено за месяц: '+fmt(due)+' · выплачено: '+fmt(paid)+'</div>'+
+    '<div class="field"><label>Откуда взять деньги</label><div class="picker two-col" id="sWal"></div></div>'+
+    '<div class="field"><label for="sAmt">Сумма</label>'+
+      '<input id="sAmt" inputmode="decimal" value="'+escapeHtml(sdraft.amount)+'">'+
+      '<div class="quick" id="sQuick"></div></div>'+
+    '<div class="field"><label for="sNote">Метка</label><input id="sNote" value="'+escapeHtml(sdraft.note)+'" placeholder="инвестиции, неотложное"></div>'+
+    '<div class="field"><label for="sDate">Дата</label><input id="sDate" type="date" value="'+sdraft.date+'"></div>';
+  const wp=m.querySelector("#sWal");
+  WALLETS.forEach(w=>{
+    const b=document.createElement("button");
+    b.className="pick"+(sdraft.wallet===w.id?" on":"");
+    b.innerHTML=ico(walletIcon(w),"var(--ink-soft)",20)+w.name;
+    b.onclick=()=>{ readSelf(); sdraft.wallet=w.id; drawSelf(); };
+    wp.appendChild(b);
+  });
+  const q=m.querySelector("#sQuick");
+  [["+ тыс",1e3],["+ млн",1e6]].forEach(([lbl,mult])=>{
+    const b=document.createElement("button"); b.textContent=lbl;
+    b.onclick=()=>{ const el=m.querySelector("#sAmt"); const n=cNum(el.value);
+      if(isFinite(n)) el.value=String(Math.round(n*mult)); sdraft.auto=false; el.focus(); };
+    q.appendChild(b);
+  });
+  const cl=document.createElement("button"); cl.textContent="← стереть";
+  cl.onclick=()=>{ const el=m.querySelector("#sAmt"); el.value=""; sdraft.auto=false; el.focus(); };
+  q.appendChild(cl);
+  m.querySelector("#sAmt").addEventListener("input",()=>{ sdraft.auto=false; });
+  const ok=document.createElement("button");
+  ok.className="btn"; ok.textContent="Записать выплату"; ok.onclick=commitSelf; m.appendChild(ok);
+  m.querySelector("#mClose").onclick=closeModal;
+  $("#scrim").hidden=false;
+}
+function commitSelf(){
+  readSelf();
+  const p=parseAmount(sdraft.amount);
+  if(!p||!p.amount){ toast("Впиши сумму"); return; }
+  const w=walletById(sdraft.wallet), now=nowISO();
+  const row={id:uuid(),date:sdraft.date,col:"self",amount:p.amount,cur:w.cur,wallet:w.id,
+             note:sdraft.note.trim(),source:"user",created_at:now,updated_at:now};
+  S.entries.push(row);
+  enqueue({kind:"insert", id:row.id,
+    row:{id:row.id,date:row.date,col:row.col,amount:row.amount,cur:row.cur,wallet:row.wallet,
+         note:row.note,source:"user",created_at:now}});
+  ui.month=row.date.slice(0,7);
+  cacheSave(); closeModal(); render(); flushThen(); toast("Выплата записана");
+}
+
 /* ---------- итоги ---------- */
 function viewSums(){
   const box=document.createElement("div");
+  box.appendChild(chartBalanceBlock(ui.month));
+  box.appendChild(chartSpendBlock(ui.month));
+  box.appendChild(paySelfBlock(ui.month));
   const t=monthTotals(ui.month);
   const spent=COLS.filter(c=>c.sign<0).reduce((s,c)=>s+t[c.id],0);
   const income=t.in;
@@ -840,7 +1278,7 @@ function viewSums(){
     const tops=topNotes(ui.month,c.id);
     const sub=tops.length?tops.map(x=>escapeHtml(x[0])+" "+fmtShort(x[1])).join(" · "):"без меток";
     b1.innerHTML+='<div class="stat"><div class="stat-top">'+
-      '<div class="stat-name"><i class="dot" style="background:'+c.color+'"></i>'+c.name+'</div>'+
+      '<div class="stat-name">'+ico(c.id,c.color,16)+c.name+'</div>'+
       '<div class="stat-val">'+fmt(val)+' <span style="color:var(--ink-faint);font-weight:400">'+pct+'%</span></div>'+
       '</div><div class="bar"><i style="width:'+pct+'%;background:'+c.color+'"></i></div>'+
       '<div class="stat-sub">'+sub+'</div></div>';
@@ -852,6 +1290,7 @@ function viewSums(){
     kv("Приход",fmt(income))+kv("Все расходы",fmt(spent))+
     kv(income-spent>=0?"Отложилось":"Ушло сверх прихода",fmt(Math.abs(income-spent)))+
     kv("Записей",String(monthEntries(ui.month).length))+
+    kv("Обменов",String(monthEntries(ui.month).filter(e=>e.conv).length))+
     kv("Остаток на сегодня",fmt(totalBase()));
   box.appendChild(b2);
 
@@ -1016,7 +1455,7 @@ function drawModal(){
     const b=document.createElement("button");
     b.className="pick"+(draft.col===c.id?" on":"");
     if(draft.col===c.id) b.style.borderColor=c.color;
-    b.innerHTML='<i class="dot" style="background:'+c.color+'"></i>'+c.short;
+    b.innerHTML=ico(c.id,c.color,22)+c.short;
     b.onclick=()=>{ readDraft(); draft.col=c.id; drawModal(); };
     pick.appendChild(b);
   });
@@ -1024,7 +1463,7 @@ function drawModal(){
   WALLETS.forEach(w=>{
     const b=document.createElement("button");
     b.className="pick"+(draft.wallet===w.id?" on":"");
-    b.textContent=w.name;
+    b.innerHTML=ico(walletIcon(w),"var(--ink-soft)",20)+w.name;
     b.onclick=()=>{ readDraft(); draft.wallet=w.id; drawModal(); };
     wp.appendChild(b);
   });
@@ -1101,7 +1540,170 @@ function commit(isZero){
   }
   cacheSave(); closeModal(); render(); flushThen();
 }
-function closeModal(){ $("#scrim").hidden=true; draft=null; gdraft=null; }
+/* ---------- обмен между кошельками ---------- */
+let cdraft=null;
+function openConv(convId){
+  if(convId){
+    const o=S.entries.find(x=>x.conv_id===convId&&x.col==="cout");
+    const i=S.entries.find(x=>x.conv_id===convId&&x.col==="cin");
+    if(!o||!i){ toast("Половина обмена не найдена"); return; }
+    cdraft={ id:convId, date:o.date, from:o.wallet, to:i.wallet, give:String(o.amount), get:String(i.amount),
+             rate:o.rate?String(o.rate):"", note:o.note||"", source:o.source,
+             updated_at:o.updated_at>i.updated_at?o.updated_at:i.updated_at };
+  }else{
+    cdraft={ id:null, date:todayISO(), from:"cash_usd", to:"cash_uzs", give:"", get:"",
+             rate:String(Math.round(S.settings.rate)), note:"" };
+  }
+  drawConv();
+}
+const cNum = v => parseFloat(String(v||"").replace(/\s/g,"").replace(",","."));
+function readConv(){
+  const m=$("#modal"); if(!m.querySelector("#cGive")) return;
+  cdraft.give=m.querySelector("#cGive").value;
+  const r=m.querySelector("#cRate"), g=m.querySelector("#cGet");
+  if(r) cdraft.rate=r.value; if(g) cdraft.get=g.value;
+  cdraft.note=m.querySelector("#cNote").value;
+  cdraft.date=m.querySelector("#cDate").value||todayISO();
+}
+function roundCur(v,cur){ return cur==="USD" ? Math.round(v*100)/100 : Math.round(v); }
+/* пересчёт «получаю» / курса по тому, что менял пользователь */
+function convRecalc(changed){
+  const m=$("#modal"), wf=walletById(cdraft.from), wt=walletById(cdraft.to);
+  if(wf.cur===wt.cur) return convSummary();
+  const gv=m.querySelector("#cGive"), rt=m.querySelector("#cRate"), gt=m.querySelector("#cGet");
+  const give=(parseAmount(gv.value)||{}).amount, rate=cNum(rt.value), get=(parseAmount(gt.value)||{}).amount;
+  if(changed==="get"){
+    if(give&&get){ const usd=wf.cur==="USD"?give:get, uzs=wf.cur==="USD"?get:give;
+      rt.value=String(Math.round(uzs/usd*100)/100); }
+  }else if(give&&rate){
+    gt.value=String(roundCur(wf.cur==="USD"?give*rate:give/rate, wt.cur));
+  }
+  convSummary();
+}
+function convSummary(){
+  const m=$("#modal"), el=m.querySelector("#cSum"); if(!el) return;
+  const wf=walletById(cdraft.from), wt=walletById(cdraft.to);
+  const give=(parseAmount(m.querySelector("#cGive").value)||{}).amount||0;
+  const cross=wf.cur!==wt.cur;
+  const gt=cross?((parseAmount(m.querySelector("#cGet").value)||{}).amount||0):give;
+  let orig=0;
+  if(cdraft.id){ const o=S.entries.find(x=>x.conv_id===cdraft.id&&x.col==="cout"); if(o&&o.wallet===wf.id) orig=o.amount; }
+  const after=walletBalance(wf.id)+orig-give;
+  el.innerHTML='<div><b>'+wf.name+'</b> −'+fmt(give,wf.cur)+' &nbsp;→&nbsp; <b>'+wt.name+'</b> +'+fmt(gt,wt.cur)+'</div>'+
+    '<div style="font-size:12px;margin-top:5px;color:'+(after<0?"var(--red)":"var(--ink-soft)")+'">'+
+    (after<0?"На «"+wf.name+"» не хватает "+fmt(-after,wf.cur):"После обмена на «"+wf.name+"»: "+fmt(after,wf.cur))+
+    '</div><div style="font-size:12px;margin-top:3px;color:var(--ink-faint)">Это не приход и не расход: оборот месяца не меняется.</div>';
+}
+function drawConv(){
+  const m=$("#modal"), wf=walletById(cdraft.from), wt=walletById(cdraft.to), cross=wf.cur!==wt.cur;
+  m.innerHTML='<button class="mclose" id="mClose" aria-label="Закрыть">×</button>'+
+    "<h3>"+(cdraft.id?"Обмен":"Обмен между кошельками")+"</h3>"+
+    '<div class="field"><label>Откуда</label><div class="picker two-col" id="cFrom"></div></div>'+
+    '<div class="field"><label>Куда</label><div class="picker two-col" id="cTo"></div></div>'+
+    '<div class="field"><label for="cGive">Отдаю ('+(wf.cur==="USD"?"доллары":"сумы")+')</label>'+
+      '<input id="cGive" inputmode="decimal" placeholder="'+(wf.cur==="USD"?"100":"1 000 000")+'" value="'+escapeHtml(cdraft.give)+'">'+
+      '<div class="quick" id="cQuick"></div></div>'+
+    (cross?
+      '<div class="two"><div class="field"><label for="cRate">Курс, сум за $1</label>'+
+        '<input id="cRate" inputmode="decimal" value="'+escapeHtml(cdraft.rate)+'"></div>'+
+      '<div class="field"><label for="cGet">Получаю ('+(wt.cur==="USD"?"доллары":"сумы")+')</label>'+
+        '<input id="cGet" inputmode="decimal" value="'+escapeHtml(cdraft.get)+'"></div></div>':"")+
+    '<div class="conv-sum" id="cSum"></div>'+
+    '<div class="field"><label for="cNote">Метка</label>'+
+      '<input id="cNote" placeholder="обменник, банк" value="'+escapeHtml(cdraft.note)+'"></div>'+
+    '<div class="field"><label for="cDate">Дата</label><input id="cDate" type="date" value="'+cdraft.date+'"></div>';
+
+  [["#cFrom","from"],["#cTo","to"]].forEach(([sel,key])=>{
+    const box=m.querySelector(sel);
+    WALLETS.forEach(w=>{
+      const b=document.createElement("button");
+      b.className="pick"+(cdraft[key]===w.id?" on":"");
+      b.innerHTML=ico(walletIcon(w),"var(--ink-soft)",20)+w.name;
+      b.onclick=()=>{ readConv(); cdraft[key]=w.id;
+        if(cdraft.from===cdraft.to){ cdraft[key==="from"?"to":"from"]=
+          WALLETS.find(x=>x.id!==w.id && x.cur!==w.cur).id; }
+        cdraft.get=""; drawConv(); };
+      box.appendChild(b);
+    });
+  });
+  const q=m.querySelector("#cQuick");
+  [["+ тыс",1e3],["+ млн",1e6]].forEach(([lbl,mult])=>{
+    const b=document.createElement("button"); b.textContent=lbl;
+    b.onclick=()=>{ const el=m.querySelector("#cGive");
+      const n=cNum(el.value); if(isFinite(n)) el.value=String(Math.round(n*mult)); convRecalc("give"); el.focus(); };
+    q.appendChild(b);
+  });
+  const cl=document.createElement("button"); cl.textContent="← стереть";
+  cl.onclick=()=>{ const el=m.querySelector("#cGive"); el.value=""; convRecalc("give"); el.focus(); };
+  q.appendChild(cl);
+
+  m.querySelector("#cGive").addEventListener("input",()=>convRecalc("give"));
+  const r=m.querySelector("#cRate"), g=m.querySelector("#cGet");
+  if(r) r.addEventListener("input",()=>convRecalc("rate"));
+  if(g) g.addEventListener("input",()=>convRecalc("get"));
+
+  const ok=document.createElement("button");
+  ok.className="btn"; ok.textContent=cdraft.id?"Сохранить":"Записать обмен";
+  ok.onclick=commitConv; m.appendChild(ok);
+  if(cdraft.id){
+    if(cdraft.updated_at){
+      const info=document.createElement("div");
+      info.style.cssText="font-size:11.5px;color:var(--ink-faint);margin-top:10px;text-align:center";
+      info.textContent=(cdraft.source==="ai"?"внесено помощником · ":"изменено ")+dmy(cdraft.updated_at)+" "+hhmm(cdraft.updated_at);
+      m.appendChild(info);
+    }
+    const del=document.createElement("button");
+    del.className="btn danger"; del.textContent="Удалить обмен";
+    del.onclick=()=>{
+      const gone=S.entries.filter(x=>x.conv_id===cdraft.id);
+      S.entries=S.entries.filter(x=>x.conv_id!==cdraft.id);
+      gone.forEach(x=>enqueue({kind:"delete", id:x.id}));
+      cacheSave(); closeModal(); render(); flushThen(); };
+    m.appendChild(del);
+  }
+  m.querySelector("#mClose").onclick=closeModal;
+  if(cross && !cdraft.get) convRecalc("give"); else convSummary();
+  $("#scrim").hidden=false;
+  setTimeout(()=>{ const a=m.querySelector("#cGive"); if(a&&!cdraft.give) a.focus(); },30);
+}
+function commitConv(){
+  readConv();
+  const wf=walletById(cdraft.from), wt=walletById(cdraft.to);
+  if(wf.id===wt.id){ toast("Выбери разные кошельки"); return; }
+  const g=parseAmount(cdraft.give);
+  if(!g||!g.amount){ toast("Впиши, сколько отдаёшь"); return; }
+  const give=g.amount, cross=wf.cur!==wt.cur;
+  let get=give, rate=null;
+  if(cross){
+    const gt=parseAmount(cdraft.get);
+    if(!gt||!gt.amount){ toast("Впиши курс или сколько получаешь"); return; }
+    get=gt.amount;
+    const usd=wf.cur==="USD"?give:get, uzs=wf.cur==="USD"?get:give;
+    rate=Math.round(uzs/usd*100)/100;
+  }
+  const note=cdraft.note.trim(), now=nowISO();
+  if(cdraft.id){
+    const o=S.entries.find(x=>x.conv_id===cdraft.id&&x.col==="cout");
+    const i=S.entries.find(x=>x.conv_id===cdraft.id&&x.col==="cin");
+    Object.assign(o,{date:cdraft.date,amount:give,cur:wf.cur,wallet:wf.id,note,rate,updated_at:now});
+    Object.assign(i,{date:cdraft.date,amount:get,cur:wt.cur,wallet:wt.id,note,rate,updated_at:now});
+    [o,i].forEach(x=>enqueue({kind:"update", id:x.id,
+      row:{date:x.date,amount:x.amount,cur:x.cur,wallet:x.wallet,note:x.note,rate:x.rate,updated_at:now}}));
+  }else{
+    const cid=uuid(), tIn=new Date(Date.parse(now)+1).toISOString();
+    const o={id:uuid(),date:cdraft.date,col:"cout",amount:give,cur:wf.cur,wallet:wf.id,note,source:"user",
+             conv_id:cid,rate,created_at:now,updated_at:now};
+    const i={id:uuid(),date:cdraft.date,col:"cin",amount:get,cur:wt.cur,wallet:wt.id,note,source:"user",
+             conv_id:cid,rate,created_at:tIn,updated_at:tIn};
+    S.entries.push(o,i);
+    [o,i].forEach(x=>enqueue({kind:"insert", id:x.id,
+      row:{id:x.id,date:x.date,col:x.col,amount:x.amount,cur:x.cur,wallet:x.wallet,note:x.note,
+           source:"user",conv_id:x.conv_id,rate:x.rate,created_at:x.created_at}}));
+    ui.month=cdraft.date.slice(0,7);
+  }
+  cacheSave(); closeModal(); render(); flushThen();
+}
+function closeModal(){ $("#scrim").hidden=true; draft=null; gdraft=null; cdraft=null; sdraft=null; }
 async function flushThen(){
   try{ await flushQueue(); ui.lastError=null; }catch(e){ ui.lastError=e.message; }
   renderSync();
