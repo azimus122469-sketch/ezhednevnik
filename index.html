@@ -1452,7 +1452,7 @@ function viewSettings(){
 }
 
 /* ---------- ИИ-помощник: чат, одобрения, токены ---------- */
-const AI = { msgs:[], actions:{}, tokens:[], newToken:null, busy:{}, loaded:false, draft:"", n:-1 };
+const AI = { msgs:[], actions:{}, tokens:[], newToken:null, busy:{}, loaded:false, draft:"", n:-1, thinking:false, connOpen:false };
 const AI_BASE = SUPABASE_URL+"/functions/v1/ezh-mcp";
 function aiPendingCount(){ return Object.values(AI.actions).filter(a=>a.status==="pending").length; }
 function aiBadge(){
@@ -1482,10 +1482,10 @@ function aiCopy(text){
 function viewAI(){
   const box=document.createElement("div");
   box.innerHTML=
-    '<div class="block"><h2>Чат с помощником</h2>'+
-    '<div class="hint" style="margin-top:-6px">Переписка и предложения помощника. Он ничего не меняет без твоей кнопки «Одобрить».</div>'+
+    '<div class="block"><h2>ИИ-помощник</h2>'+
+    '<div class="hint" style="margin-top:-6px">Он видит всю тетрадь и отвечает на вопросы. Любые изменения только предлагает: пока не нажмёшь «Одобрить», ничего не меняется.</div>'+
     '<div id="aiList" class="aiList"></div>'+
-    '<textarea id="aiText" rows="2" placeholder="Напиши помощнику…"></textarea>'+
+    '<textarea id="aiText" rows="2" placeholder="Спроси или поручи, например: добавь расход на бензин 150 000"></textarea>'+
     '<button class="btn" id="aiSendBtn">Отправить</button></div>'+
     '<div id="aiConn"></div>';
   const ta=box.querySelector("#aiText"); ta.value=AI.draft;
@@ -1495,13 +1495,13 @@ function viewAI(){
 }
 function aiDrawList(){
   const box=document.getElementById("aiList"); if(!box) return;
-  const sig=JSON.stringify([AI.msgs.map(m=>m.id),Object.values(AI.actions).map(a=>a.id+a.status),Object.keys(AI.busy)]);
+  const sig=JSON.stringify([AI.msgs.map(m=>m.id),Object.values(AI.actions).map(a=>a.id+a.status),Object.keys(AI.busy),AI.thinking]);
   if(box.dataset.sig===sig) return;
   box.dataset.sig=sig;
   const grew=AI.msgs.length!==AI.n; AI.n=AI.msgs.length;
   box.innerHTML="";
-  if(!AI.msgs.length){
-    box.innerHTML='<div class="empty"><b>Пока пусто</b>Напиши сообщение. Ответит подключённый ассистент, когда прочитает его.</div>';
+  if(!AI.msgs.length && !AI.thinking){
+    box.innerHTML='<div class="empty"><b>Пока пусто</b>Напиши сообщение. Например: «сколько у меня на картах?» или «покажи расходы за месяц».</div>';
     return;
   }
   let lastDay="";
@@ -1532,7 +1532,11 @@ function aiDrawList(){
     }
     box.appendChild(d);
   });
-  if(grew) window.scrollTo(0,document.body.scrollHeight);
+  if(AI.thinking){
+    const t=document.createElement("div"); t.className="cb bot";
+    t.innerHTML='<div class="cb-st no">ИИ думает…</div>'; box.appendChild(t);
+  }
+  if(grew||AI.thinking) window.scrollTo(0,document.body.scrollHeight);
 }
 async function aiSend(){
   const ta=document.getElementById("aiText"), btn=document.getElementById("aiSendBtn");
@@ -1542,8 +1546,20 @@ async function aiSend(){
     await api("/rest/v1/ai_chat",{method:"POST",body:[{role:"user",content:text.slice(0,8000)}],headers:{Prefer:"return=minimal"}});
     ta.value=""; AI.draft="";
     await aiPull(); window.scrollTo(0,document.body.scrollHeight);
-  }catch(e){ toast("Не отправилось: "+(e.message||"нет связи")); }
-  btn.disabled=false;
+  }catch(e){ toast("Не отправилось: "+(e.message||"нет связи")); btn.disabled=false; return; }
+  await aiAsk();
+  const b2=document.getElementById("aiSendBtn"); if(b2) b2.disabled=false;
+}
+async function aiAsk(){
+  AI.thinking=true; if(ui.tab==="ai") aiDrawList();
+  try{
+    await ensureToken();
+    const r=await fetch(AI_BASE+"/chat",{method:"POST",
+      headers:{Authorization:"Bearer "+session.access_token,"Content-Type":"application/json"},body:"{}"});
+    if(!r.ok){ let m=""; try{ m=(await r.json()).error||""; }catch(e){}
+      toast("ИИ не ответил: "+(m||("ошибка "+r.status))); }
+  }catch(e){ toast("ИИ не ответил: нет связи"); }
+  AI.thinking=false; await aiPull(); if(ui.tab==="ai") aiDrawList();
 }
 async function aiDecide(id,ok){
   if(AI.busy[id]) return;
@@ -1577,10 +1593,12 @@ function aiDrawConn(){
   box.dataset.sig=sig;
   const prev=document.getElementById("aiTokName"), keep=prev?prev.value:"";
   const active=AI.tokens.filter(t=>!t.revoked_at);
-  let h='<div class="block"><h2>Подключение помощника</h2>'+
-    '<div class="hint" style="margin-top:-6px">'+
-    (active.length?"Подключено токенов: "+active.length+". ":"Помощник не подключён. ")+
-    'Чат только хранит переписку: отвечает ассистент, которого ты подключишь по ссылке (MCP-клиент или n8n).</div><div id="aiToks"></div>';
+  let h='<div class="block"><details id="aiDet"'+(AI.connOpen?" open":"")+'>'+
+    '<summary style="cursor:pointer;font-weight:700;font-family:var(--serif);font-size:17px">Внешний ИИ (на будущее)</summary>'+
+    '<div class="hint" style="margin-top:10px">Это нужно, когда захочешь подключить главного ИИ (Claude, n8n и т.п.), чтобы он работал с тетрадью. '+
+    'Токен — это пароль для другой программы: она сможет читать тетрадь и предлагать записи, но менять без твоей кнопки «Одобрить» не сможет. '+
+    'Сейчас ничего подключать не нужно, внутренний ИИ работает сам. '+
+    (active.length?"Выдано токенов: "+active.length+".":"Токенов пока нет.")+'</div><div id="aiToks"></div>';
   if(AI.newToken){
     const url=AI_BASE+"?token="+AI.newToken;
     h+='<div class="tokbox"><b>Токен показан один раз, скопируй сейчас.</b>'+
@@ -1590,8 +1608,9 @@ function aiDrawConn(){
       '<div class="abtns"><button id="aiCopyUrl">Ссылка для MCP</button><button id="aiCopyTok">Только токен</button></div></div>';
   }
   h+='<div class="field"><label for="aiTokName">Название нового токена</label><input id="aiTokName" placeholder="например, n8n"></div>'+
-     '<button class="btn ghost" id="aiMake">Создать токен</button></div>';
+     '<button class="btn ghost" id="aiMake">Создать токен</button></details></div>';
   box.innerHTML=h;
+  const det=box.querySelector("#aiDet"); det.ontoggle=()=>{ AI.connOpen=det.open; };
   box.querySelector("#aiTokName").value=keep;
   const list=box.querySelector("#aiToks");
   AI.tokens.forEach(t=>{
