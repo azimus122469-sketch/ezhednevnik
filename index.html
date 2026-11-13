@@ -69,6 +69,9 @@
   .dh-wal b.neg{color:var(--red)}
   .conv-row .r-sum{font-size:13.5px;white-space:nowrap;gap:5px}
   .conv-arrow{color:var(--ink-faint);font-weight:400}
+  .r-fx{font-size:11.5px;margin-top:2px;color:var(--ink-faint)}
+  .r-fx b{font-weight:700}
+  .fx-up{color:var(--green)}.fx-down{color:var(--red)}
 
   .conv-pickrow{display:flex;gap:8px;align-items:center}
   .conv-pickrow .picker{flex:1}
@@ -313,6 +316,24 @@ const SELF_COL = { id:"self", name:"Себе", short:"Себе", color:"var(--te
 const colById = id => COLS.find(c => c.id === id) || CONV_COLS.find(c => c.id === id)
                       || (id==="self" ? SELF_COL : null) || COLS[0];
 const isConv = e => e.col==="cout" || e.col==="cin";
+/* курсовая разница обмена, в сумах: «получено минус отдано», оба по учётному курсу.
+   Это только показ: на остатки кошельков и на приход/расход не влияет. null, если учётного курса нет. */
+function fxDiff(fromCur,give,get,book){
+  if(!(book>0) || !(give>0) || !(get>0)) return null;
+  return fromCur==="USD" ? get-give*book : get*book-give;
+}
+function fxText(d){ const r=Math.round(d); return (r>0?"+":"")+fmt(r,"UZS"); }
+function fxClass(d){ const r=Math.round(d); return r>0?"fx-up":(r<0?"fx-down":""); }
+function convFx(e){
+  const wo=walletById(e.out.wallet), wi=walletById(e.inn.wallet);
+  if(wo.cur===wi.cur) return null;
+  return fxDiff(wo.cur,e.out.amount,e.inn.amount,e.book);
+}
+function monthFx(ym){
+  let sum=0, n=0;
+  monthEntries(ym).forEach(e=>{ if(!e.conv) return; const d=convFx(e); if(d!==null){ sum+=d; n++; } });
+  return {sum,n};
+}
 /* цвета для графиков (проверены валидатором палитры) */
 const CHART_COL = { real:"#3D5FC4", byt:"#A96A15", lich:"#6B3FA0", auto:"#B23A32" };
 
@@ -459,6 +480,7 @@ function normEntry(e){
   return { id:e.id, date:e.date, col:e.col, amount:Number(e.amount), cur:e.cur,
            wallet:e.wallet||"cash_uzs", note:e.note||"", source:e.source||"user",
            conv_id:e.conv_id||null, rate:(e.rate==null?null:Number(e.rate)),
+           book_rate:(e.book_rate==null?null:Number(e.book_rate)),
            created_at:e.created_at||"", updated_at:e.updated_at||e.created_at||"" };
 }
 function normGoal(g){
@@ -529,10 +551,18 @@ async function sync(){
 async function fetchCbuRate(){
   if(S.settings.rateSource!=="cbu") return;
   try{
-    const r=await fetch("https://cbu.uz/ru/arkhiv-kursov-valyut/json/USD/");
-    if(!r.ok) return;
-    const d=await r.json();
-    const v=Array.isArray(d)&&d[0]&&parseFloat(d[0].Rate);
+    let v=NaN;
+    /* сначала через функцию Supabase (браузер часто блокирует cbu.uz напрямую), потом напрямую */
+    try{
+      const r=await fetch(SUPABASE_URL+"/functions/v1/cbu-rate");
+      if(r.ok){ const d=await r.json(); if(d&&d.ok) v=Number(d.rate); }
+    }catch(e){}
+    if(!(v>0)){
+      const r=await fetch("https://cbu.uz/ru/arkhiv-kursov-valyut/json/USD/");
+      if(!r.ok) return;
+      const d=await r.json();
+      v=Array.isArray(d)&&d[0]?parseFloat(d[0].Rate):NaN;
+    }
     if(isFinite(v)&&v>0 && Math.abs(v-S.settings.rate)>0.5){
       S.settings.rate=v; cacheSave(); enqueue({kind:"settings"}); flushThen(); render();
     }
@@ -624,7 +654,7 @@ function monthEntries(ym){
     seen[e.conv_id]=true;
     if(o && i) out.push({ conv:true, id:o.id, conv_id:e.conv_id, date:o.date, out:o, inn:i,
       run:raw.indexOf(i)>raw.indexOf(o)?i.run:o.run,
-      note:o.note||i.note||"", rate:o.rate||i.rate||null, source:o.source,
+      note:o.note||i.note||"", rate:o.rate||i.rate||null, book:o.book_rate||i.book_rate||null, source:o.source,
       created_at:o.created_at, updated_at:o.updated_at>i.updated_at?o.updated_at:i.updated_at });
     else out.push(e);
   });
@@ -877,7 +907,7 @@ function convRow(e){
   const row=document.createElement("div"); row.className="row conv-row"; row.tabIndex=0;
   const d=e.date.slice(8,10)+"."+e.date.slice(5,7);
   const cross = wo.cur!==wi.cur;
-  const meta=metaOf(e);
+  const meta=metaOf(e), fx=cross?convFx(e):null;
   row.innerHTML=
     '<div class="r-date">'+d+'</div>'+
     '<div class="r-mid">'+
@@ -886,6 +916,7 @@ function convRow(e){
       '<div class="r-note">'+(cross?"Обмен":"Перевод")+" · "+wo.short+" → "+wi.short+
         (cross&&e.rate?" · курс "+Math.round(e.rate).toLocaleString("ru-RU").replace(/ /g," "):"")+
         (e.note?" · "+escapeHtml(e.note):"")+'</div>'+
+      (fx!==null?'<div class="r-fx">Курсовая разница: <b class="'+fxClass(fx)+'">'+fxText(fx)+'</b> · учётный курс '+Math.round(e.book).toLocaleString("ru-RU").replace(/\u00A0/g," ")+'</div>':"")+
       (meta?'<div class="r-meta">'+meta+'</div>':"")+
     '</div>'+
     '<div class="r-bal'+(e.run<0?" neg":"")+'">'+fmtShort(e.run)+'</div>';
@@ -919,7 +950,8 @@ function gridTable(list){
       const o=e.out, i=e.inn, wo=walletById(o.wallet), wi=walletById(i.wallet);
       body+='<td colspan="'+COLS.length+'" style="text-align:left;color:var(--ink-soft)">⇄ '+
         fmt(o.amount,wo.cur)+" → "+fmt(i.amount,wi.cur)+
-        (wo.cur!==wi.cur&&e.rate?" · курс "+Math.round(e.rate):"")+'</td>';
+        (wo.cur!==wi.cur&&e.rate?" · курс "+Math.round(e.rate):"")+
+        (wo.cur!==wi.cur&&convFx(e)!==null?' · <span class="'+fxClass(convFx(e))+'">разница '+fxText(convFx(e))+'</span>':"")+'</td>';
       body+='<td style="color:var(--ink-soft);font-size:12px">'+wo.short+" → "+wi.short+"</td>";
     }else if(!COLS.some(c=>c.id===e.col)){
       const w=walletById(e.wallet);
@@ -1321,6 +1353,7 @@ function viewSums(){
     kv(income-spent>=0?"Отложилось":"Ушло сверх прихода",fmt(Math.abs(income-spent)))+
     kv("Записей",String(monthEntries(ui.month).length))+
     kv("Обменов",String(monthEntries(ui.month).filter(e=>e.conv).length))+
+    (monthFx(ui.month).n?kv("Курсовая разница (не доход и не расход)",'<span class="'+fxClass(monthFx(ui.month).sum)+'">'+fxText(monthFx(ui.month).sum)+'</span>'):"")+
     kv("Остаток на сегодня",fmt(totalBase()));
   box.appendChild(b2);
 
@@ -1752,11 +1785,11 @@ function openConv(convId){
     const i=S.entries.find(x=>x.conv_id===convId&&x.col==="cin");
     if(!o||!i){ toast("Половина обмена не найдена"); return; }
     cdraft={ id:convId, date:o.date, from:o.wallet, to:i.wallet, give:String(o.amount), get:String(i.amount),
-             rate:o.rate?String(o.rate):"", note:o.note||"", source:o.source,
+             rate:o.rate?String(o.rate):"", book:o.book_rate||i.book_rate||null, note:o.note||"", source:o.source,
              updated_at:o.updated_at>i.updated_at?o.updated_at:i.updated_at };
   }else{
     cdraft={ id:null, date:todayISO(), from:"cash_usd", to:"cash_uzs", give:"", get:"",
-             rate:String(Math.round(S.settings.rate)), note:"" };
+             rate:String(Math.round(S.settings.rate)), book:S.settings.rate, note:"" };
   }
   drawConv();
 }
@@ -1793,10 +1826,13 @@ function convSummary(){
   let orig=0;
   if(cdraft.id){ const o=S.entries.find(x=>x.conv_id===cdraft.id&&x.col==="cout"); if(o&&o.wallet===wf.id) orig=o.amount; }
   const after=walletBalance(wf.id)+orig-give;
+  const fx=cross?fxDiff(wf.cur,give,gt,cdraft.book):null;
   el.innerHTML='<div><b>'+wf.name+'</b> −'+fmt(give,wf.cur)+' &nbsp;→&nbsp; <b>'+wt.name+'</b> +'+fmt(gt,wt.cur)+'</div>'+
     '<div style="font-size:12px;margin-top:5px;color:'+(after<0?"var(--red)":"var(--ink-soft)")+'">'+
     (after<0?"На «"+wf.name+"» не хватает "+fmt(-after,wf.cur):"После обмена на «"+wf.name+"»: "+fmt(after,wf.cur))+
-    '</div><div style="font-size:12px;margin-top:3px;color:var(--ink-faint)">Это не приход и не расход: оборот месяца не меняется.</div>';
+    '</div>'+(fx!==null?'<div style="font-size:13px;margin-top:6px">Курсовая разница: <b class="'+fxClass(fx)+'">'+fxText(fx)+'</b>'+
+      '<span style="color:var(--ink-faint);font-size:12px"> · учётный курс '+Math.round(cdraft.book).toLocaleString("ru-RU").replace(/\u00A0/g," ")+'</span></div>':"")+
+    '<div style="font-size:12px;margin-top:3px;color:var(--ink-faint)">Это не приход и не расход: оборот месяца не меняется. Разница только показана, с остатков она не списывается.</div>';
 }
 function drawConv(){
   const m=$("#modal"), wf=walletById(cdraft.from), wt=walletById(cdraft.to), cross=wf.cur!==wt.cur;
@@ -1877,32 +1913,33 @@ function commitConv(){
   const g=parseAmount(cdraft.give);
   if(!g||!g.amount){ toast("Впиши, сколько отдаёшь"); return; }
   const give=g.amount, cross=wf.cur!==wt.cur;
-  let get=give, rate=null;
+  let get=give, rate=null, book=null;
   if(cross){
     const gt=parseAmount(cdraft.get);
     if(!gt||!gt.amount){ toast("Впиши курс или сколько получаешь"); return; }
     get=gt.amount;
     const usd=wf.cur==="USD"?give:get, uzs=wf.cur==="USD"?get:give;
     rate=Math.round(uzs/usd*100)/100;
+    book=cdraft.book>0?cdraft.book:null;
   }
   const note=cdraft.note.trim(), now=nowISO();
   if(cdraft.id){
     const o=S.entries.find(x=>x.conv_id===cdraft.id&&x.col==="cout");
     const i=S.entries.find(x=>x.conv_id===cdraft.id&&x.col==="cin");
-    Object.assign(o,{date:cdraft.date,amount:give,cur:wf.cur,wallet:wf.id,note,rate,updated_at:now});
-    Object.assign(i,{date:cdraft.date,amount:get,cur:wt.cur,wallet:wt.id,note,rate,updated_at:now});
+    Object.assign(o,{date:cdraft.date,amount:give,cur:wf.cur,wallet:wf.id,note,rate,book_rate:book,updated_at:now});
+    Object.assign(i,{date:cdraft.date,amount:get,cur:wt.cur,wallet:wt.id,note,rate,book_rate:book,updated_at:now});
     [o,i].forEach(x=>enqueue({kind:"update", id:x.id,
-      row:{date:x.date,amount:x.amount,cur:x.cur,wallet:x.wallet,note:x.note,rate:x.rate,updated_at:now}}));
+      row:{date:x.date,amount:x.amount,cur:x.cur,wallet:x.wallet,note:x.note,rate:x.rate,book_rate:x.book_rate,updated_at:now}}));
   }else{
     const cid=uuid(), tIn=new Date(Date.parse(now)+1).toISOString();
     const o={id:uuid(),date:cdraft.date,col:"cout",amount:give,cur:wf.cur,wallet:wf.id,note,source:"user",
-             conv_id:cid,rate,created_at:now,updated_at:now};
+             conv_id:cid,rate,book_rate:book,created_at:now,updated_at:now};
     const i={id:uuid(),date:cdraft.date,col:"cin",amount:get,cur:wt.cur,wallet:wt.id,note,source:"user",
-             conv_id:cid,rate,created_at:tIn,updated_at:tIn};
+             conv_id:cid,rate,book_rate:book,created_at:tIn,updated_at:tIn};
     S.entries.push(o,i);
     [o,i].forEach(x=>enqueue({kind:"insert", id:x.id,
       row:{id:x.id,date:x.date,col:x.col,amount:x.amount,cur:x.cur,wallet:x.wallet,note:x.note,
-           source:"user",conv_id:x.conv_id,rate:x.rate,created_at:x.created_at}}));
+           source:"user",conv_id:x.conv_id,rate:x.rate,book_rate:x.book_rate,created_at:x.created_at}}));
     ui.month=cdraft.date.slice(0,7);
   }
   cacheSave(); closeModal(); render(); flushThen();

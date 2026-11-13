@@ -136,6 +136,7 @@ const DESCRIBE = `Ежедневник — личная денежная тет�
 Кошельки: cash_uzs, card_uzs (сум), cash_usd, card_usd (доллары). Валюта записи всегда равна валюте кошелька.
 Остаток кошелька = стартовый остаток (settings.starts) + сумма записей со знаком колонки. Общий итог сводится в base_cur по курсу rate (сумов за доллар).
 Прибыль месяца = приход минус расходы; pay_base=all считает все четыре расходные колонки, pay_base=real только Реализацию. Выплата себе = pay_pct% от прибыли.
+Курсовая разница обмена между валютами = «получено минус отдано», оба по учётному курсу (book_rate, курс из настроек на день обмена). Это не доход, не расход и не запись: только показ, остатки она не меняет.
 source: user = внёс владелец, ai = внёс или правил помощник.
 ПРАВИЛО: любое добавление, исправление и удаление ты только предлагаешь (инструменты propose_*). Ничего не меняется, пока владелец не нажмёт «Одобрить» в приложении; одобрение действует один раз на одно предложение. Не выдумывай данные: если чего-то не хватает, спроси в чате (send_chat_message). Перед ответом по теме разговора смотри get_chat_history.`;
 
@@ -203,7 +204,7 @@ const HANDLERS: Record<string, (a: any, c: Ctx) => Promise<unknown>> = {
 
   async list_entries(a, c) {
     const limit = Math.min(Math.max(Number(a.limit) || 100, 1), 500);
-    let q = db.from("entries").select("id,date,col,amount,cur,wallet,note,source,conv_id,rate,created_at").eq("user_id", c.userId);
+    let q = db.from("entries").select("id,date,col,amount,cur,wallet,note,source,conv_id,rate,book_rate,created_at").eq("user_id", c.userId);
     if (a.date_from) q = q.gte("date", dateArg(a.date_from, "date_from"));
     if (a.date_to) q = q.lte("date", dateArg(a.date_to, "date_to"));
     if (a.col) q = q.eq("col", a.col);
@@ -341,20 +342,23 @@ const HANDLERS: Record<string, (a: any, c: Ctx) => Promise<unknown>> = {
     const date = dateArg(a.date), out = num(a.amount_out, "amount_out");
     if (!out) throw new Error("amount_out: больше нуля");
     const cross = WALLET_CUR[from] !== WALLET_CUR[to];
-    let inn = out, rate: number | null = null;
+    let inn = out, rate: number | null = null, book: number | null = null, fx: number | null = null;
     if (cross) {
       if (a.amount_in === undefined) throw new Error("для обмена между валютами нужен amount_in");
       inn = num(a.amount_in, "amount_in");
       if (!inn) throw new Error("amount_in: больше нуля");
       const usd = WALLET_CUR[from] === "USD" ? out : inn, uzs = WALLET_CUR[from] === "USD" ? inn : out;
       rate = r2(uzs / usd);
+      // учётный курс = курс из настроек на момент обмена; курсовая разница только показывается, на остатки не влияет
+      const b = Number((await loadSettings(c.userId)).rate);
+      if (b > 0) { book = b; fx = Math.round(WALLET_CUR[from] === "USD" ? inn - out * b : inn * b - out); }
     }
     const note = String(a.note || "").slice(0, 300), cid = crypto.randomUUID();
     const ops = [
-      { op: "insert", table: "entries", id: crypto.randomUUID(), row: { date, col: "cout", amount: out, cur: WALLET_CUR[from], wallet: from, note, conv_id: cid, rate } },
-      { op: "insert", table: "entries", id: crypto.randomUUID(), row: { date, col: "cin", amount: inn, cur: WALLET_CUR[to], wallet: to, note, conv_id: cid, rate } },
+      { op: "insert", table: "entries", id: crypto.randomUUID(), row: { date, col: "cout", amount: out, cur: WALLET_CUR[from], wallet: from, note, conv_id: cid, rate, book_rate: book } },
+      { op: "insert", table: "entries", id: crypto.randomUUID(), row: { date, col: "cin", amount: inn, cur: WALLET_CUR[to], wallet: to, note, conv_id: cid, rate, book_rate: book } },
     ];
-    return propose(c, `Обмен ${dm(date)}: ${WALLET_NAME[from]} −${money(out, WALLET_CUR[from])} → ${WALLET_NAME[to]} +${money(inn, WALLET_CUR[to])}${rate ? ", курс " + rate : ""}`, ops, a.message);
+    return propose(c, `Обмен ${dm(date)}: ${WALLET_NAME[from]} −${money(out, WALLET_CUR[from])} → ${WALLET_NAME[to]} +${money(inn, WALLET_CUR[to])}${rate ? ", курс " + rate : ""}${fx !== null ? `, курсовая разница ${fx > 0 ? "+" : ""}${money(fx, "UZS")} (учётный курс ${book})` : ""}`, ops, a.message);
   },
 
   async propose_pay_self(a, c) {
