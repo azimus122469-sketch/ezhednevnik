@@ -137,6 +137,8 @@ const DESCRIBE = `Ежедневник — личная денежная тет�
 Остаток кошелька = стартовый остаток (settings.starts) + сумма записей со знаком колонки. Общий итог сводится в base_cur по курсу rate (сумов за доллар).
 Прибыль месяца = приход минус расходы; pay_base=all считает все четыре расходные колонки, pay_base=real только Реализацию. Выплата себе = pay_pct% от прибыли.
 Курсовая разница обмена между валютами = «получено минус отдано», оба по учётному курсу (book_rate, курс из настроек на день обмена). Это не доход, не расход и не запись: только показ, остатки она не меняет.
+Цели (goals) можно разбить на этапы (goal_steps: title, amount, cur, due, done); цель закрывается сама, когда выполнены все этапы.
+Долги (debts): kind owe = я должен, owed = мне должны; paid = уже выплачено, остаток = amount − paid. Долги ведутся отдельно и на остатки кошельков, приход и расход не влияют.
 source: user = внёс владелец, ai = внёс или правил помощник.
 ПРАВИЛО: любое добавление, исправление и удаление ты только предлагаешь (инструменты propose_*). Ничего не меняется, пока владелец не нажмёт «Одобрить» в приложении; одобрение действует один раз на одно предложение. Не выдумывай данные: если чего-то не хватает, спроси в чате (send_chat_message). Перед ответом по теме разговора смотри get_chat_history.`;
 
@@ -156,7 +158,8 @@ const TOOLS = [
     limit: { type: "number", description: "до 500" }, order: { type: "string", enum: ["asc", "desc"] },
   }),
   t("month_report", "Отчёт за месяц: суммы по колонкам, приход, расход, прибыль, выплата себе, по дням, остатки на начало и конец.", { ym: { type: "string", description: "ГГГГ-ММ" } }, ["ym"]),
-  t("list_goals", "Цели и дедлайны."),
+  t("list_goals", "Цели и дедлайны, с этапами (steps) и прогрессом."),
+  t("list_debts", "Долги: я должен (owe) и мне должны (owed), остаток, срок.", { status: { type: "string", enum: ["open", "closed", "all"], description: "по умолчанию open" } }),
   t("list_pending_actions", "Предложения, которые ждут одобрения владельца."),
   t("get_chat_history", "История чата с владельцем (от старых к новым), со статусами предложений. Используй, чтобы понять, о чём шёл разговор.", {
     limit: { type: "number", description: "по умолчанию 30, максимум 200" }, before: { type: "string", description: "ISO-время: только сообщения раньше" },
@@ -193,7 +196,14 @@ const HANDLERS: Record<string, (a: any, c: Ctx) => Promise<unknown>> = {
     const b = balances(entries, s);
     const { count } = await db.from("ai_actions").select("id", { count: "exact", head: true }).eq("user_id", c.userId).eq("status", "pending");
     const w = walletList(b, s);
+    const debts = (await loadAll("debts", c.userId, ["created_at"])).filter((d) => Number(d.paid) < Number(d.amount));
+    const sumDebts = (k: string) => {
+      const o: Record<string, number> = { UZS: 0, USD: 0 };
+      for (const d of debts) if (d.kind === k) o[d.cur] += Number(d.amount) - Number(d.paid);
+      return { UZS: r2(o.UZS), USD: r2(o.USD) };
+    };
     return {
+      debts_open: { i_owe: sumDebts("owe"), owed_to_me: sumDebts("owed"), count: debts.length },
       base_currency: s.base_cur, rate_uzs_per_usd: Number(s.rate), wallets: w,
       total_in_base: r2(w.reduce((x, y) => x + y.in_base, 0)),
       settings: { rate_source: s.rate_source, notify_time: s.notify_time, pay_pct: Number(s.pay_pct), pay_base: s.pay_base, starts: s.starts },
@@ -253,8 +263,30 @@ const HANDLERS: Record<string, (a: any, c: Ctx) => Promise<unknown>> = {
   },
 
   async list_goals(_a, c) {
-    const g = await loadAll("goals", c.userId, ["due"]);
-    return g.map((x) => ({ id: x.id, title: x.title, due: x.due, done: x.done, notify: x.notify, source: x.source }));
+    const [g, st] = await Promise.all([loadAll("goals", c.userId, ["due"]), loadAll("goal_steps", c.userId, ["pos"])]);
+    return g.map((x) => {
+      const steps = st.filter((y) => y.goal_id === x.id).map((y) => ({
+        id: y.id, title: y.title, amount: y.amount == null ? null : Number(y.amount), cur: y.cur, due: y.due, done: y.done,
+      }));
+      return {
+        id: x.id, title: x.title, due: x.due, done: x.done, notify: x.notify, source: x.source,
+        ...(steps.length ? { steps, steps_done: steps.filter((y) => y.done).length, steps_total: steps.length } : {}),
+      };
+    });
+  },
+
+  async list_debts(a, c) {
+    const all = await loadAll("debts", c.userId, ["created_at"]);
+    const status = a.status === "closed" || a.status === "all" ? a.status : "open";
+    const rows = all.filter((d) => status === "all" || (status === "closed") === (Number(d.paid) >= Number(d.amount)));
+    return {
+      count: rows.length,
+      debts: rows.map((d) => ({
+        id: d.id, kind: d.kind, kind_name: d.kind === "owe" ? "я должен" : "мне должны", person: d.person,
+        amount: Number(d.amount), cur: d.cur, paid: Number(d.paid), left: r2(Math.max(Number(d.amount) - Number(d.paid), 0)),
+        due: d.due, note: d.note || undefined,
+      })),
+    };
   },
 
   async list_pending_actions(_a, c) {
