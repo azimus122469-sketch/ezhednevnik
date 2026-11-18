@@ -497,7 +497,8 @@ async function pullAll(){
     const s=st[0];
     S.settings = { starts:s.starts||{}, base:s.base_cur||"USD", rate:Number(s.rate)||12600,
       rateSource:s.rate_source||"cbu", notifyTime:s.notify_time||"21:00", checks:s.checks||{},
-      payPct:Number(s.pay_pct)||10, payBase:s.pay_base||"all" };
+      payPct:Number(s.pay_pct)||10, payBase:s.pay_base||"all",
+      aiModel:s.ai_model==="terra"?"terra":"luna", aiLimit:s.ai_daily_limit==null?1:Number(s.ai_daily_limit) };
   } else { await pushSettings(); }
   cacheSave();
 }
@@ -764,7 +765,7 @@ function render(){
   if(ui.tab==="goals") v.appendChild(viewGoals());
   if(ui.tab==="sums")  v.appendChild(viewSums());
   if(ui.tab==="set")   v.appendChild(viewSettings());
-  if(ui.tab==="ai"){ v.appendChild(viewAI()); aiDrawList(); aiDrawConn(); if(!AI.loaded) aiPull(); }
+  if(ui.tab==="ai"){ v.appendChild(viewAI()); aiDrawList(); aiDrawConn(); aiDrawModel(); if(!AI.loaded) aiPull(); }
   document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("on", b.dataset.tab===ui.tab));
 }
 function renderSync(){
@@ -1485,8 +1486,10 @@ function viewSettings(){
 }
 
 /* ---------- ИИ-помощник: чат, одобрения, токены ---------- */
-const AI = { msgs:[], actions:{}, tokens:[], newToken:null, busy:{}, loaded:false, draft:"", n:-1, thinking:false, connOpen:false };
+const AI = { msgs:[], actions:{}, tokens:[], newToken:null, busy:{}, loaded:false, draft:"", n:-1, thinking:false, connOpen:false, usage:{n:0,cost:0} };
 const AI_BASE = SUPABASE_URL+"/functions/v1/ezh-mcp";
+/* начало суток по Ташкенту (UTC+5) в ISO */
+function aiDayStart(){ const d=new Date(Date.now()+5*3600e3); return new Date(d.toISOString().slice(0,10)+"T00:00:00+05:00").toISOString(); }
 function aiPendingCount(){ return Object.values(AI.actions).filter(a=>a.status==="pending").length; }
 function aiBadge(){
   const b=document.getElementById("aiBadge"); if(!b) return;
@@ -1498,14 +1501,16 @@ async function aiPull(){
     const r=await Promise.all([
       api("/rest/v1/ai_chat?select=id,role,content,action_id,created_at&order=created_at.desc&limit=200"),
       api("/rest/v1/ai_actions?select=id,summary,status,error,created_at&order=created_at.desc&limit=200"),
-      api("/rest/v1/ai_tokens?select=id,name,created_at,last_used_at,revoked_at&order=created_at.desc")
+      api("/rest/v1/ai_tokens?select=id,name,created_at,last_used_at,revoked_at&order=created_at.desc"),
+      api("/rest/v1/ai_usage?select=cost_usd,calls&created_at=gte."+encodeURIComponent(aiDayStart())).catch(()=>[])
     ]);
+    const us=Array.isArray(r[3])?r[3]:[]; AI.usage={ n:us.length, cost:us.reduce((x,u)=>x+(Number(u.cost_usd)||0),0) };
     AI.msgs=(r[0]||[]).slice().reverse();
     AI.actions={}; (r[1]||[]).forEach(a=>{ AI.actions[a.id]=a; });
     AI.tokens=r[2]||[]; AI.loaded=true;
   }catch(e){ return; }
   aiBadge();
-  if(ui.tab==="ai"){ aiDrawList(); aiDrawConn(); }
+  if(ui.tab==="ai"){ aiDrawList(); aiDrawConn(); aiDrawModel(); }
 }
 function aiCopy(text){
   if(navigator.clipboard && navigator.clipboard.writeText)
@@ -1517,6 +1522,7 @@ function viewAI(){
   box.innerHTML=
     '<div class="block"><h2>ИИ-помощник</h2>'+
     '<div class="hint" style="margin-top:-6px">Он видит всю тетрадь и отвечает на вопросы. Любые изменения только предлагает: пока не нажмёшь «Одобрить», ничего не меняется.</div>'+
+    '<div id="aiModel"></div>'+
     '<div id="aiList" class="aiList"></div>'+
     '<textarea id="aiText" rows="2" placeholder="Спроси или поручи, например: добавь расход на бензин 150 000"></textarea>'+
     '<button class="btn" id="aiSendBtn">Отправить</button></div>'+
@@ -1525,6 +1531,44 @@ function viewAI(){
   ta.oninput=()=>{ AI.draft=ta.value; };
   box.querySelector("#aiSendBtn").onclick=aiSend;
   return box;
+}
+function aiPlural(n){ const a=n%100, b=n%10; return (a>10&&a<15)?"запросов":(b===1?"запрос":(b>=2&&b<=4?"запроса":"запросов")); }
+async function aiSetSetting(patch){
+  try{
+    await api("/rest/v1/settings?user_id=eq."+session.user_id,{method:"PATCH",body:patch,headers:{Prefer:"return=minimal"}});
+    return true;
+  }catch(e){ toast("Не сохранилось: "+(e.message||"нет связи")); return false; }
+}
+function aiDrawModel(){
+  const box=document.getElementById("aiModel"); if(!box) return;
+  const m=S.settings.aiModel==="terra"?"terra":"luna", lim=S.settings.aiLimit==null?1:S.settings.aiLimit;
+  const sig=JSON.stringify([m,lim,AI.usage]);
+  if(box.dataset.sig===sig) return;
+  box.dataset.sig=sig;
+  box.innerHTML=
+    '<div class="picker two-col" id="aiSw">'+
+      '<button class="pick'+(m==="luna"?" on":"")+'" data-m="luna">Луна<br><span style="font-weight:400;font-size:11.5px">дёшево, для обычных вопросов</span></button>'+
+      '<button class="pick'+(m==="terra"?" on":"")+'" data-m="terra">Терра<br><span style="font-weight:400;font-size:11.5px">умнее, дороже в ~10 раз</span></button>'+
+    '</div>'+
+    '<div class="hint" style="margin:8px 0 2px">Сегодня: '+AI.usage.n+' '+aiPlural(AI.usage.n)+', ≈ $'+AI.usage.cost.toFixed(3)+
+      (lim>0?' из $'+lim:' (лимит выключен)')+'. Лимит в день, $: '+
+      '<input id="aiLim" inputmode="decimal" value="'+lim+'" style="width:64px;display:inline-block;padding:3px 6px"> <span style="color:var(--ink-faint)">0 — без лимита</span></div>';
+  box.querySelectorAll("#aiSw .pick").forEach(b=>{
+    b.onclick=async()=>{
+      const nm=b.dataset.m; if(nm===S.settings.aiModel) return;
+      const old=S.settings.aiModel; S.settings.aiModel=nm; cacheSave(); aiDrawModel();
+      if(!(await aiSetSetting({ai_model:nm}))){ S.settings.aiModel=old; cacheSave(); aiDrawModel(); }
+      else toast(nm==="terra"?"Теперь отвечает Терра":"Теперь отвечает Луна");
+    };
+  });
+  const li=box.querySelector("#aiLim");
+  li.onchange=async()=>{
+    const v=parseFloat(String(li.value).replace(",","."));
+    if(!isFinite(v)||v<0){ toast("Лимит: число от 0"); li.value=lim; return; }
+    const old=S.settings.aiLimit; S.settings.aiLimit=v; cacheSave();
+    if(!(await aiSetSetting({ai_daily_limit:v}))){ S.settings.aiLimit=old; cacheSave(); }
+    aiDrawModel();
+  };
 }
 function aiDrawList(){
   const box=document.getElementById("aiList"); if(!box) return;
