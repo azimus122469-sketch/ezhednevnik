@@ -138,6 +138,7 @@ const DESCRIBE = `Ежедневник — личная денежная тет�
 Прибыль месяца = приход минус расходы; pay_base=all считает все четыре расходные колонки, pay_base=real только Реализацию. Выплата себе = pay_pct% от прибыли.
 Курсовая разница обмена между валютами = «получено минус отдано», оба по учётному курсу (book_rate, курс из настроек на день обмена). Это не доход, не расход и не запись: только показ, остатки она не меняет.
 Цели (goals) можно разбить на этапы (goal_steps: title, amount, cur, due, done); цель закрывается сама, когда выполнены все этапы.
+У долгов тоже есть этапы (goal_steps с debt_id): оплата долга считается по выполненным этапам, все выполнены = долг закрыт.
 Долги (debts): kind owe = я должен, owed = мне должны; paid = уже выплачено, остаток = amount − paid. Долги ведутся отдельно и на остатки кошельков, приход и расход не влияют.
 source: user = внёс владелец, ai = внёс или правил помощник.
 ПРАВИЛО: любое добавление, исправление и удаление ты только предлагаешь (инструменты propose_*). Ничего не меняется, пока владелец не нажмёт «Одобрить» в приложении; одобрение действует один раз на одно предложение. Не выдумывай данные: если чего-то не хватает, спроси в чате (send_chat_message). Перед ответом по теме разговора смотри get_chat_history.`;
@@ -239,7 +240,7 @@ const HANDLERS: Record<string, (a: any, c: Ctx) => Promise<unknown>> = {
     const days: Record<string, { in: number; out: number }> = {};
     let paid = 0, conv = 0;
     for (const e of mon) {
-      const amt = Number(e.amount), base = toBase(amt, WALLET_CUR[e.wallet], s);
+      const amt = Number(e.amount), eb = Number(e.book_rate) > 0 ? { ...s, rate: Number(e.book_rate) } : s, base = toBase(amt, WALLET_CUR[e.wallet], eb);
       if (e.col === "self") { paid += base; continue; }
       if (e.col === "cout" || e.col === "cin") { conv++; continue; }
       byCol[e.col] += base; native[WALLET_CUR[e.wallet]][e.col] += amt;
@@ -276,7 +277,7 @@ const HANDLERS: Record<string, (a: any, c: Ctx) => Promise<unknown>> = {
   },
 
   async list_debts(a, c) {
-    const all = await loadAll("debts", c.userId, ["created_at"]);
+    const [all, st] = await Promise.all([loadAll("debts", c.userId, ["created_at"]), loadAll("goal_steps", c.userId, ["pos"])]);
     const status = a.status === "closed" || a.status === "all" ? a.status : "open";
     const rows = all.filter((d) => status === "all" || (status === "closed") === (Number(d.paid) >= Number(d.amount)));
     return {
@@ -285,6 +286,10 @@ const HANDLERS: Record<string, (a: any, c: Ctx) => Promise<unknown>> = {
         id: d.id, kind: d.kind, kind_name: d.kind === "owe" ? "я должен" : "мне должны", person: d.person,
         amount: Number(d.amount), cur: d.cur, paid: Number(d.paid), left: r2(Math.max(Number(d.amount) - Number(d.paid), 0)),
         due: d.due, note: d.note || undefined,
+        ...((() => {
+          const steps = st.filter((y) => y.debt_id === d.id).map((y) => ({ id: y.id, title: y.title, amount: y.amount == null ? null : Number(y.amount), cur: y.cur, due: y.due, done: y.done }));
+          return steps.length ? { steps, steps_done: steps.filter((y) => y.done).length, steps_total: steps.length } : {};
+        })()),
       })),
     };
   },
