@@ -384,6 +384,31 @@
   .swatches button{height:46px;border-radius:9px;border:2px solid var(--edge);cursor:pointer;background-size:cover;font:inherit;font-size:11px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.6)}
   .swatches button.on{border-color:var(--ink)}
   input[type=range]{padding:0;height:28px;border:none;background:transparent}
+
+  /* таблица как в Excel */
+  .xtool{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+  .xwrap{overflow:auto;max-height:calc(100vh - 330px);border:1px solid var(--edge);border-radius:10px;background:var(--card)}
+  .xtb{min-width:900px;border-collapse:collapse;width:100%}
+  .xtb th,.xtb td{padding:8px 12px;border-bottom:1px solid var(--grid);border-right:1px solid var(--grid);font-size:14px;text-align:left;white-space:nowrap}
+  .xtb th:last-child,.xtb td:last-child{border-right:none}
+  .xtb thead th{position:sticky;top:0;z-index:2;background:var(--card-2);border-bottom:2px solid var(--ink-faint)}
+  .xtb td.n,.xtb th.n{text-align:right;font-variant-numeric:tabular-nums}
+  .xtb td.neg{color:var(--red)}
+  .xtb td.xnote{white-space:normal;min-width:160px;max-width:340px}
+  .xtb tbody tr{cursor:pointer}
+  .xtb tbody tr:hover td{background:var(--paper-2)}
+  .xh{display:flex;align-items:center;gap:5px;justify-content:space-between}
+  .xh .xt{cursor:pointer;font-weight:700;user-select:none}
+  .xh .xsort{font-style:normal;font-size:10px;color:var(--ink-soft);min-width:9px}
+  .xfb{border:1px solid var(--edge);background:var(--card);color:var(--ink-soft);cursor:pointer;border-radius:5px;padding:0 6px;font-size:12px;line-height:18px}
+  .xfb.on{background:var(--blue);border-color:var(--blue);color:#fff}
+  .xdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px}
+  .xsum{margin-top:10px;padding:10px 12px;border:1px solid var(--edge);border-radius:10px;background:var(--card);font-size:14px;line-height:1.6}
+  .xchk{display:flex;align-items:center;gap:9px;padding:7px 2px;font-size:15px;cursor:pointer}
+  .xchk input{width:auto;margin:0}
+  html.glass .xwrap,html.glass .xsum{background:color-mix(in srgb,var(--card) var(--ga),transparent);-webkit-backdrop-filter:blur(var(--gb));backdrop-filter:blur(var(--gb))}
+  html.glass .xtb th,html.glass .xtb td{background:transparent}
+  html.glass .xtb thead th{background:color-mix(in srgb,var(--card-2) 85%,transparent)}
   :focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 </style>
 </head>
@@ -523,7 +548,7 @@ let S = {
 let queue = [];
 let ui = { tab:"book", gv:"goals", month:ymNow(), filter:"all", wallet:"all", grid:false,
            syncing:false, lastError:null,
-           wide:(LS.get(K_WIDE)===null ? (window.innerWidth>=900) : LS.get(K_WIDE)==="1"),
+           wide:(LS.get("ezh:ver")!=="mobile"), xf:{}, xs:{k:"date",dir:1}, tblAll:false,
            zoom:parseFloat(LS.get("ezh:zoom"))||1, bv:LS.get("ezh:bv")||"feed", hm:"out", openDays:{} };
 
 function ymNow(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"); }
@@ -915,7 +940,7 @@ const $ = s => document.querySelector(s);
 function render(){
   if(!session) return;
   document.body.classList.toggle("wide", ui.wide);
-  document.documentElement.style.zoom = (window.innerWidth>=900 && ui.zoom!==1) ? ui.zoom : "";
+  document.documentElement.style.zoom = (ui.wide && ui.zoom!==1) ? ui.zoom : "";
   renderHeader(); renderSync(); renderDraftBar();
   $("#monthBar").style.display = (ui.tab==="goals"||ui.tab==="set"||ui.tab==="ai") ? "none" : "flex";
   $("#addBtn").style.display = ui.tab==="ai" ? "none" : "";
@@ -936,9 +961,10 @@ function renderSync(){
   else if(ui.lastError){ el.className="sync err"; txt="Нет связи · "+ui.lastError; }
   el.appendChild(document.createTextNode(txt));
   const b=document.createElement("button");
-  b.className="wbtn"; b.textContent = ui.wide ? "Узкий вид" : "Широкий вид";
-  b.onclick=()=>{ ui.wide=!ui.wide; LS.set(K_WIDE, ui.wide?"1":"0"); render(); };
-  if(window.innerWidth>=900){
+  b.className="wbtn"; b.textContent = ui.wide ? "Версия: ПК" : "Версия: телефон";
+  b.title="Переключить между версией для компьютера и для телефона";
+  b.onclick=()=>{ ui.wide=!ui.wide; LS.set("ezh:ver", ui.wide?"pc":"mobile"); applyViewport(); render(); };
+  if(ui.wide){
     const z=document.createElement("span"); z.className="zbtns";
     const mk=(t,fn,ttl)=>{ const x=document.createElement("button"); x.className="wbtn"; x.textContent=t; x.title=ttl; x.onclick=fn; return x; };
     z.appendChild(mk("−",()=>setZoom(ui.zoom-0.1),"Отдалить"));
@@ -948,6 +974,12 @@ function renderSync(){
   }
   el.appendChild(b);
 }
+/* версия ПК на телефоне: страница раскладывается как на компьютере (ширина 1280), дальше приближать можно щипком или кнопками */
+function applyViewport(){
+  const m=document.querySelector('meta[name="viewport"]');
+  if(m) m.setAttribute("content", ui.wide ? "width=1280, viewport-fit=cover" : "width=device-width, initial-scale=1, viewport-fit=cover");
+}
+applyViewport();
 function setZoom(z){
   z=Math.min(1.6,Math.max(0.7,Math.round(z*20)/20)); ui.zoom=z; LS.set("ezh:zoom",String(z)); render();
 }
@@ -1001,7 +1033,7 @@ function viewBook(){
   left.textContent = ui.wallet==="all" ? "" : walletById(ui.wallet).name;
   bar.appendChild(left);
   const tg=document.createElement("div"); tg.className="bseg";
-  [["feed","Лента"],["a","Тетрадь"],["b","Сводка"],["c","Карта"]].forEach(([k,t])=>{
+  [["feed","Лента"],["a","Таблица"],["b","Сводка"],["c","Карта"]].forEach(([k,t])=>{
     const x=document.createElement("button"); x.textContent=t; x.className=ui.bv===k?"on":"";
     x.onclick=()=>{ ui.bv=k; LS.set("ezh:bv",k); render(); }; tg.appendChild(x);
   });
@@ -1024,7 +1056,7 @@ function viewBook(){
     e.innerHTML='<div class="empty"><b>Здесь пусто</b>Нажми «плюс» внизу и запиши первую сумму.</div>';
     box.appendChild(e); return box;
   }
-  const body = ui.bv==="a" ? gridA(list) : ui.bv==="b" ? gridB(listAll) : ui.bv==="c" ? gridC(listAll) : feedList(list);
+  const body = ui.bv==="a" ? gridA() : ui.bv==="b" ? gridB(listAll) : ui.bv==="c" ? gridC(listAll) : feedList(list);
   if(ui.bv==="feed" && ui.wide && window.innerWidth>=1000){
     const g=document.createElement("div"); g.className="bookgrid";
     const side=document.createElement("div"); side.className="side"; side.appendChild(monthCard());
@@ -1154,8 +1186,7 @@ function walletFilter(list){
     ? (e.out.wallet===ui.wallet || e.inn.wallet===ui.wallet) : e.wallet===ui.wallet);
 }
 function openDay(date){
-  ui.bv="a"; LS.set("ezh:bv","a"); ui.openDays[date]=true; render();
-  setTimeout(()=>{ const el=document.querySelector('[data-d="'+date+'"]'); if(el) el.scrollIntoView({block:"center"}); },30);
+  ui.bv="a"; LS.set("ezh:bv","a"); ui.tblAll=false; ui.xf.date={from:date,to:date}; render();
 }
 function monthCard(){
   const t=sumsOf(walletFilter(monthEntries(ui.month)));
@@ -1168,53 +1199,126 @@ function monthCard(){
   b.innerHTML=h; return b;
 }
 
-/* А. Тетрадь по дням: колонки как в бумажной тетради, итог внизу, строку дня можно раскрыть */
-function gridA(list){
-  const wrap=document.createElement("div"); wrap.className="gridwrap";
-  const cols = ui.filter==="all" ? COLS : COLS.filter(c=>c.id===ui.filter);
-  const days=aggDays(list), dates=Object.keys(days).sort();
-  const hasSelf = ui.filter==="all" && dates.some(d=>days[d].self>0);
-  const mx={}; cols.forEach(c=>mx[c.id]=Math.max(1,...dates.map(d=>days[d].c[c.id]||0)));
-  const ncol=cols.length+(hasSelf?1:0)+2;
-  let head='<tr><th>День</th>';
-  cols.forEach(c=>head+='<th style="--tc:'+c.color+';color:'+c.color+'">'+c.short+'</th>');
-  if(hasSelf) head+='<th style="--tc:var(--teal);color:var(--teal)">Себе</th>';
-  head+='<th>Остаток</th></tr>';
-  let body="";
-  if(ui.filter==="all" && ui.wallet==="all"){
-    const ob=balBefore(ui.month);
-    body+='<tr class="opening"><td colspan="'+(ncol-1)+'">Остаток на начало месяца</td><td class="bal'+(ob<0?" neg":"")+'">'+fmtShort(ob)+'</td></tr>';
-  }
-  const tot={}; cols.forEach(c=>tot[c.id]=0); let totSelf=0;
-  dates.forEach(date=>{
-    const d=days[date], open=!!ui.openDays[date], we=wdIdx(date)>=5;
-    body+='<tr class="drow'+(we?" we":"")+(open?" open":"")+'" data-d="'+date+'"><td class="dd"><b>'+date.slice(8,10)+'</b><span>'+WDM[wdIdx(date)]+'</span>'+
-      (d.conv?'<span class="badge2">⇄'+(d.conv>1?d.conv:"")+'</span>':"")+'</td>';
-    cols.forEach(c=>{
-      const v=d.c[c.id];
-      if(v===undefined) body+='<td class="nul">·</td>';
-      else { tot[c.id]+=v; body+='<td class="dc" style="--c:'+c.color+';--w:'+Math.round(v/mx[c.id]*100)+'%">'+(v===0?"0":fmtShort(v))+'</td>'; }
-    });
-    if(hasSelf){ totSelf+=d.self; body+= d.self>0 ? '<td class="dc" style="--c:var(--teal);--w:0%">−'+fmtShort(d.self)+'</td>' : '<td class="nul">·</td>'; }
-    body+='<td class="bal'+(d.run<0?" neg":"")+'">'+fmtShort(d.run)+'</td></tr>';
-    if(open) d.items.forEach(e=>{
-      let txt, amt;
-      if(e.conv){ const wo=walletById(e.out.wallet), wi=walletById(e.inn.wallet);
-        txt="⇄ обмен"+(e.note?" · "+escapeHtml(e.note):""); amt=fmt(e.out.amount,wo.cur)+" → "+fmt(e.inn.amount,wi.cur); }
-      else { const w=walletById(e.wallet), c=COLS.find(x=>x.id===e.col);
-        txt=(c?c.name:"Себе")+(e.note?" · "+escapeHtml(e.note):""); amt=(e.amount===0?"0":fmt(e.amount,w.cur))+" · "+w.short; }
-      body+='<tr class="sub" data-id="'+e.id+'" data-conv="'+(e.conv?e.conv_id:"")+'"><td colspan="'+(ncol-1)+'">'+txt+'</td><td>'+amt+'</td></tr>';
-    });
+/* А. Таблица как в Excel: строка на запись, фильтр и сортировка в заголовках, итоги по валютам без пересчёта */
+const XKEYS=[["date","Дата","date"],["colName","Статья","set"],["sum","Сумма","num"],["cur","Валюта","set"],
+  ["walletName","Кошелёк","set"],["note","Заметка","text"],["src","Кто внёс","set"],["wrun","Остаток кошелька","num"]];
+function xRows(){
+  const bal={}; WALLETS.forEach(w=>bal[w.id]=Number(S.settings.starts[w.id]||0));
+  let rows=sortedEntries().map(e=>{
+    const c=colById(e.col), w=walletById(e.wallet), v=c.sign*Number(e.amount);
+    bal[e.wallet]=(bal[e.wallet]||0)+v;
+    return {id:e.id,conv_id:e.conv_id,date:e.date,col:e.col,colName:c.name,color:c.color,sum:v,cur:w.cur,wallet:e.wallet,
+            walletName:w.name,note:e.note||"",src:e.source==="ai"?"помощник":"я",wrun:bal[e.wallet]};
   });
-  let foot='<tr class="sum"><td>Итого</td>';
-  cols.forEach(c=>foot+='<td style="color:'+c.color+'">'+fmtShort(tot[c.id])+'</td>');
-  if(hasSelf) foot+='<td style="color:var(--teal)">−'+fmtShort(totSelf)+'</td>';
-  const last=dates.length?days[dates[dates.length-1]].run:totalBase();
-  foot+='<td class="bal'+(last<0?" neg":"")+'">'+fmtShort(last)+'</td></tr>';
-  wrap.innerHTML='<table class="gt ta"><thead>'+head+'</thead><tbody>'+body+'</tbody><tfoot>'+foot+'</tfoot></table>';
-  wrap.querySelectorAll("tr.drow").forEach(tr=>tr.onclick=()=>{ const k=tr.dataset.d; ui.openDays[k]=!ui.openDays[k]; render(); });
-  wrap.querySelectorAll("tr.sub").forEach(tr=>tr.onclick=()=>{ if(tr.dataset.conv) openConv(tr.dataset.conv); else openEntry(tr.dataset.id); });
-  return wrap;
+  if(!ui.tblAll) rows=rows.filter(r=>r.date.slice(0,7)===ui.month);
+  if(ui.filter!=="all") rows=rows.filter(r=>r.col===ui.filter);
+  if(ui.wallet!=="all") rows=rows.filter(r=>r.wallet===ui.wallet);
+  return rows;
+}
+function xApply(rows){
+  const f=ui.xf, t={}; XKEYS.forEach(k=>t[k[0]]=k[2]);
+  rows=rows.filter(r=>{
+    for(const k in f){ const x=f[k], v=r[k];
+      if(t[k]==="set" && x.ex && x.ex.includes(String(v))) return false;
+      if(t[k]==="num"){ if(x.min!=null && v<x.min) return false; if(x.max!=null && v>x.max) return false; }
+      if(t[k]==="date"){ if(x.from && v<x.from) return false; if(x.to && v>x.to) return false; }
+      if(t[k]==="text" && x.q && !String(v).toLowerCase().includes(x.q.toLowerCase())) return false;
+    }
+    return true;
+  });
+  const o=ui.xs;
+  if(o) rows=rows.slice().sort((a,b)=>{ const x=a[o.k], y=b[o.k];
+    return ((typeof x==="number")?x-y:String(x).localeCompare(String(y),"ru"))*o.dir; });
+  return rows;
+}
+function openXFilter(k,title,type,base){
+  const m=$("#modal"), f=ui.xf[k]||{};
+  let h='<button class="mclose" id="mClose">×</button><h3>'+title+'</h3>'+
+    '<div class="abtns" style="margin-bottom:12px"><button id="xAsc">Сортировать ↑</button><button id="xDesc">Сортировать ↓</button></div>';
+  let vals=[];
+  if(type==="set"){
+    vals=[...new Set(base.map(r=>String(r[k])))].sort((a,b)=>a.localeCompare(b,"ru"));
+    h+='<div class="abtns" style="margin-bottom:8px"><button id="xAll">Все</button><button id="xNone">Ничего</button></div><div style="max-height:40vh;overflow:auto">';
+    vals.forEach((v,i)=>h+='<label class="xchk"><input type="checkbox" data-i="'+i+'"'+((f.ex||[]).includes(v)?"":" checked")+'> '+escapeHtml(v||"(пусто)")+'</label>');
+    h+='</div>';
+  }
+  if(type==="num") h+='<div class="field"><label for="xMin">От</label><input id="xMin" inputmode="decimal" value="'+(f.min!=null?f.min:"")+'"></div>'+
+                      '<div class="field"><label for="xMax">До</label><input id="xMax" inputmode="decimal" value="'+(f.max!=null?f.max:"")+'"></div>';
+  if(type==="date") h+='<div class="field"><label for="xFrom">С даты</label><input id="xFrom" type="date" value="'+(f.from||"")+'"></div>'+
+                       '<div class="field"><label for="xTo">По дату</label><input id="xTo" type="date" value="'+(f.to||"")+'"></div>';
+  if(type==="text") h+='<div class="field"><label for="xQ">Содержит</label><input id="xQ" value="'+escapeHtml(f.q||"")+'" placeholder="часть слова"></div>';
+  m.innerHTML=h;
+  const done=()=>{ closeModal(); render(); };
+  m.querySelector("#mClose").onclick=dismissModal;
+  m.querySelector("#xAsc").onclick=()=>{ ui.xs={k,dir:1}; done(); };
+  m.querySelector("#xDesc").onclick=()=>{ ui.xs={k,dir:-1}; done(); };
+  if(type==="set"){
+    const boxes=()=>[...m.querySelectorAll("input[type=checkbox]")];
+    m.querySelector("#xAll").onclick=()=>boxes().forEach(c=>c.checked=true);
+    m.querySelector("#xNone").onclick=()=>boxes().forEach(c=>c.checked=false);
+  }
+  const ok=document.createElement("button"); ok.className="btn"; ok.textContent="Применить";
+  ok.onclick=()=>{
+    let x=null;
+    if(type==="set"){ const ex=[...m.querySelectorAll("input[type=checkbox]")].filter(c=>!c.checked).map(c=>vals[+c.dataset.i]); if(ex.length) x={ex}; }
+    if(type==="num"){ const num=id=>{ const p=parseFloat(String(m.querySelector(id).value).replace(/\s/g,"").replace(",",".")); return isFinite(p)?p:null; };
+      const a=num("#xMin"), b=num("#xMax"); if(a!=null||b!=null) x={min:a,max:b}; }
+    if(type==="date"){ const a=m.querySelector("#xFrom").value, b=m.querySelector("#xTo").value; if(a||b) x={from:a,to:b}; }
+    if(type==="text"){ const q=m.querySelector("#xQ").value.trim(); if(q) x={q}; }
+    if(x) ui.xf[k]=x; else delete ui.xf[k];
+    done();
+  };
+  m.appendChild(ok);
+  const clr=document.createElement("button"); clr.className="btn ghost"; clr.textContent="Сбросить фильтр столбца";
+  clr.onclick=()=>{ delete ui.xf[k]; done(); }; m.appendChild(clr);
+  $("#scrim").hidden=false;
+}
+function gridA(){
+  const base=xRows(), rows=xApply(base), box=document.createElement("div");
+  const tb=document.createElement("div"); tb.className="xtool";
+  const sg=document.createElement("div"); sg.className="bseg";
+  [[false,"Этот месяц"],[true,"Всё время"]].forEach(([v,t])=>{ const x=document.createElement("button"); x.textContent=t; x.className=ui.tblAll===v?"on":"";
+    x.onclick=()=>{ ui.tblAll=v; render(); }; sg.appendChild(x); });
+  tb.appendChild(sg);
+  const nf=Object.keys(ui.xf).length;
+  const info=document.createElement("span"); info.className="hint"; info.style.margin="0";
+  info.textContent="Строк: "+rows.length+(rows.length!==base.length?" из "+base.length:"")+(nf?" · фильтров: "+nf:"");
+  tb.appendChild(info);
+  if(nf){ const r=document.createElement("button"); r.className="wbtn"; r.style.margin="0"; r.textContent="Сбросить фильтры";
+    r.onclick=()=>{ ui.xf={}; render(); }; tb.appendChild(r); }
+  box.appendChild(tb);
+  const wrap=document.createElement("div"); wrap.className="xwrap";
+  let head="<tr>";
+  XKEYS.forEach(([k,t,ty])=>{
+    const on=!!ui.xf[k], srt=ui.xs&&ui.xs.k===k?(ui.xs.dir>0?"▲":"▼"):"";
+    head+='<th class="'+(ty==="num"?"n":"")+'"><div class="xh"><span class="xt" data-k="'+k+'">'+t+'</span><i class="xsort">'+srt+'</i>'+
+          '<button class="xfb'+(on?" on":"")+'" data-k="'+k+'" title="Фильтр">▾</button></div></th>';
+  });
+  head+="</tr>";
+  let body="";
+  rows.forEach(r=>{
+    body+='<tr data-id="'+r.id+'" data-conv="'+(r.conv_id||"")+'"><td>'+r.date.slice(8,10)+"."+r.date.slice(5,7)+"."+r.date.slice(0,4)+'</td>'+
+      '<td><span class="xdot" style="background:'+r.color+'"></span>'+r.colName+'</td>'+
+      '<td class="n" style="color:'+(r.sum<0?"var(--red)":"var(--green)")+';font-weight:600">'+(r.sum<0?"−":"+")+fmt(Math.abs(r.sum),r.cur)+'</td>'+
+      '<td>'+r.cur+'</td><td>'+r.walletName+'</td><td class="xnote">'+escapeHtml(r.note)+'</td><td>'+r.src+'</td>'+
+      '<td class="n'+(r.wrun<0?" neg":"")+'">'+fmt(r.wrun,r.cur)+'</td></tr>';
+  });
+  if(!rows.length) body='<tr><td colspan="8" style="text-align:center;color:var(--ink-faint);padding:22px">Нет строк под выбранные фильтры</td></tr>';
+  wrap.innerHTML='<table class="xtb"><thead>'+head+'</thead><tbody>'+body+'</tbody></table>';
+  wrap.querySelectorAll(".xt").forEach(el=>el.onclick=()=>{ const k=el.dataset.k;
+    ui.xs = ui.xs&&ui.xs.k===k ? {k,dir:-ui.xs.dir} : {k,dir:1}; render(); });
+  wrap.querySelectorAll(".xfb").forEach(el=>el.onclick=ev=>{ ev.stopPropagation(); const d=XKEYS.find(x=>x[0]===el.dataset.k); openXFilter(d[0],d[1],d[2],base); });
+  wrap.querySelectorAll("tbody tr[data-id]").forEach(tr=>tr.onclick=()=>{ if(tr.dataset.conv) openConv(tr.dataset.conv); else openEntry(tr.dataset.id); });
+  box.appendChild(wrap);
+  // итоги по видимым строкам: каждая валюта отдельно, без пересчёта по курсу
+  const cur={}; rows.forEach(r=>{ const c=cur[r.cur]||(cur[r.cur]={inc:0,exp:0,net:0}); c.net+=r.sum;
+    if(r.col==="in") c.inc+=r.sum; else if(COLS.some(x=>x.id===r.col)) c.exp+=-r.sum; });
+  const sm=document.createElement("div"); sm.className="xsum";
+  sm.innerHTML=Object.keys(cur).length ? Object.keys(cur).map(c=>'<div><b>'+(c==="USD"?"Доллары":"Сумы")+':</b> приход '+fmt(cur[c].inc,c)+' · расход '+fmt(cur[c].exp,c)+
+      ' · движение с обменом и выплатами '+(cur[c].net<0?"−":"+")+fmt(Math.abs(cur[c].net),c)+'</div>').join("")
+    : "Нет данных";
+  box.appendChild(sm);
+  return box;
 }
 
 /* Б. Сводка месяца: статьи по неделям, доля расходов и сравнение с прошлым месяцем */
@@ -1254,7 +1358,7 @@ function gridB(listAll){
   wrap.querySelectorAll("[data-f]").forEach(td=>td.onclick=()=>{ ui.filter=td.dataset.f; ui.bv="a"; LS.set("ezh:bv","a"); render(); });
   const box=document.createElement("div"); box.appendChild(wrap);
   const note=document.createElement("div"); note.className="hint"; note.style.marginTop="8px";
-  note.textContent="Недели считаются с понедельника, суммы в "+(S.settings.base==="USD"?"долларах":"сумах")+" по курсу в шапке. Нажми на статью, чтобы открыть её записи в тетради.";
+  note.textContent="Недели считаются с понедельника, суммы в "+(S.settings.base==="USD"?"долларах":"сумах")+" по курсу в шапке. Нажми на статью, чтобы открыть её записи в таблице.";
   box.appendChild(note); return box;
 }
 
