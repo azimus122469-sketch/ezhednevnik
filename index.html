@@ -265,6 +265,91 @@
   .signin .block{background:#fff}
   .swap{background:none;border:none;color:var(--blue);font-family:inherit;font-size:13.5px;
         cursor:pointer;padding:10px 0 0;width:100%}
+
+  /* черновики */
+  .draftbar{display:flex;flex-wrap:wrap;gap:6px;padding-top:10px}
+  .draftbar[hidden]{display:none}
+  .dchip{display:flex;align-items:center;gap:7px;max-width:100%;border:1px solid #E9B8B3;background:#FFF4F2;border-radius:10px;
+         padding:6px 8px 6px 10px;font:inherit;font-size:13px;color:var(--ink);cursor:pointer;text-align:left}
+  .dchip .dlab{color:var(--red);font-weight:700;font-size:12px;flex:0 0 auto}
+  .dchip .dtx{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .dchip .dx{flex:0 0 auto;color:var(--ink-faint);font-style:normal;font-size:17px;line-height:1;padding:0 2px}
+  .draftnote{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:-6px 0 12px;padding:7px 10px;border-radius:9px;
+             background:#FFF4F2;border:1px solid #E9B8B3;font-size:12.5px;color:var(--red)}
+  .draftnote button{border:none;background:transparent;color:var(--ink-soft);font:inherit;font-size:12.5px;text-decoration:underline;cursor:pointer;padding:0}
+  .add{position:relative}
+  .add.hasdraft::after{content:"";position:absolute;top:5px;right:5px;width:9px;height:9px;border-radius:50%;background:#E5483B;border:2px solid var(--ink)}
+
+  /* виды тетради */
+  .bseg{display:inline-flex;border:1px solid var(--edge);border-radius:9px;overflow:hidden;background:#fff}
+  .bseg button{border:none;background:transparent;padding:7px 11px;font:inherit;font-size:13px;color:var(--ink-soft);cursor:pointer;white-space:nowrap}
+  .bseg button.on{background:var(--ink);color:var(--paper)}
+  .gt{min-width:560px}
+  .gt thead th{background:#fff;border-top:3px solid var(--tc,transparent)}
+  .gt thead th:first-child,.gt thead th:last-child{border-top-color:transparent}
+  .gt.ta th:last-child,.gt.ta td.bal{position:sticky;right:0;background:#fff;box-shadow:-6px 0 6px -6px rgba(0,0,0,.18)}
+  .gt.ta tr.opening td.bal,.gt.ta tr.sum td.bal{background:var(--paper-2)}
+  .gt td.dd{font-size:13px}
+  .gt td.dd b{font-size:15px;font-family:var(--serif)}
+  .gt td.dd span{color:var(--ink-faint);font-size:11.5px;margin-left:4px}
+  .gt tr.we td.dd,.gt tr.we td.dd b{color:var(--red)}
+  .gt td.dc{background-image:linear-gradient(90deg,color-mix(in srgb,var(--c) 16%,transparent) var(--w,0%),transparent var(--w,0%));color:var(--c);font-weight:600}
+  .gt td.nul{color:var(--ink-faint)}
+  .gt tr.drow{cursor:pointer}
+  .gt tr.drow:hover td{background-color:var(--paper-2)}
+  .gt tr.sub td{background:#FCFBF7;font-size:12px;color:var(--ink-soft);padding:5px 10px;cursor:pointer;border-bottom:1px dashed var(--grid)}
+  .gt tr.sub td:first-child{padding-left:26px}
+  .gt tr.open td.dd{background:var(--paper-2)}
+  .gt tr.opening td,.gt tr.closing td{background:var(--paper-2);font-size:12px;color:var(--ink-soft);font-weight:600}
+  .gt .badge2{display:inline-block;margin-left:5px;font-size:11px;color:var(--teal)}
+  .gt td.share{min-width:84px}
+  .sbar{display:inline-block;height:6px;border-radius:3px;background:var(--c);vertical-align:middle;margin-right:5px;min-width:2px}
+  .dlt-up{color:var(--green)}.dlt-dn{color:var(--red)}
+  .gt td.rl{text-align:left;font-weight:600;cursor:pointer}
+  .gt td.rl i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;background:var(--c)}
+  .gt tr.sum td{border-top:1px solid var(--rule);font-weight:700;background:var(--paper-2)}
+  .gt td.cl{cursor:pointer}
+  .gt td.cl:hover{background:var(--paper-2)}
+  .hm-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+  .cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;max-width:1100px}
+  .cal .wh{font-size:11.5px;color:var(--ink-faint);text-align:center;padding-bottom:2px}
+  .hc{border:1px solid var(--edge);border-radius:9px;background:#fff;min-height:58px;padding:5px 6px;cursor:pointer;
+      display:flex;flex-direction:column;justify-content:space-between;font-variant-numeric:tabular-nums}
+  .hc i{font-style:normal;font-size:11.5px;color:var(--ink-soft)}
+  .hc b{font-size:12.5px;text-align:right;line-height:1.1}
+  .hc.emp{border-style:dashed;background:transparent;cursor:default}
+  .hc.today{outline:2px solid var(--ink);outline-offset:-2px}
+  .hc.blank{border:none;background:transparent;cursor:default}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:14px}
+  .stat{border:1px solid var(--edge);border-radius:10px;background:#fff;padding:9px 11px}
+  .stat small{display:block;font-size:11.5px;color:var(--ink-faint)}
+  .stat b{font-size:15px;font-variant-numeric:tabular-nums}
+  .stack{display:flex;height:16px;border-radius:8px;overflow:hidden;margin:10px 0 6px;background:var(--grid)}
+  .stack i{display:block;height:100%}
+
+  /* ноутбук */
+  .zbtns{display:inline-flex;gap:4px;margin-left:auto}
+  .sync .zbtns+.wbtn{margin-left:6px}
+  .sync .wbtn+.wbtn{margin-left:0}
+  .bookgrid{display:block}
+  @media (min-width:1000px){
+    body.wide .wrap{max-width:1480px;padding:0 28px}
+    body.wide .tabbar{max-width:760px;border:1px solid var(--edge);border-radius:14px 14px 0 0;border-bottom:none}
+    body.wide #purseRows{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+    body.wide .prow{border:1px solid var(--edge);border-radius:9px;background:#fff;padding:7px 10px}
+    body.wide .prow.on{background:var(--paper-2)}
+    body.wide .purse-left{flex-basis:190px}
+    body.wide .rate-num{font-size:17px}
+    body.wide .total-num{font-size:26px}
+    body.wide .bookgrid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:22px;align-items:start}
+    body.wide .bookgrid .side{position:sticky;top:210px}
+    body.wide .scrim{align-items:center}
+    body.wide .modal{border-radius:16px;max-width:560px;padding-bottom:16px}
+    body.wide .cal{gap:8px}
+    body.wide .hc{min-height:78px}
+    body.wide table{font-size:14px}
+    body.wide th,body.wide td{padding:9px 14px}
+  }
   :focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 </style>
 </head>
@@ -296,6 +381,7 @@
   </div>
 </header>
 
+<div class="wrap draftbar" id="draftBar" hidden></div>
 <main class="wrap" id="view"></main>
 
 <div class="tabbar" id="tabbar" hidden>
@@ -402,7 +488,9 @@ let S = {
 };
 let queue = [];
 let ui = { tab:"book", gv:"goals", month:ymNow(), filter:"all", wallet:"all", grid:false,
-           syncing:false, lastError:null, wide:LS.get(K_WIDE)==="1" };
+           syncing:false, lastError:null,
+           wide:(LS.get(K_WIDE)===null ? (window.innerWidth>=900) : LS.get(K_WIDE)==="1"),
+           zoom:parseFloat(LS.get("ezh:zoom"))||1, bv:LS.get("ezh:bv")||"feed", hm:"out", openDays:{} };
 
 function ymNow(){ const d=new Date(); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"); }
 function todayISO(){ const d=new Date();
@@ -472,7 +560,7 @@ async function signUp(email,password){
   return false;
 }
 function signOut(){
-  session=null; LS.del(K_SESSION); LS.del(K_CACHE); LS.del(K_QUEUE);
+  session=null; LS.del(K_SESSION); LS.del(K_CACHE); LS.del(K_QUEUE); DR={}; LS.del(K_DRAFTS);
   S={ entries:[], goals:[], steps:[], debts:[], settings:{ starts:{}, base:"USD", rate:12600,
       rateSource:"cbu", notifyTime:"21:00", checks:{}, payPct:10, payBase:"all" } };
   queue=[]; boot();
@@ -793,7 +881,8 @@ const $ = s => document.querySelector(s);
 function render(){
   if(!session) return;
   document.body.classList.toggle("wide", ui.wide);
-  renderHeader(); renderSync();
+  document.documentElement.style.zoom = (window.innerWidth>=900 && ui.zoom!==1) ? ui.zoom : "";
+  renderHeader(); renderSync(); renderDraftBar();
   $("#monthBar").style.display = (ui.tab==="goals"||ui.tab==="set"||ui.tab==="ai") ? "none" : "flex";
   $("#addBtn").style.display = ui.tab==="ai" ? "none" : "";
   $("#chips").style.display = (ui.tab==="book") ? "flex" : "none";
@@ -815,7 +904,18 @@ function renderSync(){
   const b=document.createElement("button");
   b.className="wbtn"; b.textContent = ui.wide ? "Узкий вид" : "Широкий вид";
   b.onclick=()=>{ ui.wide=!ui.wide; LS.set(K_WIDE, ui.wide?"1":"0"); render(); };
+  if(window.innerWidth>=900){
+    const z=document.createElement("span"); z.className="zbtns";
+    const mk=(t,fn,ttl)=>{ const x=document.createElement("button"); x.className="wbtn"; x.textContent=t; x.title=ttl; x.onclick=fn; return x; };
+    z.appendChild(mk("−",()=>setZoom(ui.zoom-0.1),"Отдалить"));
+    z.appendChild(mk(Math.round(ui.zoom*100)+"%",()=>setZoom(1),"Сбросить масштаб"));
+    z.appendChild(mk("+",()=>setZoom(ui.zoom+0.1),"Приблизить"));
+    el.appendChild(z);
+  }
   el.appendChild(b);
+}
+function setZoom(z){
+  z=Math.min(1.6,Math.max(0.7,Math.round(z*20)/20)); ui.zoom=z; LS.set("ezh:zoom",String(z)); render();
 }
 function renderHeader(){
   const rows=$("#purseRows"); rows.innerHTML="";
@@ -861,15 +961,16 @@ function renderHeader(){
 function viewBook(){
   const box=document.createElement("div");
   const bar=document.createElement("div");
-  bar.style.cssText="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px";
+  bar.style.cssText="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap";
   const left=document.createElement("div");
   left.style.cssText="font-size:12.5px;color:var(--ink-soft)";
   left.textContent = ui.wallet==="all" ? "" : walletById(ui.wallet).name;
   bar.appendChild(left);
-  const tg=document.createElement("button");
-  tg.className="btn ghost"; tg.style.cssText="width:auto;padding:7px 12px;font-size:13px";
-  tg.textContent = ui.grid?"Показать лентой":"Показать сеткой";
-  tg.onclick=()=>{ ui.grid=!ui.grid; render(); };
+  const tg=document.createElement("div"); tg.className="bseg";
+  [["feed","Лента"],["a","Тетрадь"],["b","Сводка"],["c","Карта"]].forEach(([k,t])=>{
+    const x=document.createElement("button"); x.textContent=t; x.className=ui.bv===k?"on":"";
+    x.onclick=()=>{ ui.bv=k; LS.set("ezh:bv",k); render(); }; tg.appendChild(x);
+  });
   const cv=document.createElement("button");
   cv.className="btn ghost"; cv.style.cssText="width:auto;padding:7px 12px;font-size:13px;display:flex;align-items:center;gap:6px";
   cv.innerHTML=ico("conv","currentColor",15)+"Обмен";
@@ -878,17 +979,23 @@ function viewBook(){
   right.appendChild(cv); right.appendChild(tg);
   bar.appendChild(right); box.appendChild(bar);
 
-  let list=monthEntries(ui.month);
-  if(ui.filter!=="all") list=list.filter(e=>!e.conv && e.col===ui.filter);
-  if(ui.wallet!=="all") list=list.filter(e=> e.conv
+  let listAll=monthEntries(ui.month);
+  if(ui.wallet!=="all") listAll=listAll.filter(e=> e.conv
     ? (e.out.wallet===ui.wallet || e.inn.wallet===ui.wallet) : e.wallet===ui.wallet);
+  let list=listAll;
+  if(ui.filter!=="all") list=list.filter(e=>!e.conv && e.col===ui.filter);
 
   if(!list.length){
     const e=document.createElement("div"); e.className="ledger";
     e.innerHTML='<div class="empty"><b>Здесь пусто</b>Нажми «плюс» внизу и запиши первую сумму.</div>';
     box.appendChild(e); return box;
   }
-  box.appendChild(ui.grid?gridTable(list):feedList(list));
+  const body = ui.bv==="a" ? gridA(list) : ui.bv==="b" ? gridB(listAll) : ui.bv==="c" ? gridC(listAll) : feedList(list);
+  if(ui.bv==="feed" && ui.wide && window.innerWidth>=1000){
+    const g=document.createElement("div"); g.className="bookgrid";
+    const side=document.createElement("div"); side.className="side"; side.appendChild(monthCard());
+    g.appendChild(body); g.appendChild(side); box.appendChild(g);
+  }else box.appendChild(body);
   return box;
 }
 function dayHead(date, info){
@@ -975,45 +1082,202 @@ function feedList(list){
   });
   return wrap;
 }
-function gridTable(list){
-  const wrap=document.createElement("div"); wrap.className="gridwrap";
-  const t=monthTotals(ui.month);
-  let head='<tr><th>Дата</th>';
-  COLS.forEach(c=>head+='<th style="color:'+c.color+'">'+c.short+'</th>');
-  head+='<th>Кошелёк</th><th>Остаток</th></tr>';
-  let body="";
+/* ---------- виды тетради: Тетрадь (А), Сводка (Б), Карта (В) ---------- */
+const WDM=["Пн","Вт","Ср","Чт","Пт","Сб","Вс"];
+const MONTHS_GEN=["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
+function wdIdx(iso){ const [y,m,d]=iso.split("-").map(Number); return (new Date(y,m-1,d).getDay()+6)%7; }
+function baseOf(e){ return toBase(e.amount, walletById(e.wallet).cur); }
+function balBefore(ym){
+  const all=withRunning().filter(e=>e.date.slice(0,7)<ym);
+  if(all.length) return all[all.length-1].run;
+  return WALLETS.reduce((a,w)=>a+toBase(Number(S.settings.starts[w.id]||0),w.cur),0);
+}
+function aggDays(list){
+  const days={};
   list.forEach(e=>{
-    body+="<tr><td>"+e.date.slice(8,10)+"."+e.date.slice(5,7)+"</td>";
-    if(e.conv){
-      const o=e.out, i=e.inn, wo=walletById(o.wallet), wi=walletById(i.wallet);
-      body+='<td colspan="'+COLS.length+'" style="text-align:left;color:var(--ink-soft)">⇄ '+
-        fmt(o.amount,wo.cur)+" → "+fmt(i.amount,wi.cur)+
-        (wo.cur!==wi.cur&&e.rate?" · курс "+Math.round(e.rate):"")+
-        (wo.cur!==wi.cur&&convFx(e)!==null?' · <span class="'+fxClass(convFx(e))+'">разница '+fxText(convFx(e))+'</span>':"")+'</td>';
-      body+='<td style="color:var(--ink-soft);font-size:12px">'+wo.short+" → "+wi.short+"</td>";
-    }else if(!COLS.some(c=>c.id===e.col)){
-      const w=walletById(e.wallet);
-      body+='<td colspan="'+COLS.length+'" style="text-align:left;color:var(--teal);font-weight:600">'+
-        ico("self","var(--teal)",14)+' Себе '+(e.amount?fmt(e.amount,w.cur):"0")+'</td>';
-      body+='<td style="color:var(--ink-soft);font-size:12px">'+w.short+"</td>";
-    }else{
-      const w=walletById(e.wallet);
-      COLS.forEach(c=>{
-        body += (e.col===c.id)
-          ? '<td style="color:'+c.color+';font-weight:600" title="'+escapeHtml(e.note||"")+'">'+
-            (e.amount===0?"0":fmt(e.amount,w.cur))+"</td>"
-          : '<td style="color:var(--ink-faint)">—</td>';
-      });
-      body+='<td style="color:var(--ink-soft);font-size:12px">'+w.short+"</td>";
-    }
-    body+='<td class="bal'+(e.run<0?" neg":"")+'">'+fmtShort(e.run)+"</td></tr>";
+    const d=days[e.date]||(days[e.date]={date:e.date,c:{},self:0,conv:0,run:null,items:[],spent:0,inc:0});
+    d.items.push(e); d.run=e.run;
+    if(e.conv){ d.conv++; return; }
+    if(COLS.some(c=>c.id===e.col)){
+      const b=baseOf(e); d.c[e.col]=(d.c[e.col]||0)+b;
+      if(e.col==="in") d.inc+=b; else d.spent+=b;
+    }else if(e.col==="self") d.self+=baseOf(e);
   });
-  let foot="<tr><td>Итого</td>";
-  COLS.forEach(c=>foot+='<td style="color:'+c.color+'">'+fmtShort(t[c.id])+"</td>");
-  const last=list.length?list[list.length-1].run:totalBase();
-  foot+="<td></td>"+'<td class="bal'+(last<0?" neg":"")+'">'+fmtShort(last)+"</td></tr>";
-  wrap.innerHTML="<table><thead>"+head+"</thead><tbody>"+body+"</tbody><tfoot>"+foot+"</tfoot></table>";
+  return days;
+}
+function sumsOf(list){
+  const r={c:{},self:0,exp:0,inc:0}; COLS.forEach(c=>r.c[c.id]=0);
+  list.forEach(e=>{
+    if(e.conv) return;
+    if(e.col in r.c){ const b=baseOf(e); r.c[e.col]+=b; if(e.col==="in") r.inc+=b; else r.exp+=b; }
+    else if(e.col==="self") r.self+=baseOf(e);
+  });
+  r.profit = r.inc - (payBase()==="real" ? r.c.real : r.exp);
+  return r;
+}
+function walletFilter(list){
+  return ui.wallet==="all" ? list : list.filter(e=> e.conv
+    ? (e.out.wallet===ui.wallet || e.inn.wallet===ui.wallet) : e.wallet===ui.wallet);
+}
+function openDay(date){
+  ui.bv="a"; LS.set("ezh:bv","a"); ui.openDays[date]=true; render();
+  setTimeout(()=>{ const el=document.querySelector('[data-d="'+date+'"]'); if(el) el.scrollIntoView({block:"center"}); },30);
+}
+function monthCard(){
+  const t=sumsOf(walletFilter(monthEntries(ui.month)));
+  const b=document.createElement("div"); b.className="block";
+  let h="<h2>Месяц в цифрах</h2>";
+  COLS.forEach(c=>h+='<div class="kv"><span><i class="dot" style="background:'+c.color+'"></i> '+c.name+'</span><b>'+fmtShort(t.c[c.id])+'</b></div>');
+  h+='<div class="kv"><span>Расходы всего</span><b>'+fmtShort(t.exp)+'</b></div>'+
+     '<div class="kv"><span>Прибыль</span><b style="color:var(--'+(t.profit<0?"red":"green")+')">'+fmtShort(t.profit)+'</b></div>'+
+     '<div class="kv"><span>Выплачено себе</span><b>'+fmtShort(t.self)+'</b></div>';
+  b.innerHTML=h; return b;
+}
+
+/* А. Тетрадь по дням: колонки как в бумажной тетради, итог внизу, строку дня можно раскрыть */
+function gridA(list){
+  const wrap=document.createElement("div"); wrap.className="gridwrap";
+  const cols = ui.filter==="all" ? COLS : COLS.filter(c=>c.id===ui.filter);
+  const days=aggDays(list), dates=Object.keys(days).sort();
+  const hasSelf = ui.filter==="all" && dates.some(d=>days[d].self>0);
+  const mx={}; cols.forEach(c=>mx[c.id]=Math.max(1,...dates.map(d=>days[d].c[c.id]||0)));
+  const ncol=cols.length+(hasSelf?1:0)+2;
+  let head='<tr><th>День</th>';
+  cols.forEach(c=>head+='<th style="--tc:'+c.color+';color:'+c.color+'">'+c.short+'</th>');
+  if(hasSelf) head+='<th style="--tc:var(--teal);color:var(--teal)">Себе</th>';
+  head+='<th>Остаток</th></tr>';
+  let body="";
+  if(ui.filter==="all" && ui.wallet==="all"){
+    const ob=balBefore(ui.month);
+    body+='<tr class="opening"><td colspan="'+(ncol-1)+'">Остаток на начало месяца</td><td class="bal'+(ob<0?" neg":"")+'">'+fmtShort(ob)+'</td></tr>';
+  }
+  const tot={}; cols.forEach(c=>tot[c.id]=0); let totSelf=0;
+  dates.forEach(date=>{
+    const d=days[date], open=!!ui.openDays[date], we=wdIdx(date)>=5;
+    body+='<tr class="drow'+(we?" we":"")+(open?" open":"")+'" data-d="'+date+'"><td class="dd"><b>'+date.slice(8,10)+'</b><span>'+WDM[wdIdx(date)]+'</span>'+
+      (d.conv?'<span class="badge2">⇄'+(d.conv>1?d.conv:"")+'</span>':"")+'</td>';
+    cols.forEach(c=>{
+      const v=d.c[c.id];
+      if(v===undefined) body+='<td class="nul">·</td>';
+      else { tot[c.id]+=v; body+='<td class="dc" style="--c:'+c.color+';--w:'+Math.round(v/mx[c.id]*100)+'%">'+(v===0?"0":fmtShort(v))+'</td>'; }
+    });
+    if(hasSelf){ totSelf+=d.self; body+= d.self>0 ? '<td class="dc" style="--c:var(--teal);--w:0%">−'+fmtShort(d.self)+'</td>' : '<td class="nul">·</td>'; }
+    body+='<td class="bal'+(d.run<0?" neg":"")+'">'+fmtShort(d.run)+'</td></tr>';
+    if(open) d.items.forEach(e=>{
+      let txt, amt;
+      if(e.conv){ const wo=walletById(e.out.wallet), wi=walletById(e.inn.wallet);
+        txt="⇄ обмен"+(e.note?" · "+escapeHtml(e.note):""); amt=fmt(e.out.amount,wo.cur)+" → "+fmt(e.inn.amount,wi.cur); }
+      else { const w=walletById(e.wallet), c=COLS.find(x=>x.id===e.col);
+        txt=(c?c.name:"Себе")+(e.note?" · "+escapeHtml(e.note):""); amt=(e.amount===0?"0":fmt(e.amount,w.cur))+" · "+w.short; }
+      body+='<tr class="sub" data-id="'+e.id+'" data-conv="'+(e.conv?e.conv_id:"")+'"><td colspan="'+(ncol-1)+'">'+txt+'</td><td>'+amt+'</td></tr>';
+    });
+  });
+  let foot='<tr class="sum"><td>Итого</td>';
+  cols.forEach(c=>foot+='<td style="color:'+c.color+'">'+fmtShort(tot[c.id])+'</td>');
+  if(hasSelf) foot+='<td style="color:var(--teal)">−'+fmtShort(totSelf)+'</td>';
+  const last=dates.length?days[dates[dates.length-1]].run:totalBase();
+  foot+='<td class="bal'+(last<0?" neg":"")+'">'+fmtShort(last)+'</td></tr>';
+  wrap.innerHTML='<table class="gt ta"><thead>'+head+'</thead><tbody>'+body+'</tbody><tfoot>'+foot+'</tfoot></table>';
+  wrap.querySelectorAll("tr.drow").forEach(tr=>tr.onclick=()=>{ const k=tr.dataset.d; ui.openDays[k]=!ui.openDays[k]; render(); });
+  wrap.querySelectorAll("tr.sub").forEach(tr=>tr.onclick=()=>{ if(tr.dataset.conv) openConv(tr.dataset.conv); else openEntry(tr.dataset.id); });
   return wrap;
+}
+
+/* Б. Сводка месяца: статьи по неделям, доля расходов и сравнение с прошлым месяцем */
+function gridB(listAll){
+  const ym=ui.month, N=daysInMonth(ym), first=wdIdx(ym+"-01"), nW=Math.floor((N-1+first)/7)+1;
+  const weeks=[]; for(let k=0;k<nW;k++) weeks.push([]);
+  listAll.forEach(e=>{ const dn=parseInt(e.date.slice(8,10),10); weeks[Math.floor((dn-1+first)/7)].push(e); });
+  const W=weeks.map(sumsOf), M=sumsOf(listAll);
+  const prevYm=shiftMonth(ym,-1), P=sumsOf(walletFilter(monthEntries(prevYm)));
+  const lab=k=>{ const a=Math.max(1,k*7-first+1), b=Math.min(N,k*7-first+7); return a===b?String(a):a+"–"+b; };
+  const rows=COLS.map(c=>({id:c.id,name:c.name,color:c.color,get:x=>x.c[c.id],kind:c.id==="in"?"inc":"exp",filter:c.id}));
+  rows.push({name:"Расходы всего",color:"var(--ink-soft)",get:x=>x.exp,kind:"exp",sum:true});
+  rows.push({name:"Прибыль",color:"var(--green)",get:x=>x.profit,kind:"inc",sum:true,profit:true});
+  if(M.self>0||P.self>0) rows.push({name:"Выплачено себе",color:"var(--teal)",get:x=>x.self,kind:"exp"});
+  let head='<tr><th>Статья</th>'; for(let k=0;k<nW;k++) head+='<th>'+lab(k)+'</th>';
+  head+='<th>Месяц</th><th>Доля расходов</th><th>Прошлый мес.</th><th>Δ</th></tr>';
+  let body="";
+  rows.forEach(r=>{
+    const m=r.get(M), p=r.get(P);
+    body+='<tr class="'+(r.sum?"sum":"")+'"><td class="rl" '+(r.filter?'data-f="'+r.filter+'"':'')+' style="--c:'+r.color+'">'+(r.sum?"":"<i></i>")+r.name+'</td>';
+    weeks.forEach((_,k)=>{ const v=r.get(W[k]);
+      body+= Math.abs(v)<0.005 ? '<td class="nul'+(r.filter?' cl':'')+'" '+(r.filter?'data-f="'+r.filter+'"':'')+'>·</td>'
+        : '<td class="'+(r.filter?'cl':'')+'" '+(r.filter?'data-f="'+r.filter+'"':'')+' style="color:'+(r.sum?'inherit':r.color)+'">'+fmtShort(v)+'</td>'; });
+    body+='<td style="font-weight:700;color:'+(r.profit&&m<0?"var(--red)":"inherit")+'">'+fmtShort(m)+'</td>';
+    if(r.kind==="exp" && !r.sum && r.id && r.id!=="in" && M.exp>0){
+      const pct=Math.round(m/M.exp*100);
+      body+='<td class="share"><span class="sbar" style="--c:'+r.color+';width:'+Math.max(2,pct*0.5)+'px"></span>'+pct+'%</td>';
+    }else body+='<td class="nul">·</td>';
+    body+='<td style="color:var(--ink-soft)">'+(Math.abs(p)<0.005?"·":fmtShort(p))+'</td>';
+    if(Math.abs(p)<0.005) body+='<td class="nul">·</td>';
+    else{ const dp=Math.round((m-p)/Math.abs(p)*100), good=(r.kind==="inc")?dp>=0:dp<=0;
+      body+='<td class="'+(dp===0?"nul":good?"dlt-up":"dlt-dn")+'">'+(dp>0?"+":"")+dp+'%</td>'; }
+    body+='</tr>';
+  });
+  const wrap=document.createElement("div"); wrap.className="gridwrap";
+  wrap.innerHTML='<table class="gt" style="min-width:720px"><thead>'+head+'</thead><tbody>'+body+'</tbody></table>';
+  wrap.querySelectorAll("[data-f]").forEach(td=>td.onclick=()=>{ ui.filter=td.dataset.f; ui.bv="a"; LS.set("ezh:bv","a"); render(); });
+  const box=document.createElement("div"); box.appendChild(wrap);
+  const note=document.createElement("div"); note.className="hint"; note.style.marginTop="8px";
+  note.textContent="Недели считаются с понедельника, суммы в "+(S.settings.base==="USD"?"долларах":"сумах")+" по курсу в шапке. Нажми на статью, чтобы открыть её записи в тетради.";
+  box.appendChild(note); return box;
+}
+
+/* В. Карта месяца: календарь, цвет клетки = сколько потрачено (или заработано) за день */
+function gridC(listAll){
+  const ym=ui.month, N=daysInMonth(ym), first=wdIdx(ym+"-01"), days=aggDays(listAll);
+  const mode=ui.hm==="in"?"in":"out", col=mode==="in"?"--green":"--red";
+  const val=d=>d?(mode==="in"?d.inc:d.spent):0;
+  const mx=Math.max(1,...Object.values(days).map(val));
+  const box=document.createElement("div");
+  const top=document.createElement("div"); top.className="hm-top";
+  top.innerHTML='<b style="font-family:var(--serif);font-size:16px">'+(mode==="in"?"Сколько заработано по дням":"Сколько потрачено по дням")+'</b>';
+  const sg=document.createElement("div"); sg.className="bseg";
+  [["out","Расходы"],["in","Приход"]].forEach(([k,t])=>{ const x=document.createElement("button"); x.textContent=t; x.className=mode===k?"on":"";
+    x.onclick=()=>{ ui.hm=k; render(); }; sg.appendChild(x); });
+  top.appendChild(sg); box.appendChild(top);
+  const cal=document.createElement("div"); cal.className="cal";
+  WDM.forEach(w=>{ const h=document.createElement("div"); h.className="wh"; h.textContent=w; cal.appendChild(h); });
+  for(let i=0;i<first;i++){ const e=document.createElement("div"); e.className="hc blank"; cal.appendChild(e); }
+  const today=todayISO();
+  for(let d=1;d<=N;d++){
+    const iso=ym+"-"+String(d).padStart(2,"0"), a=days[iso], v=val(a);
+    const c=document.createElement("div");
+    c.className="hc"+(a?"":" emp")+(iso===today?" today":"");
+    if(v>0) c.style.background="color-mix(in srgb, var("+col+") "+Math.round(12+v/mx*60)+"%, #fff)";
+    c.innerHTML='<i>'+d+'</i><b>'+(v>0?fmtShort(v):(a?"·":""))+'</b>';
+    if(a) c.onclick=()=>openDay(iso);
+    cal.appendChild(c);
+  }
+  box.appendChild(cal);
+  // итоги карты
+  const ds=Object.values(days), M=sumsOf(listAll);
+  const elapsed = ym===ymNow() ? parseInt(todayISO().slice(8,10),10) : N;
+  const top1=ds.slice().sort((x,y)=>y.spent-x.spent)[0], best=ds.slice().sort((x,y)=>y.inc-x.inc)[0];
+  const empty=Array.from({length:elapsed},(_,i)=>ym+"-"+String(i+1).padStart(2,"0")).filter(k=>!days[k]).length;
+  const dl=iso=>parseInt(iso.slice(8,10),10)+" "+MONTHS_GEN[parseInt(iso.slice(5,7),10)-1];
+  const st=document.createElement("div"); st.className="stats";
+  const stat=(l,v)=>'<div class="stat"><small>'+l+'</small><b>'+v+'</b></div>';
+  st.innerHTML=stat("Расходы за месяц",fmtShort(M.exp))+stat("Приход за месяц",fmtShort(M.inc))+
+    stat("Средний расход в день",fmtShort(M.exp/Math.max(1,elapsed)))+
+    stat("Самый дорогой день",top1&&top1.spent>0?dl(top1.date)+" · "+fmtShort(top1.spent):"—")+
+    stat("Самый денежный день",best&&best.inc>0?dl(best.date)+" · "+fmtShort(best.inc):"—")+
+    stat("Дней без записей",String(empty));
+  box.appendChild(st);
+  // на что ушли деньги
+  if(M.exp>0){
+    const blk=document.createElement("div"); blk.className="block"; blk.style.marginTop="14px";
+    let bar='<div class="stack">', lg='<div class="legend">';
+    COLS.filter(c=>c.sign<0&&M.c[c.id]>0).forEach(c=>{
+      const pct=M.c[c.id]/M.exp*100;
+      bar+='<i style="width:'+pct+'%;background:'+c.color+'"></i>';
+      lg+='<span><i style="background:'+c.color+'"></i>'+c.name+' '+Math.round(pct)+'% · '+fmtShort(M.c[c.id])+'</span>';
+    });
+    blk.innerHTML='<h2>На что ушли деньги</h2>'+bar+'</div>'+lg+'</div>';
+    box.appendChild(blk);
+  }
+  return box;
 }
 
 /* ---------- цели ---------- */
@@ -1141,6 +1405,7 @@ function toggleGoal(id){
 }
 let gdraft=null;
 function openGoal(id){
+  if(!id && !resuming && drResume("goal")) return;
   const g = id ? S.goals.find(x=>x.id===id) : null;
   gdraft = g ? {id:g.id,title:g.title,due:g.due,notify:g.notify}
              : {id:null,title:"",due:"",notify:true};
@@ -1162,9 +1427,9 @@ function openGoal(id){
       enqueue({kind:"goal_delete", id:g.id}); cacheSave(); closeModal(); render(); flushThen(); };
     m.appendChild(del);
   }
-  m.querySelector("#mClose").onclick=closeModal;
+  m.querySelector("#mClose").onclick=dismissModal;
   $("#scrim").hidden=false;
-  setTimeout(()=>{ const t=m.querySelector("#gT"); if(t&&!gdraft.title) t.focus(); },30);
+  setTimeout(()=>{ const t=m.querySelector("#gT"); if(t&&gdraft&&!gdraft.title) t.focus(); },30);
 }
 function commitGoal(){
   const m=$("#modal");
@@ -1222,7 +1487,7 @@ function openPlan(gid){
   ["#pN","#pA","#pC"].forEach(q=>{ m.querySelector(q).addEventListener("input",upd); m.querySelector(q).addEventListener("change",upd); });
   m.querySelector("#pP").addEventListener("change",()=>{ const t=m.querySelector("#pT"); if(t.value==="Месяц"||t.value==="Неделя") t.value=m.querySelector("#pP").value==="w"?"Неделя":"Месяц"; });
   upd();
-  m.querySelector("#mClose").onclick=closeModal; $("#scrim").hidden=false;
+  m.querySelector("#mClose").onclick=dismissModal; $("#scrim").hidden=false;
 }
 function commitPlan(){
   const m=$("#modal"), gid=stdraft.goal;
@@ -1246,6 +1511,7 @@ function commitPlan(){
   cacheSave(); closeModal(); render(); flushThen();
 }
 function openStep(id,gid){
+  if(!id && !resuming && DR.step && DR.step.obj.goal===gid && drResume("step")) return;
   const x=id?S.steps.find(v=>v.id===id):null;
   stdraft={ id:id||null, goal:x?x.goal_id:gid };
   const m=$("#modal");
@@ -1263,7 +1529,7 @@ function openStep(id,gid){
       enqueue({kind:"step_delete", id:x.id}); goalSyncDone(gid2); cacheSave(); closeModal(); render(); flushThen(); };
     m.appendChild(del);
   }
-  m.querySelector("#mClose").onclick=closeModal; $("#scrim").hidden=false;
+  m.querySelector("#mClose").onclick=dismissModal; $("#scrim").hidden=false;
   setTimeout(()=>{ const t=m.querySelector("#sT"); if(t&&!t.value) t.focus(); },30);
 }
 function commitStep(){
@@ -1354,6 +1620,7 @@ function debtRow(d){
   return row;
 }
 function openDebt(id){
+  if(!id && !resuming && drResume("debt")) return;
   const d=id?S.debts.find(x=>x.id===id):null;
   dbdraft=d?{id:d.id,kind:d.kind}:{id:null,kind:"owe"};
   const m=$("#modal");
@@ -1387,7 +1654,7 @@ function openDebt(id){
       cacheSave(); closeModal(); render(); flushThen(); };
     m.appendChild(del);
   }
-  m.querySelector("#mClose").onclick=closeModal; $("#scrim").hidden=false;
+  m.querySelector("#mClose").onclick=dismissModal; $("#scrim").hidden=false;
   setTimeout(()=>{ const t=m.querySelector("#dP"); if(t&&!t.value) t.focus(); },30);
 }
 function commitDebt(){
@@ -1595,6 +1862,7 @@ function selfPrefill(){
   return left>0 ? String(roundCur(fromBase(left,w.cur),w.cur)) : "";
 }
 function openSelf(){
+  if(!resuming && drResume("self")) return;
   sdraft={ wallet:"cash_uzs", note:"себе", date:todayISO(), month:ui.month, amount:"", auto:true };
   drawSelf();
 }
@@ -1637,7 +1905,7 @@ function drawSelf(){
   m.querySelector("#sAmt").addEventListener("input",()=>{ sdraft.auto=false; });
   const ok=document.createElement("button");
   ok.className="btn"; ok.textContent="Записать выплату"; ok.onclick=commitSelf; m.appendChild(ok);
-  m.querySelector("#mClose").onclick=closeModal;
+  m.querySelector("#mClose").onclick=dismissModal;
   $("#scrim").hidden=false;
 }
 function commitSelf(){
@@ -2038,6 +2306,10 @@ function aiDrawConn(){
 let draft=null;
 function openAdd(){
   if(ui.tab==="goals"){ if(ui.gv==="debts") openDebt(null); else openGoal(null); return; }
+  openNewEntry();
+}
+function openNewEntry(){
+  if(!resuming && drResume("entry")) return;
   draft={ id:null, date:todayISO(), col: ui.filter!=="all"?ui.filter:"in",
           amount:"", wallet: ui.wallet!=="all"?ui.wallet:"cash_uzs", note:"" };
   drawModal();
@@ -2115,10 +2387,10 @@ function drawModal(){
       enqueue({kind:"delete", id:draft.id}); cacheSave(); closeModal(); render(); flushThen(); };
     m.appendChild(del);
   }
-  m.querySelector("#mClose").onclick=closeModal;
+  m.querySelector("#mClose").onclick=dismissModal;
   m.querySelector("#fAmt").addEventListener("keydown",ev=>{ if(ev.key==="Enter") commit(false); });
   $("#scrim").hidden=false;
-  setTimeout(()=>{ const a=m.querySelector("#fAmt"); if(a&&!draft.amount) a.focus(); },30);
+  setTimeout(()=>{ const a=m.querySelector("#fAmt"); if(a&&draft&&!draft.amount) a.focus(); },30);
 }
 function readDraft(){
   const m=$("#modal"); if(!m.querySelector("#fAmt")) return;
@@ -2164,6 +2436,7 @@ function openConv(convId){
              rate:o.rate?String(o.rate):"", book:o.book_rate||i.book_rate||null, note:o.note||"", source:o.source,
              updated_at:o.updated_at>i.updated_at?o.updated_at:i.updated_at };
   }else{
+    if(!resuming && drResume("conv")) return;
     cdraft={ id:null, date:todayISO(), from:"cash_usd", to:"cash_uzs", give:"", get:"",
              rate:String(Math.round(S.settings.rate)), book:S.settings.rate, note:"" };
   }
@@ -2277,10 +2550,10 @@ function drawConv(){
       cacheSave(); closeModal(); render(); flushThen(); };
     m.appendChild(del);
   }
-  m.querySelector("#mClose").onclick=closeModal;
+  m.querySelector("#mClose").onclick=dismissModal;
   if(cross && !cdraft.get) convRecalc("give"); else convSummary();
   $("#scrim").hidden=false;
-  setTimeout(()=>{ const a=m.querySelector("#cGive"); if(a&&!cdraft.give) a.focus(); },30);
+  setTimeout(()=>{ const a=m.querySelector("#cGive"); if(a&&cdraft&&!cdraft.give) a.focus(); },30);
 }
 function commitConv(){
   readConv();
@@ -2320,7 +2593,106 @@ function commitConv(){
   }
   cacheSave(); closeModal(); render(); flushThen();
 }
-function closeModal(){ $("#scrim").hidden=true; draft=null; gdraft=null; cdraft=null; sdraft=null; stdraft=null; dbdraft=null; }
+
+/* ---------- черновики: недописанное не пропадает ---------- */
+const K_DRAFTS="ezh:drafts";
+let DR=(()=>{ try{ const o=JSON.parse(LS.get(K_DRAFTS)||"{}"); return (o&&typeof o==="object")?o:{}; }catch(e){ return {}; } })();
+const drSave=()=>LS.set(K_DRAFTS, JSON.stringify(DR));
+const DR_NAME={entry:"Запись",conv:"Обмен",self:"Выплата себе",goal:"Цель",step:"Этап",debt:"Долг"};
+let resuming=false, drTimer=null;
+function drKind(){
+  if($("#scrim").hidden) return null;
+  const m=$("#modal");
+  if(draft) return "entry";
+  if(cdraft) return "conv";
+  if(sdraft) return "self";
+  if(gdraft) return "goal";
+  if(stdraft && m.querySelector("#sT")) return "step";
+  if(dbdraft) return "debt";
+  return null;
+}
+const drObj=k=>({entry:draft,conv:cdraft,self:sdraft,goal:gdraft,step:stdraft,debt:dbdraft})[k];
+const drVal=id=>{ const el=$("#modal").querySelector("#"+id); return el?String(el.value||"").trim():""; };
+function drDirty(k){
+  if(k==="entry") return !!(drVal("fAmt")||drVal("fNote"));
+  if(k==="conv")  return !!(drVal("cGive")||drVal("cNote"));
+  if(k==="self")  return !!((sdraft.auto===false&&drVal("sAmt"))||(drVal("sNote")&&drVal("sNote")!=="себе"));
+  if(k==="goal")  return !!drVal("gT");
+  if(k==="step")  return !!(drVal("sT")||drVal("sA"));
+  if(k==="debt")  return !!(drVal("dP")||drVal("dA")||drVal("dN"));
+  return false;
+}
+function drLabel(k,f){
+  if(k==="entry"){ const c=COLS.find(x=>x.id===draft.col); return (c?c.name:"")+(f.fAmt?" "+f.fAmt:"")+(f.fNote?" · "+f.fNote:""); }
+  if(k==="conv") return (f.cGive?f.cGive+" ":"")+(f.cNote||"");
+  if(k==="self") return f.sAmt||f.sNote||"";
+  if(k==="goal") return f.gT||"";
+  if(k==="step") return f.sT||f.sA||"";
+  if(k==="debt") return (f.dP||"")+(f.dA?" "+f.dA:"");
+  return "";
+}
+function drStore(){
+  const k=drKind(); if(!k) return;
+  const o=drObj(k);
+  if(o.id) return;                       // правку существующей записи не храним, только новые
+  if(!drDirty(k)){ if(DR[k]){ delete DR[k]; drSave(); } return; }
+  if(k==="entry") readDraft(); if(k==="conv") readConv(); if(k==="self") readSelf();
+  const f={}; $("#modal").querySelectorAll("input[id],select[id]").forEach(el=>{ f[el.id]=el.value; });
+  DR[k]={ t:Date.now(), obj:JSON.parse(JSON.stringify(drObj(k))), fields:f, label:drLabel(k,f) };
+  drSave();
+}
+function drSoon(){ clearTimeout(drTimer); drTimer=setTimeout(()=>{ drStore(); const b=$("#addBtn"); if(b) b.classList.toggle("hasdraft",Object.keys(DR).length>0); },250); }
+function drApply(f){ Object.keys(f||{}).forEach(id=>{ const el=$("#modal").querySelector("#"+id); if(el) el.value=f[id]; }); }
+function drResume(k){
+  const s=DR[k]; if(!s) return false;
+  if(k==="step" && !S.goals.some(g=>g.id===s.obj.goal)){ delete DR[k]; drSave(); return false; }
+  resuming=true;
+  try{
+    if(k==="entry"){ draft=s.obj; drawModal(); }
+    else if(k==="conv"){ cdraft=s.obj; drawConv(); }
+    else if(k==="self"){ sdraft=s.obj; drawSelf(); }
+    else if(k==="goal"){ openGoal(null); drApply(s.fields); }
+    else if(k==="step"){ openStep(null,s.obj.goal); drApply(s.fields); }
+    else if(k==="debt"){ openDebt(null); drApply(s.fields);
+      const bs=$("#modal").querySelectorAll("#dK .pick"); if(bs.length) bs[s.obj.kind==="owed"?1:0].click(); }
+  }finally{ resuming=false; }
+  const h=$("#modal").querySelector("h3");
+  if(h){
+    h.insertAdjacentHTML("afterend",'<div class="draftnote"><span>✎ Продолжаешь с места, где остановился</span><button id="drFresh">Начать заново</button></div>');
+    $("#drFresh").onclick=()=>{ const gid=s.obj.goal; delete DR[k]; drSave(); closeModalRaw();
+      ({entry:openNewEntry,conv:()=>openConv(null),self:openSelf,goal:()=>openGoal(null),step:()=>openStep(null,gid),debt:()=>openDebt(null)})[k](); render(); };
+  }
+  return true;
+}
+function renderDraftBar(){
+  const bar=$("#draftBar"); if(!bar) return;
+  const keys=Object.keys(DR);
+  $("#addBtn").classList.toggle("hasdraft",keys.length>0);
+  bar.innerHTML=""; bar.hidden=!keys.length;
+  keys.forEach(k=>{
+    const b=document.createElement("button"); b.className="dchip";
+    b.innerHTML='<span class="dlab">Черновик</span><span class="dtx"><b>'+DR_NAME[k]+'</b>'+(DR[k].label?" · "+escapeHtml(DR[k].label):"")+'</span><i class="dx" title="Удалить черновик">×</i>';
+    b.onclick=ev=>{
+      if(ev.target.classList.contains("dx")){ delete DR[k]; drSave(); renderDraftBar(); return; }
+      drResume(k);
+    };
+    bar.appendChild(b);
+  });
+}
+$("#modal").addEventListener("input",drSoon);
+$("#modal").addEventListener("change",drSoon);
+$("#modal").addEventListener("click",drSoon);
+document.addEventListener("visibilitychange",()=>{ if(document.hidden){ clearTimeout(drTimer); drStore(); } });
+window.addEventListener("pagehide",()=>{ clearTimeout(drTimer); drStore(); });
+function closeModalRaw(){ $("#scrim").hidden=true; draft=null; gdraft=null; cdraft=null; sdraft=null; stdraft=null; dbdraft=null; }
+/* после успешного сохранения или удаления: черновик этого вида больше не нужен */
+function closeModal(){
+  const k=drKind();
+  if(k){ const o=drObj(k); if(o&&!o.id&&DR[k]){ delete DR[k]; drSave(); } }
+  clearTimeout(drTimer); closeModalRaw();
+}
+/* закрыли крестиком, тапом мимо или Escape: недописанное сохраняется как черновик */
+function dismissModal(){ clearTimeout(drTimer); drStore(); closeModalRaw(); render(); }
 async function flushThen(){
   try{ await flushQueue(); ui.lastError=null; }catch(e){ ui.lastError=e.message; }
   renderSync();
@@ -2392,8 +2764,8 @@ document.querySelectorAll(".tab").forEach(b=>{
 $("#addBtn").onclick=openAdd;
 $("#prevM").onclick=()=>{ ui.month=shiftMonth(ui.month,-1); render(); };
 $("#nextM").onclick=()=>{ ui.month=shiftMonth(ui.month,+1); render(); };
-$("#scrim").onclick=ev=>{ if(ev.target===$("#scrim")) closeModal(); };
-document.addEventListener("keydown",ev=>{ if(ev.key==="Escape"&&!$("#scrim").hidden) closeModal(); });
+$("#scrim").onclick=ev=>{ if(ev.target===$("#scrim")) dismissModal(); };
+document.addEventListener("keydown",ev=>{ if(ev.key==="Escape"&&!$("#scrim").hidden) dismissModal(); });
 window.addEventListener("online",()=>{ if(session) sync(); });
 document.addEventListener("visibilitychange",()=>{ if(!document.hidden&&session) checkReminders(); });
 setInterval(()=>{ if(session) checkReminders(); }, 5*60*1000);
