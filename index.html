@@ -17,7 +17,7 @@
     --paper:#FBF9F3; --paper-2:#F3F0E7; --grid:#DCE5EE; --rule:#C0453C;
     --ink:#16202B; --ink-soft:#5C6875; --ink-faint:#98A1AC;
     --blue:#1F3A93; --teal:#0F766E; --green:#1E7A54; --amber:#A96A15; --red:#B23A32; --violet:#6B3FA0;
-    --edge:#E2DDD1;
+    --edge:#E2DDD1; --card:#FFFFFF; --card-2:#FCFBF7; --dr-bg:#FFF4F2; --dr-bd:#E9B8B3;
     --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
     --serif:Georgia,"Times New Roman",serif;
   }
@@ -76,7 +76,7 @@
   .conv-pickrow{display:flex;gap:8px;align-items:center}
   .conv-pickrow .picker{flex:1}
   .conv-sum{margin:2px 0 14px;padding:10px 12px;border:1px dashed var(--edge);border-radius:9px;
-            font-size:14px;background:#fff;font-variant-numeric:tabular-nums}
+            font-size:14px;background:var(--card);font-variant-numeric:tabular-nums}
 
   .chart-box{position:relative}
   .chart-box svg{display:block;width:100%;height:auto;overflow:visible}
@@ -96,23 +96,23 @@
   .sync{font-size:12px;color:var(--ink-faint);padding-bottom:8px;display:flex;align-items:center;gap:6px}
   .sync.warn{color:var(--amber)}
   .sync.err{color:var(--red)}
-  .sync .wbtn{margin-left:auto;border:1px solid var(--edge);background:#fff;border-radius:7px;
+  .sync .wbtn{margin-left:auto;border:1px solid var(--edge);background:var(--card);border-radius:7px;
               padding:3px 8px;font-size:11.5px;font-family:inherit;color:var(--ink-soft);cursor:pointer}
   .month{display:flex;align-items:center;gap:6px;padding-bottom:10px}
   .month b{font-family:var(--serif);font-size:17px;font-weight:700;min-width:150px}
-  .mbtn{border:1px solid var(--edge);background:#fff;color:var(--ink);width:30px;height:30px;
+  .mbtn{border:1px solid var(--edge);background:var(--card);color:var(--ink);width:30px;height:30px;
         border-radius:8px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
   .mbtn:active{background:var(--paper-2)}
   .chips{display:flex;gap:6px;overflow-x:auto;padding:0 0 10px;scrollbar-width:none}
   .chips::-webkit-scrollbar{display:none}
-  .chip{flex:0 0 auto;border:1px solid var(--edge);background:#fff;border-radius:9px;padding:6px 10px;
+  .chip{flex:0 0 auto;border:1px solid var(--edge);background:var(--card);border-radius:9px;padding:6px 10px;
         cursor:pointer;font-size:13px;display:flex;align-items:baseline;gap:6px;color:var(--ink-soft);font-family:inherit}
   .chip b{font-size:13.5px;font-variant-numeric:tabular-nums}
   .chip.on{background:var(--paper-2)}
   .dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex:0 0 auto;align-self:center}
 
   main{padding-top:12px}
-  .ledger{border:1px solid var(--edge);border-radius:10px;overflow:hidden;background:#fff}
+  .ledger{border:1px solid var(--edge);border-radius:10px;overflow:hidden;background:var(--card)}
   .lhead{display:flex;padding:8px 12px;font-size:12px;color:var(--ink-faint);border-bottom:1px solid var(--rule)}
   .lhead .c1{flex:0 0 52px}.lhead .c2{flex:1 1 auto}.lhead .c3{flex:0 0 88px;text-align:right}
   .row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid var(--grid);cursor:pointer}
@@ -130,19 +130,19 @@
   .empty{padding:34px 18px;text-align:center;color:var(--ink-soft);font-size:14px}
   .empty b{display:block;font-family:var(--serif);font-size:18px;color:var(--ink);margin-bottom:6px;font-weight:700}
 
-  .gridwrap{overflow-x:auto;border:1px solid var(--edge);border-radius:10px;background:#fff}
+  .gridwrap{overflow-x:auto;border:1px solid var(--edge);border-radius:10px;background:var(--card)}
   table{border-collapse:collapse;width:100%;min-width:640px;font-size:13px}
   th,td{padding:8px 10px;text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
   th:first-child,td:first-child{text-align:left}
   thead th{font-size:11.5px;color:var(--ink-faint);font-weight:600;border-bottom:1px solid var(--rule);
-           position:sticky;top:0;background:#fff}
+           position:sticky;top:0;background:var(--card)}
   tbody td{border-bottom:1px solid var(--grid)}
-  tbody tr:nth-child(even) td{background:#FCFBF7}
+  tbody tr:nth-child(even) td{background:var(--card-2)}
   td.bal{font-weight:700;color:var(--green)}
   td.bal.neg{color:var(--red)}
   tfoot td{border-top:1px solid var(--rule);font-weight:700}
 
-  .block{border:1px solid var(--edge);border-radius:10px;background:#fff;padding:14px;margin-bottom:12px}
+  .block{border:1px solid var(--edge);border-radius:10px;background:var(--card);padding:14px;margin-bottom:12px}
   .block h2{font-family:var(--serif);font-size:17px;margin:0 0 12px;font-weight:700}
   .stat{margin-bottom:14px}.stat:last-child{margin-bottom:0}
   .stat-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:14px}
@@ -158,7 +158,7 @@
   .diff-ok{color:var(--green)}.diff-bad{color:var(--red)}
 
   label{display:block;font-size:12.5px;color:var(--ink-soft);margin:0 0 5px}
-  input,select{width:100%;font-family:inherit;font-size:16px;color:var(--ink);background:#fff;
+  input,select{width:100%;font-family:inherit;font-size:16px;color:var(--ink);background:var(--card);
     border:1px solid var(--edge);border-radius:9px;padding:11px 12px;outline:none}
   input:focus,select:focus{border-color:var(--blue)}
   .field{margin-bottom:12px}
@@ -166,17 +166,17 @@
   .btn{width:100%;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:600;
        font-family:inherit;background:var(--ink);color:var(--paper);cursor:pointer}
   .btn:active{opacity:.85}
-  .btn.ghost{background:#fff;color:var(--ink);border:1px solid var(--edge)}
-  .btn.danger{background:#fff;color:var(--red);border:1px solid var(--edge)}
+  .btn.ghost{background:var(--card);color:var(--ink);border:1px solid var(--edge)}
+  .btn.danger{background:var(--card);color:var(--red);border:1px solid var(--edge)}
   .btn+.btn{margin-top:8px}
   .picker{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
   .picker.two-col{grid-template-columns:repeat(2,1fr)}
-  .pick{border:1px solid var(--edge);background:#fff;border-radius:9px;padding:9px 6px;font-size:13px;
+  .pick{border:1px solid var(--edge);background:var(--card);border-radius:9px;padding:9px 6px;font-size:13px;
         font-family:inherit;color:var(--ink-soft);cursor:pointer;display:flex;flex-direction:column;
         align-items:center;gap:5px}
   .pick.on{border-width:2px;padding:8px 5px;color:var(--ink);font-weight:600;background:var(--paper-2)}
   .quick{display:flex;gap:6px;margin-top:8px}
-  .quick button{flex:1;border:1px solid var(--edge);background:#fff;border-radius:9px;padding:9px 4px;
+  .quick button{flex:1;border:1px solid var(--edge);background:var(--card);border-radius:9px;padding:9px 4px;
                 font-size:13px;font-family:inherit;color:var(--ink);cursor:pointer}
   .quick button:active{background:var(--paper-2)}
   .hint{font-size:12px;color:var(--ink-soft);margin-top:-4px;margin-bottom:12px}
@@ -217,12 +217,12 @@
   .tabbar[hidden]{display:none}
   .tab{flex:1 1 0;border:1px solid transparent;background:transparent;border-radius:9px;padding:9px 2px;
        font-size:12.5px;font-family:inherit;color:var(--ink-soft);cursor:pointer;white-space:nowrap}
-  .tab.on{background:#fff;border-color:var(--edge);color:var(--ink);font-weight:600}
+  .tab.on{background:var(--card);border-color:var(--edge);color:var(--ink);font-weight:600}
   .add{flex:0 0 44px;background:var(--ink);color:var(--paper);border:none;border-radius:9px;
        font-size:23px;line-height:1;cursor:pointer}
 
   .aiList{margin:8px 0 12px;display:flex;flex-direction:column;gap:8px}
-  .cb{max-width:88%;padding:8px 11px;border-radius:12px;font-size:14.5px;line-height:1.35;border:1px solid var(--edge);background:#fff;word-break:break-word}
+  .cb{max-width:88%;padding:8px 11px;border-radius:12px;font-size:14.5px;line-height:1.35;border:1px solid var(--edge);background:var(--card);word-break:break-word}
   .cb.me{align-self:flex-end;background:var(--paper-2)}
   .cb.bot{align-self:flex-start}
   .cb-time{font-size:10.5px;color:var(--ink-faint);margin-top:3px;text-align:right}
@@ -233,10 +233,10 @@
   .cb-st{font-size:12.5px;font-weight:600}
   .cb-st.ok{color:var(--green)}.cb-st.no{color:var(--ink-faint)}.cb-st.bad{color:var(--red)}
   .abtns{display:flex;gap:8px}
-  .abtns button{flex:1;border-radius:9px;padding:9px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;border:1px solid var(--edge);background:#fff;color:var(--ink)}
+  .abtns button{flex:1;border-radius:9px;padding:9px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;border:1px solid var(--edge);background:var(--card);color:var(--ink)}
   .abtns button.ok{background:var(--green);border-color:var(--green);color:#fff}
   .abtns button:disabled{opacity:.5}
-  textarea{width:100%;font-family:inherit;font-size:16px;color:var(--ink);background:#fff;border:1px solid var(--edge);border-radius:9px;padding:11px 12px;outline:none;resize:vertical;margin-bottom:8px}
+  textarea{width:100%;font-family:inherit;font-size:16px;color:var(--ink);background:var(--card);border:1px solid var(--edge);border-radius:9px;padding:11px 12px;outline:none;resize:vertical;margin-bottom:8px}
   textarea:focus{border-color:var(--blue)}
   .badge{display:inline-block;min-width:15px;height:15px;line-height:15px;border-radius:8px;background:var(--red);color:#fff;font-size:10px;font-weight:700;margin-left:4px;padding:0 4px;vertical-align:top}
   .badge[hidden]{display:none}
@@ -244,7 +244,7 @@
   .tokrow:last-child{border-bottom:none}
   .tokrow .tn{flex:1 1 auto;min-width:0}
   .tokrow .tm{font-size:11.5px;color:var(--ink-faint)}
-  .tokrow button{flex:0 0 auto;border:1px solid var(--edge);background:#fff;color:var(--red);border-radius:8px;padding:6px 10px;font-size:12.5px;font-family:inherit;cursor:pointer}
+  .tokrow button{flex:0 0 auto;border:1px solid var(--edge);background:var(--card);color:var(--red);border-radius:8px;padding:6px 10px;font-size:12.5px;font-family:inherit;cursor:pointer}
   .tokbox{border:1px solid var(--amber);border-radius:9px;padding:10px;margin:10px 0;background:var(--paper-2);font-size:13px}
   .mono{font-family:ui-monospace,Menlo,monospace;font-size:12px;word-break:break-all;margin:6px 0}
 
@@ -262,32 +262,32 @@
   .signin{max-width:400px;margin:0 auto;padding:56px 16px 24px}
   .signin h1{font-family:var(--serif);font-size:30px;margin:0 0 6px;font-weight:700}
   .signin p.lead{color:var(--ink-soft);font-size:14px;margin:0 0 24px}
-  .signin .block{background:#fff}
+  .signin .block{background:var(--card)}
   .swap{background:none;border:none;color:var(--blue);font-family:inherit;font-size:13.5px;
         cursor:pointer;padding:10px 0 0;width:100%}
 
   /* черновики */
   .draftbar{display:flex;flex-wrap:wrap;gap:6px;padding-top:10px}
   .draftbar[hidden]{display:none}
-  .dchip{display:flex;align-items:center;gap:7px;max-width:100%;border:1px solid #E9B8B3;background:#FFF4F2;border-radius:10px;
+  .dchip{display:flex;align-items:center;gap:7px;max-width:100%;border:1px solid var(--dr-bd);background:var(--dr-bg);border-radius:10px;
          padding:6px 8px 6px 10px;font:inherit;font-size:13px;color:var(--ink);cursor:pointer;text-align:left}
   .dchip .dlab{color:var(--red);font-weight:700;font-size:12px;flex:0 0 auto}
   .dchip .dtx{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .dchip .dx{flex:0 0 auto;color:var(--ink-faint);font-style:normal;font-size:17px;line-height:1;padding:0 2px}
   .draftnote{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:-6px 0 12px;padding:7px 10px;border-radius:9px;
-             background:#FFF4F2;border:1px solid #E9B8B3;font-size:12.5px;color:var(--red)}
+             background:var(--dr-bg);border:1px solid var(--dr-bd);font-size:12.5px;color:var(--red)}
   .draftnote button{border:none;background:transparent;color:var(--ink-soft);font:inherit;font-size:12.5px;text-decoration:underline;cursor:pointer;padding:0}
   .add{position:relative}
   .add.hasdraft::after{content:"";position:absolute;top:5px;right:5px;width:9px;height:9px;border-radius:50%;background:#E5483B;border:2px solid var(--ink)}
 
   /* виды тетради */
-  .bseg{display:inline-flex;border:1px solid var(--edge);border-radius:9px;overflow:hidden;background:#fff}
+  .bseg{display:inline-flex;border:1px solid var(--edge);border-radius:9px;overflow:hidden;background:var(--card)}
   .bseg button{border:none;background:transparent;padding:7px 11px;font:inherit;font-size:13px;color:var(--ink-soft);cursor:pointer;white-space:nowrap}
   .bseg button.on{background:var(--ink);color:var(--paper)}
   .gt{min-width:560px}
-  .gt thead th{background:#fff;border-top:3px solid var(--tc,transparent)}
+  .gt thead th{background:var(--card);border-top:3px solid var(--tc,transparent)}
   .gt thead th:first-child,.gt thead th:last-child{border-top-color:transparent}
-  .gt.ta th:last-child,.gt.ta td.bal{position:sticky;right:0;background:#fff;box-shadow:-6px 0 6px -6px rgba(0,0,0,.18)}
+  .gt.ta th:last-child,.gt.ta td.bal{position:sticky;right:0;background:var(--card);box-shadow:-6px 0 6px -6px rgba(0,0,0,.18)}
   .gt.ta tr.opening td.bal,.gt.ta tr.sum td.bal{background:var(--paper-2)}
   .gt td.dd{font-size:13px}
   .gt td.dd b{font-size:15px;font-family:var(--serif)}
@@ -297,7 +297,7 @@
   .gt td.nul{color:var(--ink-faint)}
   .gt tr.drow{cursor:pointer}
   .gt tr.drow:hover td{background-color:var(--paper-2)}
-  .gt tr.sub td{background:#FCFBF7;font-size:12px;color:var(--ink-soft);padding:5px 10px;cursor:pointer;border-bottom:1px dashed var(--grid)}
+  .gt tr.sub td{background:var(--card-2);font-size:12px;color:var(--ink-soft);padding:5px 10px;cursor:pointer;border-bottom:1px dashed var(--grid)}
   .gt tr.sub td:first-child{padding-left:26px}
   .gt tr.open td.dd{background:var(--paper-2)}
   .gt tr.opening td,.gt tr.closing td{background:var(--paper-2);font-size:12px;color:var(--ink-soft);font-weight:600}
@@ -313,7 +313,7 @@
   .hm-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}
   .cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;max-width:1100px}
   .cal .wh{font-size:11.5px;color:var(--ink-faint);text-align:center;padding-bottom:2px}
-  .hc{border:1px solid var(--edge);border-radius:9px;background:#fff;min-height:58px;padding:5px 6px;cursor:pointer;
+  .hc{border:1px solid var(--edge);border-radius:9px;background:var(--card);min-height:58px;padding:5px 6px;cursor:pointer;
       display:flex;flex-direction:column;justify-content:space-between;font-variant-numeric:tabular-nums}
   .hc i{font-style:normal;font-size:11.5px;color:var(--ink-soft)}
   .hc b{font-size:12.5px;text-align:right;line-height:1.1}
@@ -321,7 +321,7 @@
   .hc.today{outline:2px solid var(--ink);outline-offset:-2px}
   .hc.blank{border:none;background:transparent;cursor:default}
   .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:14px}
-  .stat{border:1px solid var(--edge);border-radius:10px;background:#fff;padding:9px 11px}
+  .stat{border:1px solid var(--edge);border-radius:10px;background:var(--card);padding:9px 11px}
   .stat small{display:block;font-size:11.5px;color:var(--ink-faint)}
   .stat b{font-size:15px;font-variant-numeric:tabular-nums}
   .stack{display:flex;height:16px;border-radius:8px;overflow:hidden;margin:10px 0 6px;background:var(--grid)}
@@ -336,7 +336,7 @@
     body.wide .wrap{max-width:1480px;padding:0 28px}
     body.wide .tabbar{max-width:760px;border:1px solid var(--edge);border-radius:14px 14px 0 0;border-bottom:none}
     body.wide #purseRows{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-    body.wide .prow{border:1px solid var(--edge);border-radius:9px;background:#fff;padding:7px 10px}
+    body.wide .prow{border:1px solid var(--edge);border-radius:9px;background:var(--card);padding:7px 10px}
     body.wide .prow.on{background:var(--paper-2)}
     body.wide .purse-left{flex-basis:190px}
     body.wide .rate-num{font-size:17px}
@@ -350,6 +350,40 @@
     body.wide table{font-size:14px}
     body.wide th,body.wide td{padding:9px 14px}
   }
+
+  /* тёмная тема */
+  html.dark{
+    color-scheme:dark;
+    --paper:#11161C; --paper-2:#1A212A; --grid:#252E38; --rule:#E0675E;
+    --ink:#E8ECEF; --ink-soft:#A3AEBA; --ink-faint:#6F7B88;
+    --blue:#7C9BFF; --teal:#3DBFB2; --green:#4FC38A; --amber:#E0A24A; --red:#EF6B62; --violet:#A98BE0;
+    --edge:#2B343E; --card:#1A2129; --card-2:#161C23; --dr-bg:#2A1B1B; --dr-bd:#5C2E2B;
+  }
+  html.dark .dchip,html.dark .draftnote{color:var(--ink)}
+  html.dark .dchip .dlab,html.dark .draftnote{color:#FF8A80}
+
+  /* стекло: полупрозрачные размытые панели поверх фона приложения */
+  html.glass body::before{content:"";position:fixed;inset:0;z-index:-1;background:var(--bgimg);background-size:cover;background-position:center}
+  html.glass .ledger,html.glass .gridwrap,html.glass .block,html.glass .chip,html.glass .prow,html.glass .stat,
+  html.glass .hc:not(.emp):not(.blank),html.glass .conv-sum,html.glass .cb,html.glass .bseg,html.glass .mbtn,
+  html.glass .sync .wbtn,html.glass .tab.on,html.glass .btn.ghost,html.glass .pick,html.glass .quick button,
+  html.glass input,html.glass select,html.glass textarea,html.glass .dchip{
+    background:color-mix(in srgb,var(--card) var(--ga),transparent);
+    -webkit-backdrop-filter:blur(var(--gb)) saturate(1.35);backdrop-filter:blur(var(--gb)) saturate(1.35)}
+  html.glass header,html.glass .tabbar{
+    background:color-mix(in srgb,var(--paper) var(--ga),transparent);
+    -webkit-backdrop-filter:blur(calc(var(--gb) + 6px)) saturate(1.35);backdrop-filter:blur(calc(var(--gb) + 6px)) saturate(1.35)}
+  html.glass .modal{background:color-mix(in srgb,var(--paper) 90%,transparent);
+    -webkit-backdrop-filter:blur(26px);backdrop-filter:blur(26px)}
+  html.glass .dayhead,html.glass .lhead,html.glass .gt tr.opening td,html.glass .gt tr.sum td{background:color-mix(in srgb,var(--paper-2) var(--ga),transparent)}
+  html.glass .gt thead th,html.glass .gt tbody td{background-color:transparent}
+  html.glass .gt.ta th:last-child,html.glass .gt.ta td.bal{background:color-mix(in srgb,var(--card) 80%,transparent)}
+  html.glass .row,html.glass .ledger .row{background:transparent}
+  html.glass .pick.on,html.glass .chip.on,html.glass .prow.on{background:color-mix(in srgb,var(--paper-2) 92%,transparent)}
+  .swatches{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+  .swatches button{height:46px;border-radius:9px;border:2px solid var(--edge);cursor:pointer;background-size:cover;font:inherit;font-size:11px;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+  .swatches button.on{border-color:var(--ink)}
+  input[type=range]{padding:0;height:28px;border:none;background:transparent}
   :focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 </style>
 </head>
@@ -1245,7 +1279,7 @@ function gridC(listAll){
     const iso=ym+"-"+String(d).padStart(2,"0"), a=days[iso], v=val(a);
     const c=document.createElement("div");
     c.className="hc"+(a?"":" emp")+(iso===today?" today":"");
-    if(v>0) c.style.background="color-mix(in srgb, var("+col+") "+Math.round(12+v/mx*60)+"%, #fff)";
+    if(v>0) c.style.background="color-mix(in srgb, var("+col+") "+Math.round(12+v/mx*60)+"%, var(--card))";
     c.innerHTML='<i>'+d+'</i><b>'+(v>0?fmtShort(v):(a?"·":""))+'</b>';
     if(a) c.onclick=()=>openDay(iso);
     cal.appendChild(c);
@@ -1726,7 +1760,7 @@ function chartBalanceBlock(ym){
   g+='<path d="'+area+'" fill="var(--blue)" opacity=".07"/>'+
      '<polyline points="'+pts.join(" ")+'" fill="none" stroke="var(--blue)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
   const lx=X(N-1), ly=Y(vals[N-1]);
-  g+='<circle id="bcDot" cx="'+lx.toFixed(1)+'" cy="'+ly.toFixed(1)+'" r="4" fill="var(--blue)" stroke="#fff" stroke-width="2"/>';
+  g+='<circle id="bcDot" cx="'+lx.toFixed(1)+'" cy="'+ly.toFixed(1)+'" r="4" fill="var(--blue)" stroke="var(--card)" stroke-width="2"/>';
   g+='<line id="bcLine" x1="'+lx.toFixed(1)+'" x2="'+lx.toFixed(1)+'" y1="'+T+'" y2="'+(T+ph)+'" stroke="var(--ink-faint)" stroke-width="1" opacity="0"/>';
   const ticks=[1]; if(N>=8) ticks.push(Math.round(N/2)); if(N>1) ticks.push(N);
   [...new Set(ticks)].forEach(d=>{
@@ -1780,7 +1814,7 @@ function chartSpendBlock(ym){
       const v=x[c.id]; if(!v) return;
       const y1=Y(acc+v), y0=Y(acc); acc+=v;
       g+='<rect x="'+(cx-bw/2).toFixed(1)+'" y="'+y1.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+Math.max(0.5,(y0-y1)).toFixed(1)+
-         '" rx="1.5" fill="'+CHART_COL[c.id]+'" stroke="#fff" stroke-width="1.2"/>';
+         '" rx="1.5" fill="'+CHART_COL[c.id]+'" stroke="var(--card)" stroke-width="1.2"/>';
     });
     g+='<rect class="bar-hit" data-i="'+i+'" x="'+(cx-slot/2).toFixed(1)+'" y="'+T+'" width="'+slot.toFixed(1)+'" height="'+ph+'" fill="transparent"/>';
   });
@@ -2006,6 +2040,7 @@ function kv(k,v){ return '<div class="kv"><span>'+k+"</span><b>"+v+"</b></div>";
 function viewSettings(){
   const box=document.createElement("div");
   const s=S.settings;
+  box.appendChild(themeBlock());
 
   const b1=document.createElement("div"); b1.className="block";
   b1.innerHTML="<h2>Стартовые остатки</h2>";
@@ -2756,6 +2791,89 @@ function viewSignIn(err){
   block.appendChild(sw);
   document.getElementById("aPass").addEventListener("keydown",ev=>{ if(ev.key==="Enter") go.click(); });
 }
+
+
+/* ---------- оформление: тема и стекло ---------- */
+const K_THEME="ezh:theme", K_BGIMG="ezh:bgimg";
+const BGS={
+  aurora:"radial-gradient(900px 600px at 12% 18%,#ff8a5b99,transparent 60%),radial-gradient(800px 600px at 88% 30%,#3dd6c6aa,transparent 60%),radial-gradient(900px 700px at 50% 100%,#7c5cff99,transparent 60%),linear-gradient(160deg,#16225a,#0b3b45)",
+  dusk:"radial-gradient(900px 600px at 20% 10%,#ffb36b99,transparent 60%),radial-gradient(900px 700px at 90% 60%,#e8527a88,transparent 60%),linear-gradient(160deg,#2a1b4d,#5a2a52)",
+  sea:"radial-gradient(900px 600px at 80% 10%,#d6f5ee99,transparent 60%),radial-gradient(900px 700px at 10% 90%,#2bb0c999,transparent 60%),linear-gradient(160deg,#0b3a53,#1b7f96)",
+  graphite:"radial-gradient(900px 600px at 20% 10%,#5b6f8a88,transparent 60%),radial-gradient(900px 700px at 90% 90%,#3a4a5e99,transparent 60%),linear-gradient(160deg,#0f141a,#25303c)"
+};
+const BG_NAMES={aurora:"Аврора",dusk:"Закат",sea:"Море",graphite:"Графит",custom:"Своя"};
+let TH=(()=>{ let o={}; try{ o=JSON.parse(LS.get(K_THEME)||"{}")||{}; }catch(e){}
+  return Object.assign({mode:"auto",glass:false,bg:"aurora",alpha:62,blur:16},o); })();
+const thSave=()=>LS.set(K_THEME,JSON.stringify(TH));
+const thDark=()=>TH.mode==="dark"||(TH.mode==="auto"&&window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches);
+function applyTheme(){
+  const h=document.documentElement, dark=thDark();
+  h.classList.toggle("dark",dark); h.classList.toggle("glass",!!TH.glass);
+  h.style.setProperty("--ga",TH.alpha+"%"); h.style.setProperty("--gb",TH.blur+"px");
+  let bg=BGS[TH.bg]||BGS.aurora;
+  if(TH.bg==="custom"){ const d=LS.get(K_BGIMG); if(d) bg='url("'+d+'")'; }
+  h.style.setProperty("--bgimg",bg);
+  const m=document.querySelector('meta[name="theme-color"]'); if(m) m.setAttribute("content",dark?"#11161C":"#FBF9F3");
+}
+if(window.matchMedia) try{ matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{ if(TH.mode==="auto") applyTheme(); }); }catch(e){}
+function pickBtns(list,cur,fn,cls){
+  const d=document.createElement("div"); d.className="picker"+(cls?" "+cls:"");
+  list.forEach(([k,t])=>{ const b=document.createElement("button"); b.className="pick"+(String(cur)===String(k)?" on":""); b.textContent=t;
+    b.onclick=()=>fn(k); d.appendChild(b); });
+  return d;
+}
+function themeBlock(){
+  const b=document.createElement("div"); b.className="block"; b.innerHTML="<h2>Оформление</h2>";
+  const f1=document.createElement("div"); f1.className="field"; f1.innerHTML="<label>Тема</label>";
+  f1.appendChild(pickBtns([["auto","Как на устройстве"],["light","Светлая"],["dark","Тёмная"]],TH.mode,k=>{ TH.mode=k; thSave(); applyTheme(); render(); }));
+  b.appendChild(f1);
+  const f2=document.createElement("div"); f2.className="field"; f2.innerHTML="<label>Фон</label>";
+  f2.appendChild(pickBtns([["0","Обычный"],["1","Стекло"]],TH.glass?"1":"0",k=>{ TH.glass=k==="1"; thSave(); applyTheme(); render(); },"two-col"));
+  b.appendChild(f2);
+  if(TH.glass){
+    const sw=document.createElement("div"); sw.className="field"; sw.innerHTML="<label>Картинка за стеклом</label>";
+    const g=document.createElement("div"); g.className="swatches";
+    Object.keys(BG_NAMES).forEach(k=>{
+      const x=document.createElement("button"); x.className=TH.bg===k?"on":""; x.textContent=BG_NAMES[k];
+      if(k==="custom"){ const d=LS.get(K_BGIMG); x.style.background=d?'url("'+d+'") center/cover':"var(--paper-2)"; if(!d){ x.style.color="var(--ink-soft)"; x.style.textShadow="none"; } }
+      else x.style.background=BGS[k];
+      x.onclick=()=>{ if(k==="custom"&&!LS.get(K_BGIMG)){ file.click(); return; } TH.bg=k; thSave(); applyTheme(); render(); };
+      g.appendChild(x);
+    });
+    sw.appendChild(g);
+    const file=document.createElement("input"); file.type="file"; file.accept="image/*"; file.hidden=true;
+    file.onchange=()=>{
+      const f=file.files&&file.files[0]; if(!f) return;
+      const img=new Image(), url=URL.createObjectURL(f);
+      img.onload=()=>{
+        const k=Math.min(1,1600/Math.max(img.width,img.height)), c=document.createElement("canvas");
+        c.width=Math.round(img.width*k); c.height=Math.round(img.height*k); c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+        const data=c.toDataURL("image/jpeg",0.8); URL.revokeObjectURL(url);
+        LS.set(K_BGIMG,data);
+        if(LS.get(K_BGIMG)!==data){ toast("Картинка не поместилась в память браузера"); return; }
+        TH.bg="custom"; thSave(); applyTheme(); render();
+      };
+      img.onerror=()=>toast("Не удалось открыть картинку"); img.src=url;
+    };
+    sw.appendChild(file);
+    const up=document.createElement("button"); up.className="btn ghost"; up.style.marginTop="8px"; up.textContent="Выбрать свою картинку";
+    up.onclick=()=>file.click(); sw.appendChild(up);
+    b.appendChild(sw);
+    const slider=(label,min,max,val,unit,onv)=>{
+      const f=document.createElement("div"); f.className="field";
+      const lab=document.createElement("label"); lab.textContent=label+": "+val+unit; f.appendChild(lab);
+      const r=document.createElement("input"); r.type="range"; r.min=min; r.max=max; r.value=val;
+      r.oninput=()=>{ lab.textContent=label+": "+r.value+unit; onv(+r.value); applyTheme(); };
+      r.onchange=thSave; f.appendChild(r); return f;
+    };
+    b.appendChild(slider("Прозрачность панелей",5,70,100-TH.alpha,"%",v=>{ TH.alpha=100-v; }));
+    b.appendChild(slider("Размытие",0,30,TH.blur," px",v=>{ TH.blur=v; }));
+  }
+  const h=document.createElement("div"); h.className="hint";
+  h.textContent="Стекло размывает картинку за панелями внутри приложения. Показать то, что играет в другом окне (например музыку или YouTube), обычная веб-страница не может.";
+  b.appendChild(h); return b;
+}
+applyTheme();
 
 /* ---------- запуск ---------- */
 document.querySelectorAll(".tab").forEach(b=>{
