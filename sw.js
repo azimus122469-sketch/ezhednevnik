@@ -1,5 +1,5 @@
 /* Ежедневник — офлайн-оболочка */
-const CACHE = "ezh-shell-v14";
+const CACHE = "ezh-shell-v15";
 const SHELL = [
   "./",
   "./index.html",
@@ -31,12 +31,16 @@ self.addEventListener("fetch", ev => {
   if (url.origin !== self.location.origin) return;
   if (ev.request.method !== "GET") return;
 
-  // оболочка: сначала сеть, при её отсутствии — кэш
+  // оболочка: сначала сеть, при её отсутствии — кэш; в кэш кладём только файлы оболочки и только успешные ответы
+  const isShell = ev.request.mode === "navigate" ||
+    SHELL.some(f => new URL(f, self.location).pathname === url.pathname);
   ev.respondWith(
     fetch(ev.request)
       .then(res => {
-        const copy = res.clone();
-        caches.open(CACHE).then(c => c.put(ev.request, copy));
+        if (res.ok && isShell) {
+          const copy = res.clone();
+          caches.open(CACHE).then(c => c.put(ev.request, copy));
+        }
         return res;
       })
       .catch(() => caches.match(ev.request).then(r => r || caches.match("./index.html")))

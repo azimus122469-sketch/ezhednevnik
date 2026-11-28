@@ -485,14 +485,18 @@ function modelInfo(key: string) {
     ? { key: "terra", id: Deno.env.get("OPENAI_MODEL_TERRA") || "gpt-6.1-terra", inp: 1.0, cached: 0.05, out: 5.0 }
     : { key: "luna", id: Deno.env.get("OPENAI_MODEL_LUNA") || "gpt-6-luna", inp: 0.1, cached: 0.01, out: 0.5 };
 }
+// Настройки под владельца задаются секретами функции, в коде ничего личного: OWNER_NAME (имя), TZ_OFFSET_HOURS (часовой пояс, по умолчанию 5 = Ташкент)
+const OWNER_NAME = Deno.env.get("OWNER_NAME") || "";
+const TZ_H = Number.isFinite(Number(Deno.env.get("TZ_OFFSET_HOURS"))) && Deno.env.get("TZ_OFFSET_HOURS") ? Number(Deno.env.get("TZ_OFFSET_HOURS")) : 5;
+const TZ_ISO = (TZ_H >= 0 ? "+" : "-") + String(Math.abs(Math.trunc(TZ_H))).padStart(2, "0") + ":00";
 const MAX_HISTORY = 10, MAX_STEPS = 5, MAX_OUT_TOKENS = 4000;
 function costOf(m: { inp: number; cached: number; out: number }, u: any) {
   const i = Number(u?.input_tokens) || 0, c = Number(u?.input_tokens_details?.cached_tokens) || 0, o = Number(u?.output_tokens) || 0;
   return (Math.max(i - c, 0) * m.inp + c * m.cached + o * m.out) / 1e6;
 }
 function tashkentDayStartISO() {
-  const d = new Date(Date.now() + 5 * 3600 * 1000);
-  return new Date(`${d.toISOString().slice(0, 10)}T00:00:00+05:00`).toISOString();
+  const d = new Date(Date.now() + TZ_H * 3600 * 1000);
+  return new Date(`${d.toISOString().slice(0, 10)}T00:00:00${TZ_ISO}`).toISOString();
 }
 const AI_TOOLS = TOOLS.filter((x) => x.name !== "send_chat_message" && x.name !== "describe_diary")
   .map((x) => ({ type: "function", name: x.name, description: x.description, parameters: x.inputSchema, strict: false }));
@@ -502,10 +506,10 @@ const cut = (s: string) => (s.length > 12000 ? s.slice(0, 12000) + "…[обре
 class OpenAIError extends Error {}
 
 function systemPrompt() {
-  const d = new Date(Date.now() + 5 * 3600 * 1000); // Ташкент, UTC+5
+  const d = new Date(Date.now() + TZ_H * 3600 * 1000);
   const wd = ["воскресенье", "понедельник", "вторник", "среда", "четверг", "пятница", "суббота"][d.getUTCDay()];
-  return `Ты — ИИ-помощник личного денежного ежедневника. Владельца зовут Зик. Отвечай по-русски, коротко и прямо.
-Сегодня ${d.toISOString().slice(0, 10)}, ${wd} (Ташкент, UTC+5). Даты в инструментах — ГГГГ-ММ-ДД.
+  return `Ты — ИИ-помощник личного денежного ежедневника. ${OWNER_NAME ? "Владельца зовут " + OWNER_NAME + ". " : ""}Отвечай по-русски, коротко и прямо.
+Сегодня ${d.toISOString().slice(0, 10)}, ${wd} (UTC${TZ_H >= 0 ? "+" : ""}${TZ_H}). Даты в инструментах — ГГГГ-ММ-ДД.
 
 ${DESCRIBE}
 

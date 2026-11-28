@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#FBF9F3">
+<meta name="theme-color" content="#F6F7FA">
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" href="./icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="./apple-touch-icon.png">
@@ -14,12 +14,13 @@
 <title>Ежедневник</title>
 <style>
   :root{
-    --paper:#FBF9F3; --paper-2:#F3F0E7; --grid:#DCE5EE; --rule:#C0453C;
-    --ink:#16202B; --ink-soft:#5C6875; --ink-faint:#98A1AC;
-    --blue:#1F3A93; --teal:#0F766E; --green:#1E7A54; --amber:#A96A15; --red:#B23A32; --violet:#6B3FA0;
-    --edge:#E2DDD1; --card:#FFFFFF; --card-2:#FCFBF7; --dr-bg:#FFF4F2; --dr-bd:#E9B8B3;
-    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-    --serif:Georgia,"Times New Roman",serif;
+    --paper:#F6F7FA; --paper-2:#ECEFF5; --grid:#E4E8EF; --rule:#D5DAE3;
+    --ink:#141B26; --ink-soft:#586272; --ink-faint:#8F98A6;
+    --blue:#3B5BDB; --teal:#0E9384; --green:#16825D; --amber:#B7791F; --red:#D64545; --violet:#7048C6;
+    --edge:#E1E5ED; --card:#FFFFFF; --card-2:#F9FAFC; --dr-bg:#FFF4F2; --dr-bd:#F0C2BD;
+    --sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --serif:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --r:14px; --shadow:0 1px 2px rgba(20,27,38,.04),0 6px 20px rgba(20,27,38,.06);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;padding:0}
@@ -32,7 +33,7 @@
     background-size:22px 22px;background-position:-1px -1px}
   .wrap{max-width:620px;margin:0 auto;padding:0 14px}
   body.wide .wrap{max-width:100%;padding:0 20px}
-  body.wide .tabbar{max-width:100%}
+  body.wide .tabbar{max-width:600px}
 
   header{position:sticky;top:0;z-index:30;background:var(--paper);border-bottom:1px solid var(--edge)}
   header[hidden]{display:none}
@@ -334,7 +335,7 @@
   .bookgrid{display:block}
   @media (min-width:1000px){
     body.wide .wrap{max-width:1480px;padding:0 28px}
-    body.wide .tabbar{max-width:760px;border:1px solid var(--edge);border-radius:14px 14px 0 0;border-bottom:none}
+    body.wide .tabbar{max-width:640px}
     body.wide #purseRows{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
     body.wide .prow{border:1px solid var(--edge);border-radius:9px;background:var(--card);padding:7px 10px}
     body.wide .prow.on{background:var(--paper-2)}
@@ -354,13 +355,44 @@
   /* тёмная тема */
   html.dark{
     color-scheme:dark;
-    --paper:#11161C; --paper-2:#1A212A; --grid:#252E38; --rule:#E0675E;
+    --paper:#11161C; --paper-2:#1A212A; --grid:#252E38; --rule:#34404D;
     --ink:#E8ECEF; --ink-soft:#A3AEBA; --ink-faint:#6F7B88;
     --blue:#7C9BFF; --teal:#3DBFB2; --green:#4FC38A; --amber:#E0A24A; --red:#EF6B62; --violet:#A98BE0;
     --edge:#2B343E; --card:#1A2129; --card-2:#161C23; --dr-bg:#2A1B1B; --dr-bd:#5C2E2B;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.35);
   }
   html.dark .dchip,html.dark .draftnote{color:var(--ink)}
   html.dark .dchip .dlab,html.dark .draftnote{color:#FF8A80}
+
+  /* обновление оформления: мягкие карточки, крупные скругления, плавающая панель */
+  body{letter-spacing:-.005em;-webkit-font-smoothing:antialiased}
+  h1,h2,h3,.total-num,.month b,.empty b{letter-spacing:-.02em}
+  header{background:color-mix(in srgb,var(--paper) 86%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+  .ledger,.gridwrap,.block,.xwrap,.xsum{border-radius:var(--r);box-shadow:var(--shadow);border-color:transparent}
+  .chip,.mbtn,.pick,.quick button,.sync .wbtn,.btn,.abtns button,.conv-sum,.tokbox{border-radius:12px}
+  input,select,textarea{border-radius:12px}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 18%,transparent)}
+  .row{transition:background .15s}
+  .btn{transition:transform .08s,opacity .15s}
+  .btn:active,.add:active{transform:scale(.97)}
+  .cb{border-radius:16px;border-color:transparent;box-shadow:var(--shadow)}
+  .tabbar{left:50%;right:auto;bottom:calc(10px + env(safe-area-inset-bottom));width:calc(100% - 20px);max-width:600px;
+    transform:translateX(-50%);border:1px solid var(--edge);border-radius:22px;padding:6px;margin:0;
+    background:color-mix(in srgb,var(--card) 88%,transparent);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+    box-shadow:0 10px 30px rgba(20,27,38,.14)}
+  .tab{border-radius:16px;transition:background .15s,color .15s}
+  .tab.on{background:var(--paper-2);border-color:transparent;color:var(--ink)}
+  .add{flex:0 0 46px;height:42px;align-self:center;border-radius:16px;background:var(--blue);color:#fff;
+    box-shadow:0 4px 12px color-mix(in srgb,var(--blue) 40%,transparent)}
+  body{padding-bottom:calc(104px + env(safe-area-inset-bottom))}
+  .toast{bottom:92px;border-radius:14px;box-shadow:var(--shadow)}
+  .scrim{-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+  .modal{border-radius:24px 24px 0 0}
+  .modal h3{font-size:20px}
+  @media (prefers-reduced-motion:no-preference){
+    .modal{animation:ezhUp .22s ease-out}
+    @keyframes ezhUp{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+  }
 
   /* стекло: полупрозрачные размытые панели поверх фона приложения */
   html.glass body::before{content:"";position:fixed;inset:0;z-index:-1;background:var(--bgimg);background-size:cover;background-position:center}
@@ -558,8 +590,11 @@ function localISO(d){
   return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
 function uuid(){
   if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
-  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,c=>{
-    const r=Math.random()*16|0; return (c==="x"?r:(r&0x3|0x8)).toString(16); });
+  const b=new Uint8Array(16);
+  if(window.crypto && crypto.getRandomValues) crypto.getRandomValues(b); else for(let i=0;i<16;i++) b[i]=Math.random()*256|0;
+  b[6]=(b[6]&15)|64; b[8]=(b[8]&63)|128;
+  const h=[...b].map(x=>x.toString(16).padStart(2,"0")).join("");
+  return h.slice(0,8)+"-"+h.slice(8,12)+"-"+h.slice(12,16)+"-"+h.slice(16,20)+"-"+h.slice(20);
 }
 function nowISO(){ return new Date().toISOString(); }
 function hhmm(iso){ if(!iso) return ""; const d=new Date(iso);
@@ -666,8 +701,10 @@ async function pullAll(){
   S.entries = (rows||[]).map(normEntry);
   const gs = await api("/rest/v1/goals?select=*&order=due.asc");
   S.goals = (gs||[]).map(normGoal);
-  try{ const ss=await api("/rest/v1/goal_steps?select=*&order=pos.asc,due.asc"); S.steps=(ss||[]).map(normStep); }catch(e){}
-  try{ const ds=await api("/rest/v1/debts?select=*&order=created_at.asc"); S.debts=(ds||[]).map(normDebt); }catch(e){}
+  let partial=[];
+  try{ const ss=await api("/rest/v1/goal_steps?select=*&order=pos.asc,due.asc"); S.steps=(ss||[]).map(normStep); }catch(e){ partial.push("этапы"); }
+  try{ const ds=await api("/rest/v1/debts?select=*&order=created_at.asc"); S.debts=(ds||[]).map(normDebt); }catch(e){ partial.push("долги"); }
+  if(partial.length) toast("Не загрузилось: "+partial.join(", ")+". Показаны сохранённые данные.");
   const st = await api("/rest/v1/settings?select=*&limit=1");
   if(st && st.length){
     const s=st[0];
@@ -689,7 +726,7 @@ async function pushSettings(){
 }
 async function flushQueue(){
   if(!queue.length || !session) return;
-  const rest=[];
+  const rest=[]; let dropped=0;
   for(const op of queue){
     try{
       if(op.kind==="insert")
@@ -718,11 +755,12 @@ async function flushQueue(){
       }
       else if(op.kind==="settings") await pushSettings();
     }catch(e){
-      if(e.status && e.status>=400 && e.status<500 && e.status!==401 && e.status!==429) continue;
+      if(e.status && e.status>=400 && e.status<500 && e.status!==401 && e.status!==429){ dropped++; continue; }
       rest.push(op);
     }
   }
   queue=rest; queueSave();
+  if(dropped) toast("Сервер отклонил изменений: "+dropped+". Проверь последние записи.");
 }
 async function sync(){
   if(!session || ui.syncing) return;
@@ -3052,7 +3090,7 @@ function applyTheme(){
   let bg=BGS[TH.bg]||BGS.aurora;
   if(TH.bg==="custom"){ const d=LS.get(K_BGIMG); if(d) bg='url("'+d+'")'; }
   h.style.setProperty("--bgimg",bg);
-  const m=document.querySelector('meta[name="theme-color"]'); if(m) m.setAttribute("content",dark?"#11161C":"#FBF9F3");
+  const m=document.querySelector('meta[name="theme-color"]'); if(m) m.setAttribute("content",dark?"#11161C":"#F6F7FA");
 }
 if(window.matchMedia) try{ matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{ if(TH.mode==="auto") applyTheme(); }); }catch(e){}
 function pickBtns(list,cur,fn,cls){
