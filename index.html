@@ -487,11 +487,20 @@
 <div class="scrim" id="scrim" hidden><div class="modal" id="modal"></div></div>
 <div class="toast" id="toast" hidden></div>
 
+<script src="./config.js"></script>
 <script>
 "use strict";
 
-const SUPABASE_URL = "https://jwdwltvmmokffyupseer.supabase.co";
-const SUPABASE_KEY = "sb_publishable_mg1S0h__-ipWiSmiFgOnTw_A9T7ggwS";
+/* адрес и публичный ключ базы лежат в config.js (см. config.example.js) */
+const SUPABASE_URL = ((window.EZH_CONFIG||{}).supabaseUrl||"").replace(/\/+$/,"");
+const SUPABASE_KEY = (window.EZH_CONFIG||{}).supabaseKey||"";
+if(!/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(SUPABASE_URL) || !SUPABASE_KEY){
+  document.body.className="";
+  document.body.innerHTML='<div style="max-width:420px;margin:15vh auto;padding:0 20px;font:16px/1.5 system-ui,sans-serif">'+
+    '<h2 style="margin:0 0 8px">Приложение не настроено</h2>'+
+    '<p>Откройте файл <b>config.js</b> и впишите адрес и ключ вашего проекта Supabase. Подробности в инструкции.</p></div>';
+  throw new Error("config.js не заполнен");
+}
 
 const COLS = [
   { id:"in",   name:"Приход",     short:"Приход",  color:"var(--green)",  sign:+1 },
